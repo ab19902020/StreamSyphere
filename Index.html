@@ -4,50 +4,82 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <!-- ==================== TOP TIER SEO & GEO OPTIMIZATION ==================== -->
-    <title>Streams Sphere | Free Movies, Free Series & Legal IPTV</title>
-    <meta name="description" content="Watch free movies, free series, and legal IPTV streams online. Streams Sphere offers a premium viewing experience with VOD, live TV, arcade games, and seamless casting.">
-    <meta name="keywords" content="free movies, free series, legal IPTV, watch free tv, live tv online, free VOD, stream movies free, premium IPTV player, online arcade games">
+    <!-- ==================== SEO ==================== -->
+    <title>Streams Sphere | Free Movies, Live TV & Public-Domain Cinema</title>
+    <meta name="description" content="Watch thousands of free public-domain films, classic TV and live IPTV channels in your browser. No sign-up, no app — Pluto TV, Samsung TV Plus, Tubi, Xumo and the Internet Archive in one player.">
+    <meta name="keywords" content="free movies, public domain films, free live tv, iptv player, pluto tv, samsung tv plus, tubi, xumo, internet archive movies, watch free tv online">
     <meta name="author" content="Streams Sphere">
     <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
-    
+    <meta name="rating" content="adult">
+    <link rel="canonical" href="https://streamssphere.tv/">
+
     <!-- GEO Tags (Targeting UK / Global English) -->
     <meta name="geo.region" content="GB">
     <meta name="geo.placename" content="London">
     <meta name="geo.position" content="51.5074;-0.1278">
     <meta name="ICBM" content="51.5074, -0.1278">
-    
+
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Streams Sphere">
+    <meta property="og:locale" content="en_GB">
     <meta property="og:url" content="https://streamssphere.tv/">
-    <meta property="og:title" content="Streams Sphere | Free Movies, Free Series & Legal IPTV">
-    <meta property="og:description" content="Watch free movies, free series, and legal IPTV streams online. A premium viewing experience with VOD, live TV, and seamless casting.">
-    <meta property="og:image" content="https://images.weserv.nl/?url=iili.io/Fg2td42.png">
-    
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:title" content="Streams Sphere | Free Movies, Free Series & Legal IPTV">
-    <meta property="twitter:description" content="Watch free movies, free series, and legal IPTV streams online. A premium viewing experience with VOD, live TV, and seamless casting.">
-    
+    <meta property="og:title" content="Streams Sphere | Free Movies, Live TV & Public-Domain Cinema">
+    <meta property="og:description" content="Thousands of free public-domain films, classic TV and live IPTV channels in one browser player. No sign-up, no app.">
+    <meta property="og:image" content="https://images.weserv.nl/?url=iili.io/Fg2td42.png&w=1200&h=630&fit=contain&cbg=0d042f&output=jpg&q=85">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Streams Sphere">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Streams Sphere | Free Movies, Live TV & Public-Domain Cinema">
+    <meta name="twitter:description" content="Thousands of free public-domain films, classic TV and live IPTV channels in one browser player. No sign-up, no app.">
+    <meta name="twitter:image" content="https://images.weserv.nl/?url=iili.io/Fg2td42.png&w=1200&h=630&fit=contain&cbg=0d042f&output=jpg&q=85">
+
     <!-- JSON-LD Structured Data -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
-      "@type": "WebApplication",
-      "name": "Streams Sphere",
-      "url": "https://streamssphere.tv",
-      "description": "Watch free movies, free series, and legal IPTV streams online.",
-      "applicationCategory": "MultimediaApplication",
-      "operatingSystem": "All",
-      "genre": "Entertainment",
-      "keywords": "free movies, free series, legal IPTV",
-      "offers": {
-        "@type": "Offer",
-        "price": "0",
-        "priceCurrency": "USD"
-      }
+      "@graph": [
+        {
+          "@type": "WebApplication",
+          "@id": "https://streamssphere.tv/#app",
+          "name": "Streams Sphere",
+          "url": "https://streamssphere.tv/",
+          "description": "Watch free public-domain movies, classic TV and live IPTV channels online.",
+          "applicationCategory": "MultimediaApplication",
+          "operatingSystem": "All",
+          "browserRequirements": "Requires a modern browser with JavaScript enabled.",
+          "genre": "Entertainment",
+          "isFamilyFriendly": "false",
+          "contentRating": "18+",
+          "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+          "featureList": [
+            "Thousands of free public-domain films from the Internet Archive",
+            "Live IPTV channels from Pluto TV, Samsung TV Plus, Tubi, Xumo, Plex and more",
+            "Live TV by country and genre",
+            "Chromecast and AirPlay support",
+            "Picture-in-picture and continue watching",
+            "Instant-play HTML5 arcade games"
+          ]
+        },
+        {
+          "@type": "WebSite",
+          "@id": "https://streamssphere.tv/#website",
+          "url": "https://streamssphere.tv/",
+          "name": "Streams Sphere",
+          "publisher": { "@id": "https://streamssphere.tv/#org" }
+        },
+        {
+          "@type": "Organization",
+          "@id": "https://streamssphere.tv/#org",
+          "name": "Streams Sphere",
+          "url": "https://streamssphere.tv/",
+          "logo": "https://images.weserv.nl/?url=iili.io/Fg2td42.png&w=512&h=512&fit=contain&output=png"
+        }
+      ]
     }
     </script>
-    <!-- ========================================================================= -->
 
     <!-- Configure Tailwind for manual dark mode toggling -->
     <script>
@@ -58,12 +90,22 @@
         }
     </script>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <!-- Pinned rather than @latest: an upstream breaking release should never be able to
+         take live playback down without a deploy here first. -->
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@1.6.18/dist/hls.min.js"></script>
+
+    <!-- Warm up the connections the first render actually depends on. -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://images.weserv.nl">
+    <link rel="dns-prefetch" href="https://archive.org">
+    <link rel="dns-prefetch" href="https://iptv-org.github.io">
+    <link rel="dns-prefetch" href="https://raw.githubusercontent.com">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
-    <script src="https://www.youtube.com/iframe_api"></script>
-    <script src="https://www.gstatic.com/cv/js/sender/v1/cast_sender.js?loadCastFramework=1"></script>
+
+    <!-- Cast and the YouTube iframe API are only needed after the first interaction. -->
+    <script defer src="https://www.youtube.com/iframe_api"></script>
+    <script defer src="https://www.gstatic.com/cv/js/sender/v1/cast_sender.js?loadCastFramework=1"></script>
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-ELEK5MC4D5"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -73,10 +115,13 @@
     </script>
     <meta name="theme-color" content="#8A2BE2">
     <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Streams Sphere">
-    <link rel="manifest" href="data:application/manifest+json;base64,eyJuYW1lIjoiU3RyZWFtcyBTcGhlcmUiLCJzaG9ydF9uYW1lIjoiU3RyZWFtcyIsInN0YXJ0X3VybCI6Ii8iLCJkaXNwbGF5Ijoic3RhbmRhbG9uZSIsImJhY2tncm91bmRfY29sb3IiOiIjMDUwNTBhIiwiY29sb3IiOiIjZjBmMGY1IiwiaWNvbnMiOlt7InNyYyI6Imh0dHBzOi8vaW1hZ2VzLndlc2Vydi5ubC8/dXJsPWlpbGkuY2QvRmcydGQ0Mi5wbmciLCJzaXplcyI6IjI1NngyNTYiLCJ0eXBlIjoiaW1hZ2UvcG5nIn1dfQ==">
-    
+    <link rel="icon" href="https://images.weserv.nl/?url=iili.io/Fg2td42.png&w=64&h=64&fit=contain&output=png" type="image/png">
+    <link rel="apple-touch-icon" href="https://images.weserv.nl/?url=iili.io/Fg2td42.png&w=180&h=180&fit=contain&output=png">
+    <link rel="manifest" href="manifest.json">
+
     <style>
         :root {
             /* Base Default Variables (Dark Mode) */
@@ -307,10 +352,66 @@
             --disconnected-color: transparent;
         }
         .spin-anim { animation: spin 1s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
         .color-preview { width: 30px; height: 30px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; transition: transform 0.2s; }
         .color-preview:hover { transform: scale(1.1); border-color: var(--text-color); }
         #game-player { width: 100%; height: 100%; min-height: 75vh; }
         #quality-selector, #latency-badge { font-family: 'Poppins', sans-serif; }
+
+        /* ---- Loading skeletons: show the shape of the content before it lands ---- */
+        .skeleton {
+            position: relative;
+            overflow: hidden;
+            background: color-mix(in srgb, var(--text-color) 10%, transparent);
+        }
+        .skeleton::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            transform: translateX(-100%);
+            background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--text-color) 12%, transparent), transparent);
+            animation: skeleton-sweep 1.4s ease-in-out infinite;
+        }
+        @keyframes skeleton-sweep { 100% { transform: translateX(100%); } }
+
+        /* ---- Keyboard focus: visible everywhere, never on plain mouse clicks ---- */
+        :focus-visible {
+            outline: 2px solid var(--accent-color);
+            outline-offset: 2px;
+            border-radius: 6px;
+        }
+        .channel-item:focus-visible, .category-item:focus-visible { outline-offset: -2px; }
+
+        /* ---- Source bar: labelled runs of pills ---- */
+        #top-playlist-bar { scroll-behavior: smooth; }
+        .playlist-group-label { align-self: center; border-left: 1px solid var(--border-color); }
+        .playlist-group-label:first-child { border-left: none; padding-left: 0; }
+
+        /* Nudge the scrollbar to read as chrome rather than as content. */
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background-color: color-mix(in srgb, var(--accent-color) 55%, transparent);
+        }
+        .custom-scrollbar:hover::-webkit-scrollbar-thumb { background-color: var(--accent-color); }
+        .custom-scrollbar { scrollbar-width: thin; scrollbar-color: var(--accent-color) transparent; }
+
+        /* Cards keep a steady footprint while their artwork loads. */
+        .dvd-case-img { background: color-mix(in srgb, var(--text-color) 8%, transparent); }
+
+        .channel-item { border-radius: 10px; }
+        .channel-item:hover { background-color: color-mix(in srgb, var(--accent-color) 18%, transparent); }
+        .category-item:hover { background-color: color-mix(in srgb, var(--accent-color) 14%, transparent); }
+
+        /* Respect the OS "reduce motion" setting: kill the ambient animation loops. */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+            body { animation: none; }
+            .animate-cascade { opacity: 1; }
+        }
     </style>
 </head>
 <body class="bg-slate-50 dark:bg-slate-900 transition-colors duration-500">
@@ -319,70 +420,72 @@
     
     <header class="w-full border-b flex items-center justify-between p-3 lg:px-6 z-40 flex-shrink-0">
         <div class="flex items-center space-x-3">
-            <button id="menu-toggle" class="md:hidden p-2 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors bg-black/5 dark:bg-white/5 rounded-lg border border-black/10 dark:border-white/10">
+            <button id="menu-toggle" aria-label="Open channel menu" class="md:hidden p-2 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors bg-black/5 dark:bg-white/5 rounded-lg border border-black/10 dark:border-white/10">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
             </button>
             <div class="flex items-center space-x-3 cursor-pointer" onclick="location.reload()">
-                <img id="logo" src="https://images.weserv.nl/?url=iili.io/Fg2td42.png" alt="Streams Sphere Logo" class="h-10 w-auto filter drop-shadow-[0_0_8px_var(--accent-color)]" style="transition: filter 1s ease;">
+                <!-- Served through weserv at display size: the original PNG is ~1.1 MB and
+                     renders at 40 px, which cost every visitor a megabyte for nothing. -->
+                <img id="logo" src="https://images.weserv.nl/?url=iili.io/Fg2td42.png&w=96&output=webp&q=90" alt="Streams Sphere" width="40" height="40" class="h-10 w-auto filter drop-shadow-[0_0_8px_var(--accent-color)]" style="transition: filter 1s ease;">
                 <span class="text-xl font-bold text-slate-900 dark:text-white header-title hidden sm:block tracking-wide">Streams Sphere</span>
             </div>
         </div>
         <div class="flex items-center space-x-2 md:space-x-3">
-            <button id="open-search-btn" class="p-2 px-3 text-sm custom-btn flex items-center space-x-2 border-[var(--accent-color)]" title="Global Search">
+            <button id="open-search-btn" aria-label="Search all media" class="p-2 px-3 text-sm custom-btn flex items-center space-x-2 border-[var(--accent-color)]" title="Global Search (press /)">
                 <svg class="w-4 h-4 text-slate-800 dark:text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
                 <span class="hidden md:inline font-bold">Search</span>
             </button>
-            <button id="games-pin-btn" class="p-2 px-3 text-sm custom-btn flex items-center space-x-2 bg-purple-100 dark:bg-purple-600/20 border-purple-300 dark:border-purple-500/50 hover:bg-purple-200 dark:hover:bg-purple-500" title="Open Arcade Hub">
+            <button id="games-pin-btn" aria-label="Open the arcade hub" class="p-2 px-3 text-sm custom-btn flex items-center space-x-2 bg-purple-100 dark:bg-purple-600/20 border-purple-300 dark:border-purple-500/50 hover:bg-purple-200 dark:hover:bg-purple-500" title="Open Arcade Hub">
                 <span class="text-lg leading-none drop-shadow-md">🕹️</span>
                 <span class="hidden lg:inline font-bold">Games</span>
             </button>
             <div class="relative flex items-center">
-                <button id="cast-btn" class="p-2 px-3 text-sm custom-btn flex items-center space-x-2 relative" title="Cast / AirPlay">
+                <button id="cast-btn" aria-label="Cast to a TV or AirPlay device" class="p-2 px-3 text-sm custom-btn flex items-center space-x-2 relative" title="Cast / AirPlay">
                     <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 16.1A5 5 0 0 1 5.9 20M2 12.05A9 9 0 0 1 9.95 20M2 8V6a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-6"></path><line x1="2" y1="20" x2="2.01" y2="20"></line></svg>
                     <span class="hidden lg:inline font-semibold">Cast</span>
                 </button>
                 <div class="absolute inset-0 w-full h-full opacity-0 overflow-hidden"><google-cast-launcher></google-cast-launcher></div>
             </div>
-            <button id="pip-btn" class="p-2 px-3 text-sm custom-btn flex items-center space-x-2" title="Picture-in-Picture">
+            <button id="pip-btn" aria-label="Picture in picture" class="p-2 px-3 text-sm custom-btn flex items-center space-x-2" title="Picture-in-Picture">
                 <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><rect x="12" y="14" width="7" height="5" rx="1" ry="1"></rect></svg>
             </button>
-            <button id="fullscreen-btn" class="p-2 px-3 text-sm custom-btn flex items-center space-x-2" title="Fullscreen">
+            <button id="fullscreen-btn" aria-label="Toggle fullscreen" class="p-2 px-3 text-sm custom-btn flex items-center space-x-2" title="Fullscreen">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></svg>
             </button>
             
             <!-- Theme Toggle Button -->
-            <button id="theme-toggle-btn" class="p-2 px-3 text-sm custom-btn flex items-center space-x-2" title="Toggle Light/Dark Mode">
+            <button id="theme-toggle-btn" aria-label="Switch between light and dark mode" class="p-2 px-3 text-sm custom-btn flex items-center space-x-2" title="Toggle Light/Dark Mode">
                 <svg id="theme-icon-sun" class="w-4 h-4 hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
                 <svg id="theme-icon-moon" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
             </button>
 
-            <button id="settings-btn" class="p-2 px-3 text-sm custom-btn flex items-center space-x-2" title="Settings & Themes">
+            <button id="settings-btn" aria-label="Settings and themes" class="p-2 px-3 text-sm custom-btn flex items-center space-x-2" title="Settings & Themes">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
             </button>
         </div>
     </header>
 
-    <div id="top-playlist-bar" class="w-full border-b flex items-center px-4 py-2 space-x-2 overflow-x-auto no-scrollbar z-30 flex-shrink-0 shadow-lg">
-    </div>
+    <nav id="top-playlist-bar" aria-label="Content sources" class="w-full border-b flex items-center px-4 py-2 space-x-2 overflow-x-auto no-scrollbar z-30 flex-shrink-0 shadow-lg">
+    </nav>
 
     <div class="flex flex-1 overflow-hidden min-h-0">
-        <aside id="sidebar" class="absolute md:relative top-0 left-0 h-full w-72 md:w-80 border-r flex flex-col z-30 transform -translate-x-full md:translate-x-0 flex-shrink-0 min-h-0">
+        <aside id="sidebar" aria-label="Channels and categories" class="absolute md:relative top-0 left-0 h-full w-72 md:w-80 border-r flex flex-col z-30 transform -translate-x-full md:translate-x-0 flex-shrink-0 min-h-0">
             <div class="p-3 border-b border-[var(--border-color)] bg-white/40 dark:bg-black/40 flex space-x-2 items-center">
                 <div class="relative flex-1">
-                    <input type="text" id="local-filter-input" placeholder="Filter playlist..." class="w-full p-2.5 pl-9 custom-input text-sm">
+                    <input type="search" id="local-filter-input" aria-label="Filter the current list" placeholder="Filter this list…" class="w-full p-2.5 pl-9 custom-input text-sm">
                     <svg class="w-4 h-4 text-slate-500 dark:text-slate-400 absolute left-3 top-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
                 </div>
-                <button id="refresh-playlist-btn" class="p-2.5 text-sm custom-btn flex items-center justify-center font-bold" title="Refresh Playlist Data" style="color: var(--accent-color)">
+                <button id="refresh-playlist-btn" aria-label="Reload this source" class="p-2.5 text-sm custom-btn flex items-center justify-center font-bold" title="Refresh Playlist Data" style="color: var(--accent-color)">
                     <svg id="refresh-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
                 </button>
-                <button id="add-playlist-btn" class="p-2.5 text-sm custom-btn flex items-center justify-center font-bold" title="Add Custom M3U">
+                <button id="add-playlist-btn" aria-label="Add a custom M3U playlist" class="p-2.5 text-sm custom-btn flex items-center justify-center font-bold" title="Add Custom M3U">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
                 </button>
-                <button id="close-sidebar-btn" class="md:hidden p-2 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white ml-1 bg-black/5 dark:bg-white/5 rounded-lg border border-black/10 dark:border-white/10" title="Close Menu">
+                <button id="close-sidebar-btn" aria-label="Close menu" class="md:hidden p-2 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white ml-1 bg-black/5 dark:bg-white/5 rounded-lg border border-black/10 dark:border-white/10" title="Close Menu">
                     <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                 </button>
             </div>
-            <div id="playlist-container" class="flex-1 overflow-y-auto custom-scrollbar p-2 bg-black/5 dark:bg-black/10 relative">
+            <div id="playlist-container" class="flex-1 overflow-y-auto custom-scrollbar p-2 bg-black/5 dark:bg-black/10 relative" aria-live="polite">
                 <div id="playlist-element"></div>
             </div>
         </aside>
@@ -391,7 +494,7 @@
             <div id="player-container" class="relative w-full aspect-video bg-black rounded-xl flex-shrink-0 border border-black/10 dark:border-white/5 transition-all">
                 <video id="main-player" class="absolute top-0 left-0 w-full h-full rounded-xl object-contain z-10 bg-black" preload="auto" playsinline controls x-webkit-airplay="allow" disableRemotePlayback="false"></video>
                 
-                <button id="quality-toggle-btn" class="hidden absolute top-4 right-4 bg-black/80 text-white p-2 rounded-full shadow-lg border border-white/10 z-30 hover:bg-white/20 transition-all backdrop-blur-md" title="Quality Settings">
+                <button id="quality-toggle-btn" aria-label="Stream quality" class="hidden absolute top-4 right-4 bg-black/80 text-white p-2 rounded-full shadow-lg border border-white/10 z-30 hover:bg-white/20 transition-all backdrop-blur-md" title="Quality Settings">
                     <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
                 </button>
 
@@ -407,6 +510,23 @@
                 
                 <iframe id="game-player" class="absolute top-0 left-0 w-full h-full rounded-xl hidden border-none z-10 bg-black" allow="autoplay; fullscreen; keyboard-map; gamepad" allowfullscreen scrolling="no"></iframe>
                 
+                <!-- First-run state: an empty black rectangle is a dead end, so the player
+                     says what this is and what to do until something is selected. -->
+                <div id="player-idle" class="absolute inset-0 flex flex-col items-center justify-center text-center p-6 rounded-xl z-[15] pointer-events-none select-none"
+                     style="background: radial-gradient(circle at 50% 40%, color-mix(in srgb, var(--accent-color) 22%, #000) 0%, #05050a 70%)">
+                    <div class="text-5xl mb-4 drop-shadow-[0_0_20px_var(--accent-glow)]" aria-hidden="true">🎞️</div>
+                    <p class="header-title text-white text-2xl md:text-3xl font-bold tracking-wide mb-2">Streams Sphere</p>
+                    <p class="text-sm md:text-base text-white/70 max-w-md leading-relaxed">
+                        Thousands of free films, classic TV and live channels. Pick something from the list, or hit
+                        <kbd class="px-1.5 py-0.5 mx-0.5 rounded bg-white/15 border border-white/20 text-xs font-mono">/</kbd> to search.
+                    </p>
+                    <div class="flex flex-wrap justify-center gap-2 mt-5 text-[10px] font-bold uppercase tracking-widest text-white/50">
+                        <span class="px-2.5 py-1 rounded-full border border-white/15 bg-white/5">No sign-up</span>
+                        <span class="px-2.5 py-1 rounded-full border border-white/15 bg-white/5">No app</span>
+                        <span class="px-2.5 py-1 rounded-full border border-white/15 bg-white/5">Cast &amp; AirPlay</span>
+                    </div>
+                </div>
+
                 <div id="loading-overlay" class="hidden absolute inset-0 bg-white/90 dark:bg-black/90 backdrop-blur-sm flex flex-col items-center justify-center text-center p-6 rounded-xl border z-20" style="border-color: var(--accent-glow)">
                     <div class="loader mb-4" id="loading-spinner"></div>
                     <p id="loading-text" class="text-slate-900 dark:text-white font-bold text-xl header-title mb-2">Loading Stream...</p>
@@ -502,7 +622,7 @@
         <h2 class="text-3xl sm:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-600 via-pink-600 to-indigo-600 dark:from-purple-400 dark:via-pink-400 dark:to-indigo-400 header-title tracking-widest flex items-center gap-4 relative z-10 uppercase">
             <span class="text-4xl sm:text-5xl drop-shadow-[0_0_15px_rgba(168,85,247,0.5)] dark:drop-shadow-[0_0_15px_rgba(168,85,247,0.8)]">🕹️</span> Arcade Universe
         </h2>
-        <button id="close-game-hub" class="p-3 bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:hover:bg-white/20 hover:rotate-90 rounded-full transition-all duration-300 text-slate-900 dark:text-white relative z-10 border border-black/10 dark:border-white/10">
+        <button id="close-game-hub" aria-label="Close the arcade" class="p-3 bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:hover:bg-white/20 hover:rotate-90 rounded-full transition-all duration-300 text-slate-900 dark:text-white relative z-10 border border-black/10 dark:border-white/10">
             <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
         </button>
     </div>
@@ -517,8 +637,8 @@
     <div id="global-search-modal-content" class="w-full max-w-4xl mx-auto rounded-xl flex flex-col shadow-2xl h-[85vh] border border-[var(--border-color)]">
         <div class="p-4 border-b border-[var(--border-color)] flex items-center space-x-3">
             <svg class="w-6 h-6 text-slate-800 dark:text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-            <input type="text" id="global-search-input" placeholder="Search entire app (Movies, TV, Series)..." class="w-full bg-transparent text-xl text-slate-800 dark:text-white outline-none placeholder-slate-400 dark:placeholder-slate-500 font-bold">
-            <button id="close-global-search" class="p-2 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"><svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
+            <input type="search" id="global-search-input" aria-label="Search all media" placeholder="Search films, channels and shows…" class="w-full bg-transparent text-xl text-slate-800 dark:text-white outline-none placeholder-slate-400 dark:placeholder-slate-500 font-bold">
+            <button id="close-global-search" aria-label="Close search" class="p-2 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"><svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
         </div>
         <div id="global-search-results" class="flex-1 overflow-y-auto custom-scrollbar p-4 flex flex-col">
             <div class="h-full flex items-center justify-center text-slate-500 text-lg">Type to instantly search all active media...</div>
@@ -573,6 +693,7 @@
         <div class="max-h-[60vh] overflow-y-auto custom-scrollbar pr-4 text-sm text-slate-700 dark:text-slate-300 space-y-5 py-4">
              <div><h3 class="font-bold text-xs tracking-widest mb-2 uppercase" style="color: var(--accent-color)">Data & Privacy Policy</h3><p>To enhance your experience, this website uses your browser's local storage to remember your preferences.</p></div>
              <div><h3 class="font-bold text-xs tracking-widest mb-2 uppercase" style="color: var(--accent-color)">Copyright & DMCA Policy</h3><p>StreamsSphere.tv is a search index of publicly available content and does not host any files.</p></div>
+             <div><h3 class="font-bold text-xs tracking-widest mb-2 uppercase" style="color: var(--accent-color)">18+ Content Notice</h3><p>The Free Cinema library is an unfiltered index of the Internet Archive's public-domain film collections. It includes vintage adult, exploitation and grindhouse titles alongside classic cinema. This site is intended for viewers aged 18 and over.</p></div>
         </div>
         <div class="pt-5 border-t border-[var(--border-color)] text-center">
             <button id="close-dmca-btn" class="custom-btn p-3 px-10 rounded-lg text-slate-900 dark:text-white font-bold uppercase tracking-widest text-xs">Acknowledge</button>
@@ -691,8 +812,11 @@ document.addEventListener('DOMContentLoaded', function() {
         gameHubGrid: document.getElementById('game-hub-grid'),
         themeToggleBtn: document.getElementById('theme-toggle-btn'),
         themeIconSun: document.getElementById('theme-icon-sun'),
-        themeIconMoon: document.getElementById('theme-icon-moon')
+        themeIconMoon: document.getElementById('theme-icon-moon'),
+        playerIdle: document.getElementById('player-idle')
     };
+
+    const FALLBACK_ART = 'https://images.weserv.nl/?url=iili.io/Fg2td42.png';
 
     let hls, ytPlayer, allChannelsInPlaylist = [], masterAllChannels = [];
     let favorites = [], customPlaylists = [];
@@ -705,7 +829,11 @@ document.addEventListener('DOMContentLoaded', function() {
     let activeChannelObj = null; 
     let watchHistory = [];       
     let tmdbMemCache = JSON.parse(localStorage.getItem('iptv_tmdb_cache')) || {};
-    let vodGroupsMaster = { 'Movies': { 'All Movies': [] }, 'Series': {} }; 
+    // Series library, keyed by show name -> array of episodes.
+    let vodSeriesMaster = {};
+    // Every archive.org title pulled in this session, so global search can reach them.
+    let archiveLoadedChannels = [];
+    const archiveStreamCache = {};
     let userTheme = localStorage.getItem('app_theme') || 'aurora';
     let ambilightEnabled = localStorage.getItem('ambilight_enabled') !== 'false';
     elements.ambilightToggle.checked = ambilightEnabled;
@@ -713,22 +841,13 @@ document.addEventListener('DOMContentLoaded', function() {
     let webrtcPeer = null;
     let webrtcStatsInterval = null;
 
-    // --- Affiliate Auto-Open Logic ---
-    function setupGlobalAffiliateClick() {
-        document.addEventListener('click', function(e) {
-            const lastPop = localStorage.getItem('last_affiliate_pop');
-            const now = Date.now();
-            const twentyFourHours = 24 * 60 * 60 * 1000;
-
-            if (!lastPop || (now - parseInt(lastPop)) > twentyFourHours) {
-                // Set the local storage immediately so it only fires once per 24hrs
-                localStorage.setItem('last_affiliate_pop', now.toString());
-                
-                const affiliateLink = "https://www.amazon.co.uk/TV-4K-Streaming-Compatible-Supports-black/dp/B0G1M61429?dib=eyJ2IjoiMSJ9.yB8PagfzpmX0ovqBjkeESdRtspYACcGiZ9BmTtQqDrPBPuRvtH_pRZCks8fdLLaX9YYJFQuZCAIBpLBuRIX5b46SDowEIqQn2l-vtgcmITZv8we8WiOJBqsjF1vFviqaMdYE9pGhxpJTZs-mi0L2FkzAcScu3C3s9bn6cN28ZJbTpI4Ll92DVeZNeOxNOrtvXnd8umK5w3tIH8Wbc6TX6UWV4_JbQIWTUpPYLFX8YVE.ldwcXWLaf_LtTdLZ_1YQO_h_XFrSqBP3i6Ta-Dqjxt8&dib_tag=se&keywords=xiaomi%2Bstick%2B4k&qid=1784299711&sr=8-5&th=1&linkCode=ll2&tag=adamjjames-21&linkId=8548e91f22bf4155a89478004b71e75d&ref_=as_li_ss_tl";
-                window.open(affiliateLink, '_blank');
-            }
-        }, true); // useCapture to ensure it catches early
-    }
+    // NOTE: The previous build hijacked the visitor's first click anywhere on the page
+    // and force-opened the Amazon affiliate link in a new tab. That breaks the Amazon
+    // Associates operating agreement (traffic must come from a clear, user-initiated
+    // link), is flagged by AdSense as a deceptive/accidental-click pattern, and is the
+    // kind of thing that makes first-time visitors bounce and never return.
+    // The affiliate placement now lives only in the in-page banner, which the visitor
+    // clicks deliberately. Do not reintroduce automatic window.open() on page clicks.
 
     // --- Theme & Light/Dark Logic ---
     const THEMES = {
@@ -803,17 +922,63 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    /**
+     * Channel titles, group names and logo URLs come from third-party M3U files and from
+     * whatever playlist URL a visitor pastes in, so nothing from a playlist may reach
+     * innerHTML raw. Everything interpolated into a template below goes through here.
+     */
+    function escapeHtml(value) {
+        return String(value == null ? '' : value)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+    }
+
     // Toast UI
     function showToast(message, type = "success", duration = 3000) {
         const toast = document.createElement('div');
         toast.className = `p-4 rounded-lg shadow-xl text-sm font-bold text-slate-900 dark:text-white flex items-center gap-3 animate-cascade backdrop-blur-md border border-black/10 dark:border-white/10 ${type === 'error' ? 'bg-red-200/90 dark:bg-red-600/90' : 'bg-white/90 dark:bg-black/90'}`;
-        toast.innerHTML = `<span class="text-xl leading-none">${type === 'error' ? '⚠️' : '✅'}</span><span>${message}</span>`;
+        toast.setAttribute('role', 'status');
+        toast.innerHTML = `<span class="text-xl leading-none" aria-hidden="true">${type === 'error' ? '⚠️' : '✅'}</span><span>${escapeHtml(message)}</span>`;
         elements.toastContainer.appendChild(toast);
         setTimeout(() => {
             toast.style.opacity = '0';
             toast.style.transform = 'translateY(10px)';
             setTimeout(() => { if (toast.parentNode) toast.parentNode.removeChild(toast); }, 300);
         }, duration);
+    }
+
+    /* ---- Shared sidebar states: skeleton while loading, friendly failure copy ---- */
+
+    function showSidebarSkeleton(message = 'Loading…') {
+        const rows = Array.from({ length: 9 }, (_, i) => `
+            <div class="flex items-center gap-3 p-2 mx-1 rounded-lg" style="animation-delay:${i * 0.06}s">
+                <div class="skeleton w-10 h-10 rounded flex-shrink-0"></div>
+                <div class="flex-1 space-y-2">
+                    <div class="skeleton h-3 rounded" style="width:${70 + ((i * 7) % 25)}%"></div>
+                    <div class="skeleton h-2 rounded" style="width:${35 + ((i * 5) % 25)}%"></div>
+                </div>
+            </div>`).join('');
+        elements.playlistElement.innerHTML = `
+            <div role="status" aria-live="polite">
+                <p class="px-3 py-3 text-xs font-bold uppercase tracking-widest text-[var(--text-muted)]">${message}</p>
+                ${rows}
+            </div>`;
+    }
+
+    function showSidebarError(title, detail) {
+        elements.playlistElement.innerHTML = `
+            <div class="flex flex-col items-center justify-center mt-10 space-y-4 px-5 text-center" role="alert">
+                <div class="w-14 h-14 rounded-full flex items-center justify-center text-3xl bg-black/5 dark:bg-white/5 border border-[var(--border-color)]">📡</div>
+                <p class="font-bold text-slate-900 dark:text-white">${title}</p>
+                <p class="text-xs text-[var(--text-muted)] leading-relaxed">${detail}</p>
+                <button onclick="document.getElementById('refresh-playlist-btn').click()" class="px-5 py-2.5 rounded-lg text-white font-bold text-xs uppercase tracking-wider shadow-lg flex items-center space-x-2" style="background-color: var(--accent-color)">
+                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+                    <span>Try again</span>
+                </button>
+            </div>`;
     }
 
     function calculateAmbilight(imgUrl) {
@@ -903,13 +1068,14 @@ document.addEventListener('DOMContentLoaded', function() {
             el.className = 'dvd-case movie-case relative animate-cascade border border-black/10 dark:border-white/5';
             el.style.animationDelay = `${idx * 0.05}s`;
             el.innerHTML = `
-                <img src="${item.logo || 'https://images.weserv.nl/?url=iili.io/Fg2td42.png'}" class="dvd-case-img" onerror="this.src='https://images.weserv.nl/?url=iili.io/Fg2td42.png'">
-                <div class="dvd-case-title pb-6 text-white">${item.title}</div>
-                <div class="absolute bottom-0 left-0 right-0 h-1.5 bg-black/60 z-20">
+                <img src="${escapeHtml(item.logo || FALLBACK_ART)}" alt="" loading="lazy" class="dvd-case-img" data-fallback-art>
+                <div class="dvd-case-title pb-6 text-white">${escapeHtml(item.title)}</div>
+                <div class="absolute bottom-0 left-0 right-0 h-1.5 bg-black/60 z-20" role="progressbar" aria-valuenow="${Math.round(progressPct)}" aria-valuemin="0" aria-valuemax="100">
                     <div class="h-full shadow-[0_0_8px_var(--accent-glow)] transition-all" style="width: ${progressPct}%; background-color: var(--accent-color);"></div>
                 </div>
-                <div class="play-overlay"><svg class="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg></div>
+                <div class="play-overlay"><svg class="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg></div>
             `;
+            el.querySelector('[data-fallback-art]').addEventListener('error', function () { this.src = FALLBACK_ART; });
             el.addEventListener('click', () => {
                 playStream(item.url, false, 0, item.savedTime);
                 elements.nowPlayingTitle.textContent = item.title;
@@ -949,30 +1115,183 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }, { rootMargin: '200px' });
 
+    // NOTE on VOD sources: the old 'Movies' entry pointed every one of its 766 titles at
+    // the archive.org item `movies_202211`, which the Internet Archive has since darkened
+    // (is_dark: true) — every link returned HTTP 403. It has been replaced by the
+    // ARCHIVE_COLLECTIONS library below, which streams genuinely public-domain films
+    // straight from archive.org with proper CORS headers.
     const VOD_SOURCES = [
         { name: 'Comedy Series', url: 'https://raw.githubusercontent.com/ab19902020/Comedy/main/Series.m3u', type: 'series' },
         { name: 'South Park', url: 'https://raw.githubusercontent.com/ab19902020/Sp/main/Sp.m3u', type: 'series', defaultGroup: 'South Park' },
-        { name: 'King of the Hill', url: 'https://raw.githubusercontent.com/ab19902020/King/main/Kingofhill.m3u', type: 'series', defaultGroup: 'King of the Hill' },
-        { name: 'Movies', url: 'https://raw.githubusercontent.com/ab19902020/Comedy/main/Movies.m3u', type: 'movie' }
+        { name: 'King of the Hill', url: 'https://raw.githubusercontent.com/ab19902020/King/main/Kingofhill.m3u', type: 'series', defaultGroup: 'King of the Hill' }
     ];
 
+    /* =====================================================================
+       FREE CINEMA — public-domain film library served straight from archive.org
+       ---------------------------------------------------------------------
+       archive.org sends `Access-Control-Allow-Origin: *` and supports HTTP range
+       requests, so these files stream natively in <video> with no proxy at all.
+       Every collection below is public domain / freely distributable.
+       ===================================================================== */
+    const ARCHIVE_ENDPOINT = 'https://archive.org/advancedsearch.php';
+    const ARCHIVE_PAGE_SIZE = 60;
+
+    const ARCHIVE_COLLECTIONS = [
+        { key: 'feature_films',        label: 'Feature Films',      icon: '🎬' },
+        { key: 'SciFi_Horror',         label: 'Sci-Fi & Horror',    icon: '👽' },
+        { key: 'animationandcartoons', label: 'Animation & Cartoons', icon: '✏️' },
+        { key: 'classic_tv',           label: 'Classic TV',         icon: '📺' },
+        { key: 'silent_films',         label: 'Silent Era',         icon: '🎩' },
+        { key: 'short_films',          label: 'Short Films',        icon: '⏱️' }
+    ];
+
+    // These collections are carried unfiltered. The public-domain corner of archive.org
+    // includes vintage exploitation and grindhouse titles alongside everything else, so
+    // the library is labelled 18+ rather than curated.
+    // Formats archive.org derives, in descending order of browser friendliness.
+    const ARCHIVE_FORMAT_RANK = ['h.264 ia', 'h.264', 'mpeg4', '512kb mpeg4', 'ogg video', 'webm'];
+
+    function archiveThumb(identifier) {
+        return `https://archive.org/services/img/${encodeURIComponent(identifier)}`;
+    }
+
+    function archiveIsPlayableName(name) {
+        return /\.(mp4|m4v|webm|ogv|mov)$/i.test(name || '');
+    }
+
+    /** Turn one advancedsearch document into the channel shape the rest of the app uses. */
+    function buildArchiveChannel(doc, collectionLabel) {
+        const year = doc.year ? ` (${doc.year})` : '';
+        // archive.org returns `title` as an array on items with multiple title fields.
+        const titleField = Array.isArray(doc.title) ? doc.title.join(' ') : doc.title;
+        const rawTitle = (titleField || doc.identifier || 'Untitled').toString().trim();
+        return {
+            title: `${rawTitle}${year}`,
+            url: `archive:${doc.identifier}`,
+            logo: archiveThumb(doc.identifier),
+            group: collectionLabel,
+            isVod: true,
+            isArchive: true,
+            archiveId: doc.identifier,
+            sourcePlaylistName: 'Free Cinema'
+        };
+    }
+
+    /**
+     * Query archive.org. `collection` may be null when running a free-text search.
+     * Returns { channels, total }.
+     */
+    async function archiveSearch({ collection, label, term = '', page = 1, rows = ARCHIVE_PAGE_SIZE, sort = 'downloads desc' }) {
+        const clauses = ['mediatype:(movies)'];
+        if (collection) clauses.push(`collection:(${collection})`);
+        if (term) clauses.push(`title:(${term.replace(/[^\w\s'-]/g, ' ').trim()})`);
+
+        const params = new URLSearchParams();
+        params.set('q', clauses.join(' AND '));
+        ['identifier', 'title', 'year', 'downloads', 'avg_rating'].forEach(f => params.append('fl[]', f));
+        params.append('sort[]', sort);
+        params.set('rows', rows);
+        params.set('page', page);
+        params.set('output', 'json');
+
+        const res = await fetch(`${ARCHIVE_ENDPOINT}?${params.toString()}`, { cache: 'no-store' });
+        if (!res.ok) throw new Error(`Archive search failed (HTTP ${res.status})`);
+        const json = await res.json();
+        const docs = (json.response && json.response.docs) || [];
+
+        const channels = docs
+            .filter(d => d.identifier)
+            .map(d => buildArchiveChannel(d, label || 'Free Cinema'));
+
+        // Keep them reachable from global search for the rest of the session.
+        const seen = new Set(archiveLoadedChannels.map(c => c.url));
+        channels.forEach(c => { if (!seen.has(c.url)) archiveLoadedChannels.push(c); });
+
+        return { channels, total: (json.response && json.response.numFound) || 0 };
+    }
+
+    /** Resolve `archive:<identifier>` to a directly playable file URL. */
+    async function resolveArchiveStream(identifier) {
+        if (archiveStreamCache[identifier]) return archiveStreamCache[identifier];
+
+        const res = await fetch(`https://archive.org/metadata/${encodeURIComponent(identifier)}`, { cache: 'no-store' });
+        if (!res.ok) throw new Error(`Could not read archive metadata (HTTP ${res.status})`);
+        const meta = await res.json();
+
+        if (meta.is_dark) throw new Error('This title has been withdrawn from the Internet Archive.');
+
+        const files = (meta.files || []).filter(f => archiveIsPlayableName(f.name));
+        if (!files.length) throw new Error('No streamable video file in this item.');
+
+        // Prefer the format browsers handle best; break ties on the larger (better) derivative.
+        files.sort((a, b) => {
+            const ra = ARCHIVE_FORMAT_RANK.indexOf((a.format || '').toLowerCase());
+            const rb = ARCHIVE_FORMAT_RANK.indexOf((b.format || '').toLowerCase());
+            const na = ra === -1 ? ARCHIVE_FORMAT_RANK.length : ra;
+            const nb = rb === -1 ? ARCHIVE_FORMAT_RANK.length : rb;
+            if (na !== nb) return na - nb;
+            return (parseInt(b.size, 10) || 0) - (parseInt(a.size, 10) || 0);
+        });
+
+        const url = `https://archive.org/download/${encodeURIComponent(identifier)}/${encodeURIComponent(files[0].name)}`;
+        archiveStreamCache[identifier] = url;
+        return url;
+    }
+
+    const IPTV_ORG = 'https://iptv-org.github.io/iptv';
+    // The iptv-org project removed its /networks/ folder, which is why the old Pluto TV
+    // and Samsung TV Plus pills silently returned a GitHub 404 page. The per-network
+    // playlists now live under /streams/ in the source repo.
+    const IPTV_STREAMS = 'https://raw.githubusercontent.com/iptv-org/iptv/master/streams';
+
     let BASE_PLAYLISTS = [
-        { name: 'VOD: Movies & Series', icon: '🍿', isVodMaster: true },
-        { name: 'All Channels', url: 'https://iptv-org.github.io/iptv/index.m3u', icon: '📺'},
-        { name: 'USA', url: 'https://iptv-org.github.io/iptv/countries/us.m3u', icon: '🇺🇸'},
-        { name: 'England', url: 'https://iptv-org.github.io/iptv/countries/uk.m3u', icon: '🏴󠁧󠁢󠁥󠁮󠁧󠁿'},
-        { name: 'Europe TV', icon: '🌍', region: 'Europe' },
-        { name: 'Americas TV', icon: '🌎', region: 'Americas' },
-        { name: 'Asia TV', icon: '🌏', region: 'Asia' },
-        { name: 'Movies (Live)', url: 'https://iptv-org.github.io/iptv/categories/movies.m3u', icon: '🎬'},
-        { name: 'Sports (Live)', url: 'https://iptv-org.github.io/iptv/categories/sports.m3u', icon: '⚽'},
-        { name: 'News (Live)', url: 'https://iptv-org.github.io/iptv/categories/news.m3u', icon: '📰'},
-        { name: 'Kids (Live)', url: 'https://iptv-org.github.io/iptv/categories/kids.m3u', icon: '👶'},
-        { name: 'Music (Live)', url: 'https://iptv-org.github.io/iptv/categories/music.m3u', icon: '🎵'},
-        { name: 'YT Live', icon: '🔴', channels: [{ title: 'The Osbournes Podcast', url: 'https://www.youtube.com/live/mozvQNIsvik', logo: "", sourcePlaylistName: 'YT Live'},{ title: 'lofi hip hop radio', url: 'https://www.youtube.com/watch?v=jfKfPfyJRdk', logo: "", sourcePlaylistName: 'YT Live'},]},
-        { name: 'Plex US', url: 'https://raw.githubusercontent.com/iptv-org/iptv/master/streams/us_plex.m3u', icon: '▶️'},
-        { name: 'Pluto TV', url: 'https://iptv-org.github.io/iptv/networks/pluto_tv.m3u', icon: '🪐'},
-        { name: 'Samsung TV', url: 'https://iptv-org.github.io/iptv/networks/samsung_tv_plus.m3u', icon: '📺'}
+        // --- Highlights -----------------------------------------------------------
+        { name: 'Free Cinema', icon: '🎞️', isArchiveMaster: true, group: 'Highlights', badge: '18+' },
+        { name: 'Series & Shows', icon: '🍿', isVodMaster: true, group: 'Highlights' },
+
+        // --- Live TV by region ----------------------------------------------------
+        { name: 'All Channels', url: `${IPTV_ORG}/index.m3u`, icon: '📺', group: 'Live TV' },
+        { name: 'United Kingdom', url: `${IPTV_ORG}/countries/uk.m3u`, icon: '🇬🇧', group: 'Live TV' },
+        { name: 'USA', url: `${IPTV_ORG}/countries/us.m3u`, icon: '🇺🇸', group: 'Live TV' },
+        { name: 'Canada', url: `${IPTV_ORG}/countries/ca.m3u`, icon: '🇨🇦', group: 'Live TV' },
+        { name: 'Australia', url: `${IPTV_ORG}/countries/au.m3u`, icon: '🇦🇺', group: 'Live TV' },
+        { name: 'India', url: `${IPTV_ORG}/countries/in.m3u`, icon: '🇮🇳', group: 'Live TV' },
+        { name: 'Europe TV', icon: '🌍', region: 'Europe', group: 'Live TV' },
+        { name: 'Americas TV', icon: '🌎', region: 'Americas', group: 'Live TV' },
+        { name: 'Asia TV', icon: '🌏', region: 'Asia', group: 'Live TV' },
+        { name: 'Africa TV', icon: '🌍', region: 'Africa', group: 'Live TV' },
+        { name: 'Oceania TV', icon: '🏝️', region: 'Oceania', group: 'Live TV' },
+
+        // --- Free ad-supported networks (highest reliability of every source here) --
+        { name: 'Pluto TV', url: `${IPTV_STREAMS}/us_pluto.m3u`, icon: '🪐', group: 'Free Networks' },
+        { name: 'Pluto TV UK', url: `${IPTV_STREAMS}/uk_pluto.m3u`, icon: '🪐', group: 'Free Networks' },
+        { name: 'Samsung TV Plus', url: `${IPTV_STREAMS}/us_samsung.m3u`, icon: '📱', group: 'Free Networks' },
+        { name: 'Tubi', url: `${IPTV_STREAMS}/us_tubi.m3u`, icon: '🔶', group: 'Free Networks' },
+        { name: 'Xumo', url: `${IPTV_STREAMS}/us_xumo.m3u`, icon: '🟣', group: 'Free Networks' },
+        { name: 'Plex', url: `${IPTV_STREAMS}/us_plex.m3u`, icon: '▶️', group: 'Free Networks' },
+        { name: 'Stirr', url: `${IPTV_STREAMS}/us_stirr.m3u`, icon: '🌀', group: 'Free Networks' },
+        { name: 'Roku', url: `${IPTV_STREAMS}/us_roku.m3u`, icon: '🟪', group: 'Free Networks' },
+
+        // --- Live channels by genre ------------------------------------------------
+        { name: 'Movies (Live)', url: `${IPTV_ORG}/categories/movies.m3u`, icon: '🎬', group: 'Genres' },
+        { name: 'Sports (Live)', url: `${IPTV_ORG}/categories/sports.m3u`, icon: '⚽', group: 'Genres' },
+        { name: 'News (Live)', url: `${IPTV_ORG}/categories/news.m3u`, icon: '📰', group: 'Genres' },
+        { name: 'Kids (Live)', url: `${IPTV_ORG}/categories/kids.m3u`, icon: '👶', group: 'Genres' },
+        { name: 'Music (Live)', url: `${IPTV_ORG}/categories/music.m3u`, icon: '🎵', group: 'Genres' },
+        { name: 'Entertainment', url: `${IPTV_ORG}/categories/entertainment.m3u`, icon: '🎭', group: 'Genres' },
+        { name: 'Documentary', url: `${IPTV_ORG}/categories/documentary.m3u`, icon: '🎥', group: 'Genres' },
+        { name: 'Comedy', url: `${IPTV_ORG}/categories/comedy.m3u`, icon: '😂', group: 'Genres' },
+        { name: 'Animation', url: `${IPTV_ORG}/categories/animation.m3u`, icon: '✏️', group: 'Genres' },
+        { name: 'Classic', url: `${IPTV_ORG}/categories/classic.m3u`, icon: '🏛️', group: 'Genres' },
+        { name: 'Science', url: `${IPTV_ORG}/categories/science.m3u`, icon: '🔬', group: 'Genres' },
+        { name: 'Travel', url: `${IPTV_ORG}/categories/travel.m3u`, icon: '✈️', group: 'Genres' },
+        { name: 'Cooking', url: `${IPTV_ORG}/categories/cooking.m3u`, icon: '🍳', group: 'Genres' },
+        { name: 'Outdoor', url: `${IPTV_ORG}/categories/outdoor.m3u`, icon: '🏕️', group: 'Genres' },
+
+        { name: 'YT Live', icon: '🔴', group: 'Live TV', channels: [
+            { title: 'The Osbournes Podcast', url: 'https://www.youtube.com/live/mozvQNIsvik', logo: "", sourcePlaylistName: 'YT Live' },
+            { title: 'lofi hip hop radio', url: 'https://www.youtube.com/watch?v=jfKfPfyJRdk', logo: "", sourcePlaylistName: 'YT Live' }
+        ]}
     ];
 
     let allPlaylists = [];
@@ -980,21 +1299,31 @@ document.addEventListener('DOMContentLoaded', function() {
     function setupAllPlaylists() {
         allPlaylists = [...BASE_PLAYLISTS];
         if (hasConsent) {
-            allPlaylists.unshift({ name: 'Favorites', icon: '⭐' });
-            if (customPlaylists && customPlaylists.length > 0) allPlaylists = [...allPlaylists, ...customPlaylists];
+            allPlaylists.unshift({ name: 'Favorites', icon: '⭐', group: 'Highlights' });
+            if (customPlaylists && customPlaylists.length > 0) {
+                allPlaylists = [...allPlaylists, ...customPlaylists.map(p => ({ ...p, group: 'Your Playlists' }))];
+            }
         }
     }
 
     function toggleFavorite(btn) {
-        if (!hasConsent) { showToast("Please accept the data policy to save favorites.", "info"); return; }
-        const channelStr = btn.dataset.channel.replace(/&apos;/g, "'");
-        try {
-            const channel = JSON.parse(channelStr);
-            const index = favorites.findIndex(f => f.url === channel.url);
-            if (index > -1) { favorites.splice(index, 1); btn.classList.remove('favorite'); showToast("Removed from favorites", "info"); } 
-            else { favorites.push(channel); btn.classList.add('favorite'); showToast("Added to favorites ❤️", "success"); }
-            try { localStorage.setItem('iptv_favorites', JSON.stringify(favorites)); } catch(e){}
-        } catch (e) {}
+        if (!hasConsent) { showToast("Accept the data policy to save favourites.", "info"); return; }
+        const channel = btn._channel;
+        if (!channel) return;
+
+        const index = favorites.findIndex(f => f.url === channel.url);
+        if (index > -1) {
+            favorites.splice(index, 1);
+            btn.classList.remove('favorite');
+            btn.setAttribute('aria-label', 'Add to favourites');
+            showToast(`Removed “${channel.title}” from favourites`, "info");
+        } else {
+            favorites.push(channel);
+            btn.classList.add('favorite');
+            btn.setAttribute('aria-label', 'Remove from favourites');
+            showToast(`Saved “${channel.title}” to favourites`, "success");
+        }
+        try { localStorage.setItem('iptv_favorites', JSON.stringify(favorites)); } catch(e){}
     }
 
     function updateFeaturedGrid(channels, sectionTitle = 'Featured') {
@@ -1026,14 +1355,18 @@ document.addEventListener('DOMContentLoaded', function() {
             el.style.animationDelay = `${(idx % 12) * 0.05}s`;
             el.dataset.url = ch.url;
             
-            const imgSrc = ch.logo || 'https://images.weserv.nl/?url=iili.io/Fg2td42.png';
-            
+            const imgSrc = ch.logo || FALLBACK_ART;
+
             el.innerHTML = `
-                <img src="${imgSrc}" class="dvd-case-img" onerror="window.handleDeadImage(this, '${ch.url}'); this.src='https://images.weserv.nl/?url=iili.io/Fg2td42.png'">
-                <div class="dvd-case-title text-white">${ch.title}</div>
-                <div class="play-overlay"><svg class="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg></div>
+                <img src="${escapeHtml(imgSrc)}" alt="" loading="lazy" class="dvd-case-img" data-fallback-art>
+                <div class="dvd-case-title text-white">${escapeHtml(ch.title)}</div>
+                <div class="play-overlay"><svg class="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg></div>
             `;
-            
+            el.querySelector('[data-fallback-art]').addEventListener('error', function () {
+                window.handleDeadImage(this, ch.url);
+                this.src = FALLBACK_ART;
+            });
+
             el.addEventListener('click', () => {
                 playStream(ch.url);
                 elements.nowPlayingTitle.textContent = ch.title;
@@ -1062,9 +1395,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="absolute top-3 right-3 flex flex-wrap justify-end gap-1 z-20 max-w-[80%]">
                     <span class="px-2.5 py-1 bg-white/80 dark:bg-black/60 text-slate-800 dark:text-white text-[10px] font-bold uppercase rounded-full shadow backdrop-blur border tracking-wider" style="border-color: ${game.color}50;">${game.subtitle}</span>
                 </div>
-                <svg class="game-icon w-14 h-14 mb-4 relative z-10" style="color: ${game.color}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">${game.svg}</svg>
+                <svg class="game-icon w-14 h-14 mb-4 relative z-10" style="color: ${game.color}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">${game.svg}</svg>
                 <h4 class="text-base font-bold text-slate-900 dark:text-white mb-1 header-title tracking-wide relative z-10 text-center leading-tight">
-                    ${game.title.replace(' ', '<br><span class="text-sm opacity-80 font-normal">')}</span>
+                    ${escapeHtml(game.title)}
                 </h4>
                 <div class="play-overlay"><svg class="w-14 h-14 text-white" fill="currentColor" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg></div>
             `;
@@ -1081,31 +1414,53 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    /**
+     * Fetch a playlist, falling back through public CORS proxies only when needed.
+     *
+     * Every first-party source (iptv-org.github.io, raw.githubusercontent.com,
+     * archive.org) already answers with `Access-Control-Allow-Origin: *`, so the direct
+     * attempt is what normally succeeds. The proxies exist for user-supplied M3U URLs.
+     *
+     * The old version walked 4 proxies x 2 retries at a 15s timeout each, so a dead URL
+     * could hang the sidebar for two minutes. Attempts are now budgeted and a response
+     * that is not actually a playlist is rejected instead of being cached as one.
+     */
     async function fetchWithFallback(url, retries = 2, forceRefresh = false) {
-        const proxies = [ '', 'https://api.codetabs.com/v1/proxy?quest=', 'https://api.allorigins.win/raw?url=', 'https://corsproxy.io/?' ];
-        let lastError;
+        const attempts = [
+            { proxy: '', timeout: 12000, tries: Math.max(1, retries) },
+            { proxy: 'https://api.codetabs.com/v1/proxy?quest=', timeout: 12000, tries: 1 },
+            { proxy: 'https://api.allorigins.win/raw?url=', timeout: 12000, tries: 1 },
+            { proxy: 'https://corsproxy.io/?url=', timeout: 10000, tries: 1 }
+        ];
+
         let targetUrl = url;
         if (forceRefresh) targetUrl += (targetUrl.includes('?') ? '&' : '?') + 'nocache=' + Date.now();
 
-        for (const proxy of proxies) {
-            for (let i = 0; i < retries; i++) {
+        let lastError = new Error('Could not reach the playlist.');
+
+        for (const { proxy, timeout, tries } of attempts) {
+            for (let i = 0; i < tries; i++) {
+                const controller = new AbortController();
+                const timer = setTimeout(() => controller.abort(), timeout);
                 try {
-                    const controller = new AbortController();
-                    const timeout = setTimeout(() => controller.abort(), 15000); 
                     const fetchUrl = proxy ? proxy + encodeURIComponent(targetUrl) : targetUrl;
-                    
                     const response = await fetch(fetchUrl, { signal: controller.signal, cache: 'no-store' });
-                    clearTimeout(timeout);
                     if (!response.ok) throw new Error(`HTTP ${response.status}`);
-                    
-                    const text = await response.text();
+
+                    let text = await response.text();
                     if (proxy.includes('allorigins') && text.startsWith('{')) {
-                        try { return JSON.parse(text).contents; } catch(e) { return text; }
+                        try { text = JSON.parse(text).contents; } catch (e) { /* keep raw text */ }
                     }
+
+                    // A 200 that isn't a playlist means the path moved and we're looking at
+                    // an HTML error page. Treat it as a failure so the next proxy is tried.
+                    if (!isValidPlaylist(text)) throw new Error('Response was not a playlist.');
                     return text;
                 } catch (err) {
-                    lastError = err;
-                    await new Promise(r => setTimeout(r, 500));
+                    lastError = err.name === 'AbortError' ? new Error('The source timed out.') : err;
+                    if (i < tries - 1) await new Promise(r => setTimeout(r, 400 * (i + 1)));
+                } finally {
+                    clearTimeout(timer);
                 }
             }
         }
@@ -1224,18 +1579,46 @@ document.addEventListener('DOMContentLoaded', function() {
         destroyPlayers();
         elements.loadingOverlay.classList.remove('hidden');
         elements.loadingSpinner.style.display = 'none';
-        document.getElementById('loading-text').innerText = "Playback Error";
-        
-        document.getElementById('loading-subtext').innerHTML = `
-            ${errMsg}<br><br>
-            <div class="flex flex-wrap justify-center gap-2 mt-2">
-                <button onclick="playStream('${url}')" class="px-3 py-1.5 bg-purple-600 rounded text-xs font-bold text-white uppercase shadow hover:bg-purple-500">Retry</button>
-                <button onclick="playStreamWithProxy('${url}')" class="px-3 py-1.5 bg-indigo-600 rounded text-xs font-bold text-white uppercase shadow hover:bg-indigo-500">Try Proxy</button>
-                <a href="${url}" target="_blank" class="px-3 py-1.5 bg-blue-600 rounded text-xs font-bold text-white uppercase no-underline shadow hover:bg-blue-500">Download/External</a>
-                <a href="vlc://${url}" class="px-3 py-1.5 bg-orange-600 rounded text-xs font-bold text-white uppercase no-underline shadow hover:bg-orange-500 flex items-center gap-1"><svg class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L1 21h22L12 2zm0 3.8l7.5 13.2H4.5L12 5.8z"/></svg> VLC</a>
-            </div>
-        `;
-        showToast("Playback error – check connection or try proxy", "error");
+        elements.loadingText.innerText = "This stream didn't open";
+
+        const isArchive = url.startsWith('archive:');
+        const subtext = elements.loadingSubtext;
+        subtext.innerHTML = `
+            <span class="block max-w-md mx-auto leading-relaxed">${escapeHtml(errMsg)}</span>
+            <span class="block text-[11px] mt-2 text-[var(--text-muted)]">Free channel lists go offline without warning — picking another channel usually just works.</span>
+            <div class="flex flex-wrap justify-center gap-2 mt-4" data-error-actions></div>`;
+
+        const actions = subtext.querySelector('[data-error-actions]');
+        const addAction = (label, handler, cls) => {
+            const b = document.createElement('button');
+            b.className = `px-3 py-1.5 rounded text-xs font-bold text-white uppercase tracking-wider shadow transition-colors ${cls}`;
+            b.textContent = label;
+            b.addEventListener('click', handler);
+            actions.appendChild(b);
+        };
+
+        addAction('Retry', () => playStream(url), 'bg-purple-600 hover:bg-purple-500');
+
+        if (!isArchive) {
+            // A proxy hop and an external handoff only make sense for a real http(s) URL.
+            addAction('Try proxy', () => playStreamWithProxy(url), 'bg-indigo-600 hover:bg-indigo-500');
+
+            const open = document.createElement('a');
+            open.href = url;
+            open.target = '_blank';
+            open.rel = 'noopener noreferrer';
+            open.className = 'px-3 py-1.5 bg-blue-600 hover:bg-blue-500 rounded text-xs font-bold text-white uppercase tracking-wider no-underline shadow';
+            open.textContent = 'Open externally';
+            actions.appendChild(open);
+
+            const vlc = document.createElement('a');
+            vlc.href = `vlc://${url}`;
+            vlc.className = 'px-3 py-1.5 bg-orange-600 hover:bg-orange-500 rounded text-xs font-bold text-white uppercase tracking-wider no-underline shadow';
+            vlc.textContent = 'VLC';
+            actions.appendChild(vlc);
+        }
+
+        showToast("That stream didn't open — try another", "error");
     }
 
     window.playStreamWithProxy = function(url) {
@@ -1562,56 +1945,113 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    function smartLocalCategorize(title) {
-        const t = title.toLowerCase();
-        if (t.includes('murder') || t.includes('killer') || t.includes('dead')) return 'Thriller';
-        if (t.includes('alien') || t.includes('space') || t.includes('star wars')) return 'Science Fiction';
-        if (t.includes('ghost') || t.includes('zombie') || t.includes('vampire')) return 'Horror';
-        if (t.includes('love') || t.includes('wedding')) return 'Romance';
-        if (t.includes('batman') || t.includes('spider-man') || t.includes('avengers') || t.includes('war')) return 'Action';
-        return 'Other Movies';
+    function vodSeriesEpisodes() {
+        return Object.values(vodSeriesMaster).flat();
     }
 
     async function loadVodRepository(forceRefresh = false) {
-        elements.playlistElement.innerHTML = `<div class="flex flex-col items-center justify-center h-full space-y-4"><div class="loader"></div><p class="text-sm text-slate-500 dark:text-slate-400">Loading VOD Repositories...</p></div>`;
-        ['Action', 'Comedy', 'Drama', 'Horror', 'Science Fiction', 'Animation', 'Thriller', 'Family', 'Mystery'].forEach(g => vodGroupsMaster.Movies[g] = []);
+        showSidebarSkeleton('Loading series library…');
 
-        for (const source of VOD_SOURCES) {
+        const results = await Promise.all(VOD_SOURCES.map(async source => {
             try {
                 const data = await fetchWithFallback(source.url, 2, forceRefresh);
-                const parsed = await parseM3U(data, 'VOD: Movies & Series');
+                return { source, parsed: await parseM3U(data, 'Series & Shows') };
+            } catch (e) {
+                console.warn('Failed to load VOD source', source.url, e);
+                return null;
+            }
+        }));
 
-                parsed.channels.forEach(ch => {
-                    ch.isVod = true;
-                    if (source.type === 'series') {
-                        ch.isSeries = true;
-                        let seriesName = ch.group && ch.group !== 'Uncategorized' ? ch.group : (source.defaultGroup || extractSeriesNameFromTitle(ch.title) || 'Other Series');
-                        ch.group = seriesName;
-                        ch.title = cleanEpisodeTitle(ch.title, seriesName);
-                        if (!vodGroupsMaster.Series[seriesName]) vodGroupsMaster.Series[seriesName] = [];
-                        vodGroupsMaster.Series[seriesName].push(ch);
-                    } else {
-                        ch.isSeries = false;
-                        ch.title = cleanTitleForSearch(ch.title);
-                        let group = ch.group;
-                        if (!group || group === 'Uncategorized') {
-                            const cacheKey = `tmdb_m_${ch.title.toLowerCase()}`;
-                            if (tmdbMemCache[cacheKey] && tmdbMemCache[cacheKey].genre) {
-                                group = tmdbMemCache[cacheKey].genre;
-                                if(tmdbMemCache[cacheKey].logo && !ch.logo) ch.logo = tmdbMemCache[cacheKey].logo;
-                            } else {
-                                group = smartLocalCategorize(ch.title);
-                            }
-                        }
-                        if (!vodGroupsMaster.Movies[group]) vodGroupsMaster.Movies[group] = [];
-                        vodGroupsMaster.Movies[group].push(ch);
-                        vodGroupsMaster.Movies['All Movies'].push(ch);
-                    }
-                });
-            } catch(e) { console.error("Failed to load VOD source", source.url); }
+        vodSeriesMaster = {};
+        results.filter(Boolean).forEach(({ source, parsed }) => {
+            parsed.channels.forEach(ch => {
+                ch.isVod = true;
+                ch.isSeries = true;
+                const seriesName = (ch.group && ch.group !== 'Uncategorized')
+                    ? ch.group
+                    : (source.defaultGroup || extractSeriesNameFromTitle(ch.title) || 'Other Series');
+                ch.group = seriesName;
+                ch.title = cleanEpisodeTitle(ch.title, seriesName);
+                (vodSeriesMaster[seriesName] = vodSeriesMaster[seriesName] || []).push(ch);
+            });
+        });
+
+        if (Object.keys(vodSeriesMaster).length === 0) {
+            showSidebarError('No series could be loaded.', 'The series playlists may be offline. Try a force refresh.');
+            return;
         }
 
-        displayNestedStructure([], vodGroupsMaster, 'VOD: Movies & Series', () => loadDataForSource('VOD: Movies & Series'));
+        displayNestedStructure([], vodSeriesMaster, 'Series & Shows', () => loadDataForSource('Series & Shows'));
+    }
+
+    /* ---------------- Free Cinema (archive.org) browsing ---------------- */
+
+    function displayArchiveLibrary() {
+        elements.playlistElement.innerHTML = '';
+        updateFeaturedGrid([], '');
+
+        const intro = document.createElement('div');
+        intro.className = 'px-3 py-3 mx-1 mb-1 text-[11px] leading-relaxed text-[var(--text-muted)] border-b border-[var(--border-color)]';
+        intro.innerHTML = `
+            <span class="inline-flex items-center gap-1.5 px-2 py-0.5 mb-2 rounded-full text-[10px] font-bold tracking-wider bg-red-500/15 text-red-500 border border-red-500/30">
+                <span aria-hidden="true">🔞</span> 18+
+            </span>
+            <span class="block">Public-domain cinema streamed directly from the <strong class="text-[var(--text-color)]">Internet Archive</strong>. Free, legal, and always online.</span>
+            <span class="block mt-1.5">This is an unfiltered archive and includes vintage adult and exploitation titles. Intended for viewers aged 18 and over.</span>`;
+        elements.playlistElement.appendChild(intro);
+
+        ARCHIVE_COLLECTIONS.forEach((col, idx) => {
+            const div = document.createElement('div');
+            div.className = 'category-item flex items-center space-x-3 p-3 cursor-pointer transition-colors duration-200 border-b border-[var(--border-color)] text-sm animate-cascade mx-1';
+            div.style.animationDelay = `${idx * 0.05}s`;
+            div.setAttribute('role', 'button');
+            div.setAttribute('tabindex', '0');
+            div.innerHTML = `
+                <div class="flex-shrink-0 w-8 h-8 flex items-center justify-center text-xl opacity-80" style="color: var(--accent-color)">${col.icon}</div>
+                <span class="flex-1 truncate font-medium text-slate-800 dark:text-slate-200">${col.label}</span>
+                <svg class="w-4 h-4 opacity-50" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>`;
+            const open = () => displayArchiveCollection(col, 1);
+            div.addEventListener('click', open);
+            div.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); } });
+            elements.playlistElement.appendChild(div);
+        });
+    }
+
+    async function displayArchiveCollection(col, page = 1) {
+        showSidebarSkeleton(`Loading ${col.label}…`);
+        try {
+            const { channels, total } = await archiveSearch({
+                collection: col.key,
+                label: col.label,
+                page,
+                rows: ARCHIVE_PAGE_SIZE
+            });
+
+            if (!channels.length) {
+                showSidebarError(`Nothing found in ${col.label}.`, 'The Internet Archive may be busy — try again shortly.');
+                return;
+            }
+
+            allChannelsInPlaylist = channels;
+            const totalPages = Math.max(1, Math.ceil(total / ARCHIVE_PAGE_SIZE));
+
+            await populatePlaylistUI(channels, true, () => displayArchiveLibrary(), col.label);
+            renderArchivePager(col, page, totalPages, total);
+        } catch (e) {
+            showSidebarError(`Could not load ${col.label}.`, e.message || 'Check your connection and try again.');
+        }
+    }
+
+    function renderArchivePager(col, page, totalPages, total) {
+        const pager = document.createElement('div');
+        pager.className = 'flex items-center justify-between gap-2 p-3 mx-1 mt-2 border-t border-[var(--border-color)] sticky bottom-0 bg-[var(--glass-bg)] backdrop-blur-md';
+        pager.innerHTML = `
+            <button class="archive-prev custom-btn px-3 py-2 text-xs font-bold uppercase tracking-wider disabled:opacity-40 disabled:cursor-not-allowed" ${page <= 1 ? 'disabled' : ''}>Prev</button>
+            <span class="text-[11px] text-[var(--text-muted)] font-semibold">Page ${page} / ${totalPages.toLocaleString()} · ${total.toLocaleString()} films</span>
+            <button class="archive-next custom-btn px-3 py-2 text-xs font-bold uppercase tracking-wider disabled:opacity-40 disabled:cursor-not-allowed" ${page >= totalPages ? 'disabled' : ''}>Next</button>`;
+        pager.querySelector('.archive-prev').addEventListener('click', () => displayArchiveCollection(col, page - 1));
+        pager.querySelector('.archive-next').addEventListener('click', () => displayArchiveCollection(col, page + 1));
+        elements.playlistElement.appendChild(pager);
     }
 
     function displayNestedStructure(path, structure, sourceName, onBackToRoot) {
@@ -1666,14 +2106,14 @@ document.addEventListener('DOMContentLoaded', function() {
             let iconHTML = categoryIcons[key] || categoryIcons['Default'];
             
             if (isChannelList) {
-                categoryDiv.innerHTML = `<div class="flex-shrink-0 w-8 h-8 flex items-center justify-center text-xl opacity-80" style="color: var(--accent-color)">${iconHTML}</div> <span class="flex-1 truncate font-medium text-slate-800 dark:text-slate-200">${key}</span> <span class="text-[10px] bg-black/5 dark:bg-black/40 px-2 py-1 rounded font-bold text-slate-800 dark:text-slate-200">${nextLevel.length}</span>`;
+                categoryDiv.innerHTML = `<div class="flex-shrink-0 w-8 h-8 flex items-center justify-center text-xl opacity-80" style="color: var(--accent-color)">${iconHTML}</div> <span class="flex-1 truncate font-medium text-slate-800 dark:text-slate-200">${escapeHtml(key)}</span> <span class="text-[10px] bg-black/5 dark:bg-black/40 px-2 py-1 rounded font-bold text-slate-800 dark:text-slate-200">${nextLevel.length}</span>`;
                 categoryDiv.addEventListener('click', () => {
                     allChannelsInPlaylist = nextLevel;
                     populatePlaylistUI(nextLevel, true, () => displayNestedStructure(path, structure, sourceName, onBackToRoot), key);
                 });
             } else {
                 const subItemCount = Object.keys(nextLevel).length;
-                categoryDiv.innerHTML = `<div class="flex-shrink-0 w-8 h-8 flex items-center justify-center text-xl opacity-80" style="color: var(--accent-color)">${iconHTML}</div> <span class="flex-1 truncate font-medium text-slate-800 dark:text-slate-200">${key}</span> <span class="text-[10px] bg-black/5 dark:bg-black/40 px-2 py-1 rounded font-bold text-slate-800 dark:text-slate-200">${subItemCount}</span>`;
+                categoryDiv.innerHTML = `<div class="flex-shrink-0 w-8 h-8 flex items-center justify-center text-xl opacity-80" style="color: var(--accent-color)">${iconHTML}</div> <span class="flex-1 truncate font-medium text-slate-800 dark:text-slate-200">${escapeHtml(key)}</span> <span class="text-[10px] bg-black/5 dark:bg-black/40 px-2 py-1 rounded font-bold text-slate-800 dark:text-slate-200">${subItemCount}</span>`;
                 categoryDiv.addEventListener('click', () => { displayNestedStructure([...path, key], structure, sourceName, onBackToRoot); });
             }
             elements.playlistElement.appendChild(categoryDiv);
@@ -1693,7 +2133,7 @@ document.addEventListener('DOMContentLoaded', function() {
         renderInChunks(countriesInRegion, elements.playlistElement, (country) => {
             const countryDiv = document.createElement('div');
             countryDiv.className = 'category-item flex items-center space-x-3 p-3 cursor-pointer transition-colors duration-200 border-b border-[var(--border-color)] text-sm mx-1';
-            countryDiv.innerHTML = `<div class="flex-shrink-0 w-8 h-8 flex items-center justify-center text-2xl">${country.icon}</div> <span class="flex-1 font-semibold truncate text-slate-800 dark:text-slate-200">${country.name}</span>`;
+            countryDiv.innerHTML = `<div class="flex-shrink-0 w-8 h-8 flex items-center justify-center text-2xl">${country.icon}</div> <span class="flex-1 font-semibold truncate text-slate-800 dark:text-slate-200">${escapeHtml(country.name)}</span>`;
             
             countryDiv.addEventListener('click', async () => {
                 elements.playlistElement.innerHTML = `<div class="flex justify-center items-center h-full"><div class="loader"></div></div>`;
@@ -1705,7 +2145,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 } catch(e) {
                     elements.playlistElement.innerHTML = `
                     <div class="flex flex-col items-center justify-center mt-10 space-y-4 px-4 text-center">
-                        <p class="text-red-500 font-bold">Failed to load ${country.name}</p>
+                        <p class="text-red-500 font-bold">Failed to load ${escapeHtml(country.name)}</p>
                         <button onclick="document.getElementById('refresh-playlist-btn').click()" class="px-5 py-2.5 rounded-lg text-white font-bold text-sm uppercase shadow-lg flex items-center space-x-2" style="background-color: var(--accent-color)">
                             <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
                             <span>Force Refresh</span>
@@ -1719,9 +2159,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     async function loadDataForSource(sourceKey, forceRefresh = false) {
         if (forceRefresh && elements.refreshIcon) elements.refreshIcon.classList.add('spin-anim');
-        elements.playlistElement.innerHTML = `<div class="flex justify-center items-center h-full"><div class="loader"></div></div>`;
+        showSidebarSkeleton(`Loading ${sourceKey}…`);
         const playlist = allPlaylists.find(p => p.name === sourceKey);
-        
+
         if (!playlist) {
             elements.playlistElement.innerHTML = `<p class="p-4 text-center text-[var(--text-muted)]">Playlist not found.</p>`;
             if (elements.refreshIcon) elements.refreshIcon.classList.remove('spin-anim');
@@ -1729,17 +2169,23 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         if (playlist.region) {
-            updateFeaturedGrid([], ''); 
+            updateFeaturedGrid([], '');
             displayWorldTvRegion(playlist.region);
             if (elements.refreshIcon) elements.refreshIcon.classList.remove('spin-anim');
             return;
         }
 
-        if (vodGroupsMaster.Movies['All Movies'].length === 0) loadVodRepository(forceRefresh); 
-        
+        if (playlist.isArchiveMaster) {
+            displayArchiveLibrary();
+            if (elements.refreshIcon) elements.refreshIcon.classList.remove('spin-anim');
+            return;
+        }
+
         if (playlist.isVodMaster) {
-            if (vodGroupsMaster.Movies['All Movies'].length > 0) {
-                displayNestedStructure([], vodGroupsMaster, 'VOD: Movies & Series', () => loadDataForSource('VOD: Movies & Series'));
+            if (Object.keys(vodSeriesMaster).length === 0 || forceRefresh) {
+                await loadVodRepository(forceRefresh);
+            } else {
+                displayNestedStructure([], vodSeriesMaster, 'Series & Shows', () => loadDataForSource('Series & Shows'));
             }
             if (elements.refreshIcon) elements.refreshIcon.classList.remove('spin-anim');
             return;
@@ -1747,7 +2193,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         allChannelsInPlaylist = [];
         let groupedChannels = {};
-        
+
         if (sourceKey === 'Favorites') {
             if (favorites.length === 0) {
                 elements.playlistElement.innerHTML = `<p class="p-4 text-center text-[var(--text-muted)] mt-10">No favorites yet. Click the star icon to save channels.</p>`;
@@ -1801,25 +2247,29 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             
             const data = await fetchWithFallback(playlist.url, 2, forceRefresh);
-            if(hasConsent && isValidPlaylist(data)) {
+
+            // A moved or deleted playlist answers with a 200 HTML error page, not an M3U.
+            // Without this guard the source used to render as an empty, silent list.
+            if (!isValidPlaylist(data)) {
+                throw new Error('That source no longer returns a valid playlist.');
+            }
+
+            if (hasConsent) {
                 try { localStorage.setItem(cacheKey, JSON.stringify({ timestamp: Date.now(), data: data })); } catch(e) { console.warn("Storage full"); }
             }
             const parsed = await parseM3U(data, playlist.name);
+            if (!parsed.channels.length) throw new Error('That source came back empty.');
+
             allChannelsInPlaylist = parsed.channels;
             groupedChannels = parsed.groups;
             await displayCategories(groupedChannels, null, playlist.name);
-            showToast(`Loaded ${playlist.name}`, "success", 1600);
+            showToast(`Loaded ${parsed.channels.length.toLocaleString()} channels from ${playlist.name}`, "success", 1600);
         } catch (error) {
-            elements.playlistElement.innerHTML = `
-                <div class="flex flex-col items-center justify-center mt-10 space-y-4 px-4 text-center">
-                    <p class="text-red-500 font-bold">Could not load source.</p>
-                    <p class="text-xs text-slate-500 dark:text-slate-400">The playlist file might be blocked or offline.</p>
-                    <button onclick="document.getElementById('refresh-playlist-btn').click()" class="px-5 py-2.5 rounded-lg text-white font-bold text-sm uppercase shadow-lg flex items-center space-x-2" style="background-color: var(--accent-color)">
-                        <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
-                        <span>Force Refresh Proxy</span>
-                    </button>
-                </div>`;
-            showToast("Failed to load playlist", "error");
+            showSidebarError(
+                `Could not load ${playlist.name}.`,
+                `${error.message || 'The playlist may be blocked or offline.'} Other sources in the bar above should still work.`
+            );
+            showToast(`Failed to load ${playlist.name}`, "error");
         }
         if (elements.refreshIcon) elements.refreshIcon.classList.remove('spin-anim');
     }
@@ -1857,7 +2307,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const sortedIconKeys = Object.keys(categoryIcons).sort((a, b) => b.length - a.length);
             const iconKey = Object.keys(categoryIcons).find(key => key === category) || sortedIconKeys.find(key => category.toLowerCase().includes(key.toLowerCase())) || 'Default';
             const iconHTML = categoryIcons[iconKey];
-            categoryDiv.innerHTML = `<div class="flex-shrink-0 w-6 h-6 flex items-center justify-center text-xl opacity-80" style="color: var(--accent-color)">${iconHTML}</div> <span class="flex-1 truncate font-medium text-slate-800 dark:text-slate-200">${category}</span> <span class="text-[10px] bg-black/5 dark:bg-black/40 px-2 py-1 rounded font-bold text-slate-800 dark:text-slate-200">${channels.length}</span>`;
+            categoryDiv.innerHTML = `<div class="flex-shrink-0 w-6 h-6 flex items-center justify-center text-xl opacity-80" style="color: var(--accent-color)">${iconHTML}</div> <span class="flex-1 truncate font-medium text-slate-800 dark:text-slate-200">${escapeHtml(category)}</span> <span class="text-[10px] bg-black/5 dark:bg-black/40 px-2 py-1 rounded font-bold text-slate-800 dark:text-slate-200">${channels.length}</span>`;
             categoryDiv.addEventListener('click', () => {
                 populatePlaylistUI(channels, true, () => displayCategories(groupedChannels, backFunction, sourceTitle), category);
             });
@@ -1900,16 +2350,29 @@ document.addEventListener('DOMContentLoaded', function() {
             
             channelDiv.innerHTML = `
                 <div class="flex-shrink-0 w-10 h-10 bg-black/5 dark:bg-black/40 rounded flex items-center justify-center overflow-hidden border border-black/5 dark:border-white/5 relative">
-                    <img src="${channel.logo || ''}" class="channel-logo w-full h-full object-cover absolute inset-0 z-10" 
-                        onerror="window.handleDeadImage(this, '${channel.url}'); this.style.display='none'; this.nextElementSibling.style.display='flex';" 
-                        onload="this.style.display='block'; this.nextElementSibling.style.display='none';">
-                    <div class="channel-logo-fallback w-full h-full flex items-center justify-center text-sm font-bold text-slate-500 font-display absolute inset-0" style="${channel.logo ? 'display: none;' : 'display: flex;'}">${(channel.title || 'X').substring(0,1).toUpperCase()}</div>
+                    <img src="${escapeHtml(channel.logo || '')}" alt="" loading="lazy" class="channel-logo w-full h-full object-cover absolute inset-0 z-10">
+                    <div class="channel-logo-fallback w-full h-full flex items-center justify-center text-sm font-bold text-slate-500 absolute inset-0" style="${channel.logo ? 'display: none;' : 'display: flex;'}">${escapeHtml((channel.title || 'X').substring(0,1).toUpperCase())}</div>
                 </div>
                 <div class="flex-1 overflow-hidden pr-2">
-                    <div class="channel-title text-sm text-slate-700 dark:text-slate-200 truncate tracking-wide">${channel.title || 'Loading...'}</div>
+                    <div class="channel-title text-sm text-slate-700 dark:text-slate-200 truncate tracking-wide">${escapeHtml(channel.title || 'Loading…')}</div>
                 </div>
-                <button class="favorite-btn p-1 text-lg text-slate-400 dark:text-slate-600 hover:text-slate-900 dark:hover:text-white transition-colors ${isFavorite ? 'favorite' : ''}" data-channel='${JSON.stringify(channel).replace(/'/g, "&apos;")}'>★</button>
+                <button class="favorite-btn p-1 text-lg text-slate-400 dark:text-slate-600 hover:text-slate-900 dark:hover:text-white transition-colors ${isFavorite ? 'favorite' : ''}" aria-label="${isFavorite ? 'Remove from' : 'Add to'} favourites" title="Favourite">★</button>
             `;
+
+            const logoImg = channelDiv.querySelector('.channel-logo');
+            const logoFallback = channelDiv.querySelector('.channel-logo-fallback');
+            logoImg.addEventListener('error', function () {
+                window.handleDeadImage(this, channel.url);
+                this.style.display = 'none';
+                logoFallback.style.display = 'flex';
+            });
+            logoImg.addEventListener('load', function () {
+                this.style.display = 'block';
+                logoFallback.style.display = 'none';
+            });
+            // Hold the channel object itself rather than round-tripping it through a
+            // JSON string in a DOM attribute, which broke on titles containing quotes.
+            channelDiv.querySelector('.favorite-btn')._channel = channel;
 
             if (channel.isVod && !channel.logo) tmdbObserver.observe(channelDiv);
             return channelDiv;
@@ -1926,26 +2389,53 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('loading-text').innerText = "Loading Stream...";
         document.getElementById('loading-subtext').innerText = "Please wait, connecting to media...";
         
+        elements.playerIdle?.classList.add('hidden');
+
         currentlyPlayingUrl = url;
         const videoId = extractVideoID(url);
         const isGame = url.includes('.html') || url.includes('playcanv.as') || url.includes('githack.com') || url.includes('hextris.io') || url.includes('itch.io');
         const isWebRTC = url.includes('whep') || url.startsWith('webrtc://') || url.includes('/whep/');
-        
-        const allKnownChannels = [...(allChannelsInPlaylist || []), ...favorites, ...vodGroupsMaster.Movies['All Movies']];
+
+        const allKnownChannels = [...(allChannelsInPlaylist || []), ...favorites, ...archiveLoadedChannels, ...vodSeriesEpisodes()];
         const currentChannel = allKnownChannels.find(c => c.url === url);
-        
+
         if (currentChannel && !isProxyRetry) {
-            activeChannelObj = currentChannel; 
+            activeChannelObj = currentChannel;
             elements.nowPlayingTitle.textContent = currentChannel.title;
             elements.nowPlayingGenre.textContent = currentChannel.group || (isGame ? 'ARCADE GAME' : 'MEDIA');
-            
+
             if (!isGame && currentChannel.logo) calculateAmbilight(currentChannel.logo);
             else applyTheme(userTheme);
         }
-        
+
         destroyPlayers();
 
         if (currentLoadId !== activeLoadId) return;
+
+        // Free Cinema titles are stored as `archive:<identifier>`; the real file URL is
+        // only known after a metadata lookup, so resolve it before touching the player.
+        if (url.startsWith('archive:')) {
+            elements.loadingText.innerText = "Opening from the Internet Archive…";
+            elements.loadingSubtext.innerText = "Finding the best available print of this film.";
+            try {
+                const resolved = await resolveArchiveStream(url.slice('archive:'.length));
+                if (currentLoadId !== activeLoadId) return;
+                elements.mainPlayer.classList.remove('hidden');
+                activePlayer = 'native';
+                elements.mainPlayer.src = resolved;
+                elements.mainPlayer.load();
+                if (restoreTime > 0) {
+                    const onCanPlay = () => { elements.mainPlayer.currentTime = restoreTime; elements.mainPlayer.removeEventListener('canplay', onCanPlay); };
+                    elements.mainPlayer.addEventListener('canplay', onCanPlay);
+                }
+                elements.mainPlayer.play().catch(e => { if (e.name === 'NotAllowedError') elements.loadingOverlay.classList.add('hidden'); });
+                if (hasConsent) localStorage.setItem('iptv_last_played', url);
+            } catch (err) {
+                if (currentLoadId !== activeLoadId) return;
+                showPlayerError(url, err.message || 'This Internet Archive title could not be opened.');
+            }
+            return;
+        }
 
         if (isWebRTC) {
             const whepUrl = url.replace('webrtc://', 'https://');
@@ -2044,23 +2534,47 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function renderPlaylistOptions(playlistsToRender) {
         elements.topPlaylistBar.innerHTML = '';
-        const currentActive = hasConsent ? (localStorage.getItem('iptv_last_source') || 'VOD: Movies & Series') : 'VOD: Movies & Series';
+        const savedActive = hasConsent ? localStorage.getItem('iptv_last_source') : null;
+        const currentActive = playlistsToRender.some(p => p.name === savedActive) ? savedActive : 'Free Cinema';
 
+        // The source list is long enough now that an undifferentiated pill run is hard to
+        // scan, so pills are emitted in labelled runs: Highlights, Live TV, Free Networks,
+        // Genres. The bar still scrolls as one strip.
+        let lastGroup = null;
         playlistsToRender.forEach(playlist => {
+            const group = playlist.group || 'More';
+            if (group !== lastGroup) {
+                const label = document.createElement('span');
+                label.className = 'playlist-group-label flex-shrink-0 text-[9px] font-bold uppercase tracking-[0.15em] text-[var(--text-muted)] pl-3 pr-1 select-none';
+                label.setAttribute('aria-hidden', 'true');
+                label.textContent = group;
+                elements.topPlaylistBar.appendChild(label);
+                lastGroup = group;
+            }
+
             const pillBtn = document.createElement('button');
             const isActive = playlist.name === currentActive;
-            
+
             pillBtn.className = `playlist-pill px-4 py-1.5 rounded-full font-semibold text-xs whitespace-nowrap flex items-center space-x-2 ${isActive ? 'active' : ''}`;
             pillBtn.dataset.name = playlist.name;
-            pillBtn.innerHTML = `<span>${playlist.icon || '📁'}</span> <span>${playlist.name}</span>`;
-            
+            pillBtn.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+            const badge = playlist.badge
+                ? `<span class="ml-1 px-1.5 py-0.5 rounded text-[9px] font-bold leading-none bg-red-500/20 text-red-500 border border-red-500/30">${escapeHtml(playlist.badge)}</span>`
+                : '';
+            pillBtn.innerHTML = `<span aria-hidden="true">${playlist.icon || '📁'}</span> <span>${escapeHtml(playlist.name)}</span>${badge}`;
+
             pillBtn.addEventListener('click', () => {
-                document.querySelectorAll('.playlist-pill').forEach(p => p.classList.remove('active'));
+                document.querySelectorAll('.playlist-pill').forEach(p => {
+                    p.classList.remove('active');
+                    p.setAttribute('aria-pressed', 'false');
+                });
                 pillBtn.classList.add('active');
-                
+                pillBtn.setAttribute('aria-pressed', 'true');
+                pillBtn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+
                 if (hasConsent) localStorage.setItem('iptv_last_source', playlist.name);
                 if (typeof gtag === 'function') gtag('event', 'select_playlist', { 'playlist_name': playlist.name });
-                
+
                 loadDataForSource(playlist.name);
 
                 if (window.innerWidth < 768) {
@@ -2125,43 +2639,83 @@ document.addEventListener('DOMContentLoaded', function() {
             elements.mobileOverlay.classList.add('hidden');
         });
 
+        function renderSearchRow(channel, badge) {
+            const itemDiv = document.createElement('div');
+            itemDiv.className = 'channel-item flex items-center space-x-4 p-3 cursor-pointer rounded-xl transition-all duration-200 border border-black/5 dark:border-white/5 mb-2 bg-black/5 dark:bg-white/5 hover:bg-[var(--accent-glow)]';
+            itemDiv.setAttribute('role', 'button');
+            itemDiv.setAttribute('tabindex', '0');
+            itemDiv.innerHTML = `
+                <div class="flex-shrink-0 w-12 h-12 bg-black/5 dark:bg-black/40 rounded flex items-center justify-center overflow-hidden border border-black/5 dark:border-white/5">
+                    <img src="${escapeHtml(channel.logo || '')}" alt="" loading="lazy" class="w-full h-full object-cover" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" onload="this.style.display='block'; this.nextElementSibling.style.display='none';">
+                    <div class="w-full h-full flex items-center justify-center text-sm font-bold text-slate-500" style="${channel.logo ? 'display: none;' : 'display: flex;'}">${escapeHtml((channel.title || 'X').substring(0,1).toUpperCase())}</div>
+                </div>
+                <div class="flex-1 overflow-hidden">
+                    <div class="text-sm font-bold text-slate-900 dark:text-white truncate">${escapeHtml(channel.title || 'Unknown')}</div>
+                    <div class="text-xs font-semibold uppercase tracking-wider" style="color: var(--accent-color)">${escapeHtml(badge || channel.group || 'Media')}</div>
+                </div>
+                <svg class="w-6 h-6 text-slate-500 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>`;
+            const go = () => {
+                elements.globalSearchModal.classList.add('hidden');
+                playStream(channel.url);
+                elements.nowPlayingTitle.textContent = channel.title;
+                elements.nowPlayingGenre.textContent = channel.group || 'MEDIA';
+                elements.mainView.scrollTo({ top: 0, behavior: 'smooth' });
+            };
+            itemDiv.addEventListener('click', go);
+            itemDiv.addEventListener('keydown', ev => { if (ev.key === 'Enter') go(); });
+            return itemDiv;
+        }
+
+        function searchSectionHeading(text) {
+            const h = document.createElement('div');
+            h.className = 'text-[10px] font-bold uppercase tracking-widest text-[var(--text-muted)] px-1 pt-3 pb-2';
+            h.textContent = text;
+            return h;
+        }
+
         elements.globalSearchInput?.addEventListener('input', e => {
-            const term = e.target.value.toLowerCase().trim();
-            if (term.length < 2) { elements.globalSearchResults.innerHTML = '<div class="h-full flex items-center justify-center text-slate-500 dark:text-slate-400 text-lg">Keep typing...</div>'; return; }
+            clearTimeout(searchTimeout);
+            const raw = e.target.value.trim();
+            const term = raw.toLowerCase();
 
-            let searchPool = [...favorites];
-            if (vodGroupsMaster && vodGroupsMaster.Movies['All Movies']) searchPool = searchPool.concat(vodGroupsMaster.Movies['All Movies']);
-            if (allChannelsInPlaylist.length > 0) searchPool = searchPool.concat(allChannelsInPlaylist);
-            
+            if (term.length < 2) {
+                elements.globalSearchResults.innerHTML = '<div class="h-full flex items-center justify-center text-[var(--text-muted)] text-lg">Type at least two characters…</div>';
+                return;
+            }
+
+            // Local pass is instant; the Internet Archive pass is debounced behind it.
+            const searchPool = [...favorites, ...archiveLoadedChannels, ...vodSeriesEpisodes(), ...allChannelsInPlaylist];
             const uniquePool = Array.from(new Map(searchPool.map(item => [item.url, item])).values());
-            const results = uniquePool.filter(c => c.title && c.title.toLowerCase().includes(term)).slice(0, 50); 
-            
-            elements.globalSearchResults.innerHTML = '';
-            if (results.length === 0) { elements.globalSearchResults.innerHTML = '<div class="h-full flex items-center justify-center text-slate-500 dark:text-slate-400 text-lg">No matches found.</div>'; return; }
+            const local = uniquePool.filter(c => c.title && c.title.toLowerCase().includes(term)).slice(0, 40);
 
-            results.forEach(channel => {
-                const itemDiv = document.createElement('div');
-                itemDiv.className = 'channel-item flex items-center space-x-4 p-3 cursor-pointer rounded-xl transition-all duration-200 border border-black/5 dark:border-white/5 mb-2 bg-black/5 dark:bg-white/5 hover:bg-purple-500/20';
-                itemDiv.innerHTML = `
-                    <div class="flex-shrink-0 w-12 h-12 bg-black/5 dark:bg-black/40 rounded flex items-center justify-center overflow-hidden border border-black/5 dark:border-white/5">
-                        <img src="${channel.logo || ''}" class="w-full h-full object-cover" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" onload="this.style.display='block'; this.nextElementSibling.style.display='none';">
-                        <div class="w-full h-full flex items-center justify-center text-sm font-bold text-slate-500 font-display" style="${channel.logo ? 'display: none;' : 'display: flex;'}">${(channel.title || 'X').substring(0,1).toUpperCase()}</div>
-                    </div>
-                    <div class="flex-1 overflow-hidden">
-                        <div class="text-sm font-bold text-slate-900 dark:text-white truncate">${channel.title || 'Unknown'}</div>
-                        <div class="text-xs text-purple-600 dark:text-purple-400 font-semibold uppercase tracking-wider">${channel.group || 'Media'}</div>
-                    </div>
-                    <svg class="w-6 h-6 text-slate-500" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
-                `;
-                itemDiv.addEventListener('click', () => {
-                    elements.globalSearchModal.classList.add('hidden');
-                    playStream(channel.url);
-                    elements.nowPlayingTitle.textContent = channel.title;
-                    elements.nowPlayingGenre.textContent = channel.group || 'MEDIA';
-                    elements.mainView.scrollTo({ top: 0, behavior: 'smooth' });
-                });
-                elements.globalSearchResults.appendChild(itemDiv);
-            });
+            elements.globalSearchResults.innerHTML = '';
+            if (local.length) {
+                elements.globalSearchResults.appendChild(searchSectionHeading(`In your library · ${local.length}`));
+                local.forEach(c => elements.globalSearchResults.appendChild(renderSearchRow(c)));
+            }
+
+            const archiveBlock = document.createElement('div');
+            archiveBlock.innerHTML = `<div class="text-[10px] font-bold uppercase tracking-widest text-[var(--text-muted)] px-1 pt-4 pb-2">Searching the Internet Archive…</div>`;
+            elements.globalSearchResults.appendChild(archiveBlock);
+
+            searchTimeout = setTimeout(async () => {
+                try {
+                    const { channels } = await archiveSearch({ collection: null, label: 'Free Cinema', term: raw, rows: 30 });
+                    // A newer keystroke may have replaced this render pass already.
+                    if (!archiveBlock.isConnected) return;
+                    archiveBlock.innerHTML = '';
+                    if (!channels.length) {
+                        if (!local.length) {
+                            elements.globalSearchResults.innerHTML = '<div class="h-full flex items-center justify-center text-[var(--text-muted)] text-lg">No matches found.</div>';
+                        }
+                        return;
+                    }
+                    archiveBlock.appendChild(searchSectionHeading(`Free public-domain films · ${channels.length}`));
+                    channels.forEach(c => archiveBlock.appendChild(renderSearchRow(c, 'Free Cinema')));
+                } catch (err) {
+                    if (archiveBlock.isConnected) archiveBlock.innerHTML = '';
+                }
+            }, 350);
         });
 
         elements.settingsBtn?.addEventListener('click', () => elements.settingsModal.classList.remove('hidden'));
@@ -2325,38 +2879,26 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function registerPWA() {
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('data:application/javascript;base64,' + btoa(`
-                    self.addEventListener('install', e => {
-                        e.waitUntil(caches.open('streams-sphere-v4').then(cache => {
-                            return cache.addAll(['/']);
-                        }));
-                    });
-                    self.addEventListener('fetch', e => {
-                        e.respondWith(caches.match(e.request).then(response => {
-                            return response || fetch(e.request);
-                        }));
-                    });
-                `)).then(() => {
-                    console.log('%c✅ PWA Service Worker ready', 'color:#8A2BE2;font-weight:700');
-                }).catch(() => {});
-            });
-        }
+        // The worker lives in sw.js now. The old inline data: worker cached every response
+        // cache-first, which pinned visitors to a stale build after each deploy.
+        if (!('serviceWorker' in navigator) || location.protocol === 'file:') return;
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('/sw.js').catch(() => {});
+        });
     }
 
     function initialize() {
         checkCookieConsent();
         initializeThemeSystem();
-        setupGlobalAffiliateClick(); // Init the global auto-open handler
         bindAllEvents();
         initializePlayers();
         setupAllPlaylists();
         renderPlaylistOptions(allPlaylists);
-        
-        loadVodRepository();
-        
-        const lastSourceName = hasConsent ? (localStorage.getItem('iptv_last_source') || 'VOD: Movies & Series') : 'VOD: Movies & Series';
+
+        // Sources are loaded on demand now, so first paint is not blocked on the
+        // series playlists finishing their round-trip.
+        const savedSource = hasConsent ? localStorage.getItem('iptv_last_source') : null;
+        const lastSourceName = allPlaylists.some(p => p.name === savedSource) ? savedSource : 'Free Cinema';
         loadDataForSource(lastSourceName);
 
         registerPWA();
