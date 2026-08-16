@@ -81,15 +81,23 @@
     }
     </script>
 
-    <!-- Configure Tailwind for manual dark mode toggling -->
-    <script>
-        tailwind = {
-            config: {
-                darkMode: 'class',
-            }
-        }
-    </script>
+    <!--
+      Tailwind must be configured AFTER the CDN script loads.
+
+      This previously assigned `tailwind = { config: { darkMode: 'class' } }` *before* the
+      CDN script tag, so the CDN overwrote the global on load and the setting was lost.
+      Tailwind therefore fell back to its default `darkMode: 'media'`, meaning every
+      `dark:` utility followed the visitor's OS setting instead of the site's own toggle.
+
+      The visible symptom: a visitor whose OS is in dark mode got `dark:text-slate-200`
+      applied while the site was in day mode — near-white text on white panels, which is
+      exactly the "washed out, can't read the titles" report. The mirror case broke night
+      mode for anyone on a light-mode OS.
+    -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = { darkMode: 'class' };
+    </script>
     <!-- Pinned rather than @latest: an upstream breaking release should never be able to
          take live playback down without a deploy here first. -->
     <script src="https://cdn.jsdelivr.net/npm/hls.js@1.6.18/dist/hls.min.js"></script>
@@ -130,26 +138,57 @@
             --text-muted: #a0a0b0;
             --accent-color: #8A2BE2;
             --accent-glow: rgba(138, 43, 226, 0.6);
+            --accent-text: #8A2BE2;   /* accent for text/icons; darkened in day mode */
+            --accent-solid: #8A2BE2;  /* accent behind white text; darkened in day mode */
             --glass-bg: rgba(15, 15, 25, 0.7);
             --border-color: rgba(255, 255, 255, 0.1);
             --grad-1: #0d042f;
             --grad-2: #2c135c;
             --grad-3: #0a192f;
             --grad-4: #3d2f7b;
+
+            /* Row / chip surfaces. Kept as tokens so light mode can be tuned separately
+               instead of relying on bg-black/5, which is invisible on a pale background. */
+            --row-bg: rgba(255, 255, 255, 0.03);
+            --row-hover: rgba(255, 255, 255, 0.08);
+            --chip-bg: rgba(0, 0, 0, 0.45);
+            --chip-text: #e6e6ee;
+            --panel-bg: rgba(0, 0, 0, 0.18);
         }
 
-        /* Upgraded Light Mode (Day Mode) - Softer, Better Contrast, Not Washed Out */
+        /*
+         * DAY MODE
+         *
+         * The previous light palette was near-white panels (0.75 white glass) on a
+         * near-white background (#e0e7ff -> #f1f5f9), so nothing separated from anything
+         * and the faint borders and bg-black/5 chips disappeared entirely — text read as
+         * floating on a white sheet.
+         *
+         * The fix is elevation: the page sits on a genuinely tinted surface and the panels
+         * are crisp near-white on top of it, with darker text, stronger borders and chips
+         * that are actually visible.
+         */
         html.light {
-            --bg-color: #f1f5f9; 
-            --text-color: #1e293b; 
-            --text-muted: #64748b; 
-            --glass-bg: rgba(255, 255, 255, 0.75);
-            --border-color: rgba(148, 163, 184, 0.35); 
-            /* Soft, rich daylight gradients instead of harsh whites */
-            --grad-1: #e0e7ff; 
-            --grad-2: #f1f5f9; 
-            --grad-3: #ede9fe; 
-            --grad-4: #e2e8f0; 
+            --bg-color: #dde4f1;
+            --text-color: #0b1220;           /* ~16:1 on the panels */
+            --text-muted: #465569;           /* ~7.5:1 — readable, still secondary */
+            --glass-bg: rgba(255, 255, 255, 0.94);
+            --border-color: rgba(51, 65, 85, 0.28);
+            --accent-text: #6d28d9;
+            --accent-solid: #6d28d9;
+
+            --row-bg: rgba(15, 23, 42, 0.035);
+            --row-hover: rgba(15, 23, 42, 0.075);
+            --chip-bg: rgba(15, 23, 42, 0.10);
+            --chip-text: #0b1220;
+            --panel-bg: rgba(15, 23, 42, 0.05);
+
+            /* Tinted daylight gradient — light, but with enough colour that white panels
+               sitting on it read as raised cards. */
+            --grad-1: #c9d6ef;
+            --grad-2: #dfe5f2;
+            --grad-3: #d7cdf2;
+            --grad-4: #cbdaea;
         }
 
         html, body { overflow: hidden; height: 100%; transition: background-color 0.5s ease; }
@@ -224,6 +263,26 @@
             color: var(--text-color);
             border-left: 3px solid var(--accent-color);
         }
+        /* On a pale background a 60%-opacity accent wash swallows the dark row text,
+           so day mode gets a lighter tint and keeps full-strength text. */
+        html.light .channel-item.active {
+            background: linear-gradient(90deg, color-mix(in srgb, var(--accent-color) 20%, transparent), transparent);
+            color: var(--text-color);
+        }
+        html.light .channel-item.active .channel-title {
+            color: var(--text-color);
+            font-weight: 700;
+        }
+
+        /* Count badges and list-row fills. Previously bg-black/5, which is invisible in
+           day mode — the numbers beside each category simply vanished. */
+        .count-chip {
+            background: var(--chip-bg);
+            color: var(--chip-text);
+            font-variant-numeric: tabular-nums;
+            font-weight: 700;
+        }
+        .list-panel { background: var(--panel-bg); }
         html.dark .channel-item.active {
             color: white;
             box-shadow: inset 10px 0 20px -10px var(--accent-glow);
@@ -475,7 +534,7 @@
                     <input type="search" id="local-filter-input" aria-label="Filter the current list" placeholder="Filter this list…" class="w-full p-2.5 pl-9 custom-input text-sm">
                     <svg class="w-4 h-4 text-slate-500 dark:text-slate-400 absolute left-3 top-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
                 </div>
-                <button id="refresh-playlist-btn" aria-label="Reload this source" class="p-2.5 text-sm custom-btn flex items-center justify-center font-bold" title="Refresh Playlist Data" style="color: var(--accent-color)">
+                <button id="refresh-playlist-btn" aria-label="Reload this source" class="p-2.5 text-sm custom-btn flex items-center justify-center font-bold" title="Refresh Playlist Data" style="color: var(--accent-text)">
                     <svg id="refresh-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
                 </button>
                 <button id="add-playlist-btn" aria-label="Add a custom M3U playlist" class="p-2.5 text-sm custom-btn flex items-center justify-center font-bold" title="Add Custom M3U">
@@ -485,7 +544,7 @@
                     <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                 </button>
             </div>
-            <div id="playlist-container" class="flex-1 overflow-y-auto custom-scrollbar p-2 bg-black/5 dark:bg-black/10 relative" aria-live="polite">
+            <div id="playlist-container" class="flex-1 overflow-y-auto custom-scrollbar p-2 list-panel relative" aria-live="polite">
                 <div id="playlist-element"></div>
             </div>
         </aside>
@@ -530,16 +589,16 @@
                 <div id="loading-overlay" class="hidden absolute inset-0 bg-white/90 dark:bg-black/90 backdrop-blur-sm flex flex-col items-center justify-center text-center p-6 rounded-xl border z-20" style="border-color: var(--accent-glow)">
                     <div class="loader mb-4" id="loading-spinner"></div>
                     <p id="loading-text" class="text-slate-900 dark:text-white font-bold text-xl header-title mb-2">Loading Stream...</p>
-                    <div id="loading-subtext" class="text-sm" style="color: var(--accent-color)">Please wait. Connecting to media...</div>
+                    <div id="loading-subtext" class="text-sm" style="color: var(--accent-text)">Please wait. Connecting to media...</div>
                 </div>
             </div>
 
             <div id="now-playing-info" class="mt-4 p-4 glass-ui rounded-xl flex items-center gap-4 border-l-4 flex-shrink-0 shadow-lg" style="border-left-color: var(--accent-color)">
-                <div class="w-12 h-12 rounded-lg bg-black/10 dark:bg-black/50 border border-black/10 dark:border-white/10 flex items-center justify-center flex-shrink-0" style="color: var(--accent-color)">
+                <div class="w-12 h-12 rounded-lg bg-black/10 dark:bg-black/50 border border-black/10 dark:border-white/10 flex items-center justify-center flex-shrink-0" style="color: var(--accent-text)">
                     <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
                 </div>
                 <div class="flex flex-col text-left truncate flex-1">
-                    <span class="text-[10px] font-bold uppercase tracking-widest mb-1 truncate" id="now-playing-genre" style="color: var(--accent-color)">NOW PLAYING</span>
+                    <span class="text-[10px] font-bold uppercase tracking-widest mb-1 truncate" id="now-playing-genre" style="color: var(--accent-text)">NOW PLAYING</span>
                     <span id="now-playing-title" class="font-bold text-slate-900 dark:text-white text-lg truncate tracking-wide">Select a channel or game to begin</span>
                 </div>
             </div>
@@ -558,7 +617,7 @@
                     </div>
                     
                     <div class="flex-1 text-center md:text-left">
-                        <div class="text-[10px] font-bold uppercase tracking-widest text-[#e68a00] dark:text-[#ff9900] mb-1.5 flex items-center justify-center md:justify-start gap-1">
+                        <div class="text-[10px] font-bold uppercase tracking-widest text-[#a85f00] dark:text-[#ff9900] mb-1.5 flex items-center justify-center md:justify-start gap-1">
                             <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
                             Recommended Hardware
                         </div>
@@ -579,7 +638,7 @@
 
             <div id="continue-watching-container" class="mt-6 px-2 hidden">
                 <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-3 flex items-center space-x-2 header-title">
-                    <svg class="w-5 h-5" style="color: var(--accent-color)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                    <svg class="w-5 h-5" style="color: var(--accent-text)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
                     <span>Continue Watching</span>
                 </h3>
                 <div id="history-grid" class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-3">
@@ -606,7 +665,7 @@
             
             <div id="featured-container" class="mt-8 mb-6 px-2 flex-1 hidden">
                 <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-4 flex items-center space-x-3 header-title">
-                    <svg class="w-6 h-6" style="color: var(--accent-color)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+                    <svg class="w-6 h-6" style="color: var(--accent-text)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
                     <span>Featured Selection</span>
                 </h3>
                 <div id="featured-channels-grid" class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8 gap-4 pb-8">
@@ -682,7 +741,7 @@
         </div>
         <div class="flex justify-end space-x-3 pt-4">
             <button id="cancel-add-playlist-btn" class="flex-1 p-3 custom-btn font-semibold text-sm">Cancel</button>
-            <button id="save-playlist-btn" class="flex-1 p-3 rounded-lg text-white font-bold text-sm shadow-lg border-none" style="background-color: var(--accent-color)">Save Source</button>
+            <button id="save-playlist-btn" class="flex-1 p-3 rounded-lg text-white font-bold text-sm shadow-lg border-none" style="background-color: var(--accent-solid)">Save Source</button>
         </div>
     </div>
 </div>
@@ -691,9 +750,9 @@
     <div id="dmca-modal-content" class="glass-ui p-8 rounded-xl shadow-2xl max-w-2xl w-full space-y-4 relative">
         <h2 class="text-2xl font-bold text-center text-slate-900 dark:text-white pb-4 border-b border-[var(--border-color)] header-title">Disclaimer & Policies</h2>
         <div class="max-h-[60vh] overflow-y-auto custom-scrollbar pr-4 text-sm text-slate-700 dark:text-slate-300 space-y-5 py-4">
-             <div><h3 class="font-bold text-xs tracking-widest mb-2 uppercase" style="color: var(--accent-color)">Data & Privacy Policy</h3><p>To enhance your experience, this website uses your browser's local storage to remember your preferences.</p></div>
-             <div><h3 class="font-bold text-xs tracking-widest mb-2 uppercase" style="color: var(--accent-color)">Copyright & DMCA Policy</h3><p>StreamsSphere.tv is a search index of publicly available content and does not host any files.</p></div>
-             <div><h3 class="font-bold text-xs tracking-widest mb-2 uppercase" style="color: var(--accent-color)">18+ Content Notice</h3><p>The Free Cinema library is an unfiltered index of the Internet Archive's public-domain film collections. It includes vintage adult, exploitation and grindhouse titles alongside classic cinema. This site is intended for viewers aged 18 and over.</p></div>
+             <div><h3 class="font-bold text-xs tracking-widest mb-2 uppercase" style="color: var(--accent-text)">Data & Privacy Policy</h3><p>To enhance your experience, this website uses your browser's local storage to remember your preferences.</p></div>
+             <div><h3 class="font-bold text-xs tracking-widest mb-2 uppercase" style="color: var(--accent-text)">Copyright & DMCA Policy</h3><p>StreamsSphere.tv is a search index of publicly available content and does not host any files.</p></div>
+             <div><h3 class="font-bold text-xs tracking-widest mb-2 uppercase" style="color: var(--accent-text)">18+ Content Notice</h3><p>The Free Cinema library is an unfiltered index of the Internet Archive's public-domain film collections. It includes vintage adult, exploitation and grindhouse titles alongside classic cinema. This site is intended for viewers aged 18 and over.</p></div>
         </div>
         <div class="pt-5 border-t border-[var(--border-color)] text-center">
             <button id="close-dmca-btn" class="custom-btn p-3 px-10 rounded-lg text-slate-900 dark:text-white font-bold uppercase tracking-widest text-xs">Acknowledge</button>
@@ -704,13 +763,13 @@
 <div id="cookie-consent-banner" class="hidden fixed bottom-0 left-0 right-0 md:bottom-6 md:left-auto md:right-6 md:w-[400px] p-5 z-[9999] glass-ui shadow-2xl border-t border-[var(--border-color)] md:rounded-xl">
     <div class="flex flex-col gap-4">
         <h4 class="font-bold text-slate-900 dark:text-white flex items-center space-x-3 text-sm tracking-widest uppercase">
-            <svg class="w-5 h-5" style="color: var(--accent-color)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+            <svg class="w-5 h-5" style="color: var(--accent-text)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
             <span>Storage Consent</span>
         </h4>
         <p class="text-xs text-slate-700 dark:text-slate-300 leading-relaxed">Local storage allocation is mandatory to persist favorites and settings across sessions.</p>
         <div class="flex gap-3 justify-end mt-2">
             <button id="decline-cookies" class="custom-btn bg-transparent border-slate-400 dark:border-slate-600 p-2 px-4 text-xs rounded-lg font-bold uppercase tracking-wider">Deny</button>
-            <button id="accept-cookies" class="p-2 px-5 text-xs rounded-lg text-white font-bold uppercase tracking-wider border-none shadow-lg" style="background-color: var(--accent-color)">Authorize</button>
+            <button id="accept-cookies" class="p-2 px-5 text-xs rounded-lg text-white font-bold uppercase tracking-wider border-none shadow-lg" style="background-color: var(--accent-solid)">Authorize</button>
         </div>
     </div>
 </div>
@@ -850,11 +909,22 @@ document.addEventListener('DOMContentLoaded', function() {
     // clicks deliberately. Do not reintroduce automatic window.open() on page clicks.
 
     // --- Theme & Light/Dark Logic ---
+    /*
+     * Each theme carries two palettes.
+     *
+     * `lg1..lg4` are the day-mode gradient stops. They used to be near-white
+     * (#e0e7ff -> #f1f5f9), which left the white panels with nothing to sit on. They are
+     * now genuinely tinted so panels read as raised cards.
+     *
+     * `lightAccent` exists because the neon accents are unreadable as text on a pale
+     * background — #00fa9a on white is about 1.4:1. Day mode uses this darker variant
+     * wherever the accent is used for text or icons, and keeps the neon for glows.
+     */
     const THEMES = {
-        'aurora': { primary: '#8A2BE2', g1: '#0d042f', g2: '#2c135c', g3: '#0a192f', g4: '#3d2f7b', lg1: '#e0e7ff', lg2: '#f1f5f9', lg3: '#ede9fe', lg4: '#e2e8f0' },
-        'cyberpunk': { primary: '#ff00ff', g1: '#090014', g2: '#2a0033', g3: '#00121a', g4: '#00334d', lg1: '#fce7f3', lg2: '#fdf2f8', lg3: '#f3e8ff', lg4: '#fce7f3' },
-        'crimson': { primary: '#e60000', g1: '#1a0000', g2: '#4d0000', g3: '#0a0000', g4: '#330000', lg1: '#fee2e2', lg2: '#fef2f2', lg3: '#ffedd5', lg4: '#fee2e2' },
-        'emerald': { primary: '#00fa9a', g1: '#001a0d', g2: '#004d26', g3: '#000a05', g4: '#00331a', lg1: '#dcfce7', lg2: '#f0fdf4', lg3: '#ecfdf5', lg4: '#dcfce7' }
+        'aurora':    { primary: '#8A2BE2', lightAccent: '#6d28d9', g1: '#0d042f', g2: '#2c135c', g3: '#0a192f', g4: '#3d2f7b', lg1: '#c9d6ef', lg2: '#dfe5f2', lg3: '#d7cdf2', lg4: '#cbdaea' },
+        'cyberpunk': { primary: '#ff00ff', lightAccent: '#a21caf', g1: '#090014', g2: '#2a0033', g3: '#00121a', g4: '#00334d', lg1: '#f2cfe4', lg2: '#f6dcec', lg3: '#e6cdf2', lg4: '#f0d2e8' },
+        'crimson':   { primary: '#e60000', lightAccent: '#b91c1c', g1: '#1a0000', g2: '#4d0000', g3: '#0a0000', g4: '#330000', lg1: '#f0cfcf', lg2: '#f6dada', lg3: '#f5ddc9', lg4: '#efd0d0' },
+        'emerald':   { primary: '#00fa9a', lightAccent: '#047857', g1: '#001a0d', g2: '#004d26', g3: '#000a05', g4: '#00331a', lg1: '#c6e8d3', lg2: '#daf2e3', lg3: '#cdeee0', lg4: '#c9e6d8' }
     };
 
     function initializeThemeSystem() {
@@ -905,10 +975,13 @@ document.addEventListener('DOMContentLoaded', function() {
         if(!t) return;
         
         const isLight = document.documentElement.classList.contains('light');
-        
+
         document.documentElement.style.setProperty('--accent-color', t.primary);
-        document.documentElement.style.setProperty('--accent-glow', `${t.primary}99`); 
-        
+        document.documentElement.style.setProperty('--accent-glow', `${t.primary}99`);
+        // Text and icons use --accent-text so day mode can darken the neon accents.
+        document.documentElement.style.setProperty('--accent-text', isLight ? (t.lightAccent || t.primary) : t.primary);
+        document.documentElement.style.setProperty('--accent-solid', isLight ? (t.lightAccent || t.primary) : t.primary);
+
         if (isLight) {
             document.documentElement.style.setProperty('--grad-1', t.lg1);
             document.documentElement.style.setProperty('--grad-2', t.lg2);
@@ -974,7 +1047,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="w-14 h-14 rounded-full flex items-center justify-center text-3xl bg-black/5 dark:bg-white/5 border border-[var(--border-color)]">📡</div>
                 <p class="font-bold text-slate-900 dark:text-white">${title}</p>
                 <p class="text-xs text-[var(--text-muted)] leading-relaxed">${detail}</p>
-                <button onclick="document.getElementById('refresh-playlist-btn').click()" class="px-5 py-2.5 rounded-lg text-white font-bold text-xs uppercase tracking-wider shadow-lg flex items-center space-x-2" style="background-color: var(--accent-color)">
+                <button onclick="document.getElementById('refresh-playlist-btn').click()" class="px-5 py-2.5 rounded-lg text-white font-bold text-xs uppercase tracking-wider shadow-lg flex items-center space-x-2" style="background-color: var(--accent-solid)">
                     <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
                     <span>Try again</span>
                 </button>
@@ -1137,12 +1210,19 @@ document.addEventListener('DOMContentLoaded', function() {
     const ARCHIVE_PAGE_SIZE = 60;
 
     const ARCHIVE_COLLECTIONS = [
-        { key: 'feature_films',        label: 'Feature Films',      icon: '🎬' },
-        { key: 'SciFi_Horror',         label: 'Sci-Fi & Horror',    icon: '👽' },
-        { key: 'animationandcartoons', label: 'Animation & Cartoons', icon: '✏️' },
-        { key: 'classic_tv',           label: 'Classic TV',         icon: '📺' },
-        { key: 'silent_films',         label: 'Silent Era',         icon: '🎩' },
-        { key: 'short_films',          label: 'Short Films',        icon: '⏱️' }
+        { key: 'feature_films',          label: 'Feature Films',        icon: '🎬' },
+        { key: 'SciFi_Horror',           label: 'Sci-Fi & Horror',      icon: '👽' },
+        { key: 'animationandcartoons',   label: 'Animation & Cartoons', icon: '✏️' },
+        { key: 'more_animation',         label: 'More Animation',       icon: '🎨' },
+        { key: 'vintage_cartoons',       label: 'Vintage Cartoons',     icon: '🐭' },
+        { key: 'classic_tv',             label: 'Classic TV',           icon: '📺' },
+        { key: 'television',             label: 'Television Archive',   icon: '📡' },
+        { key: 'silent_films',           label: 'Silent Era',           icon: '🎩' },
+        { key: 'short_films',            label: 'Short Films',          icon: '⏱️' },
+        { key: 'prelinger',              label: 'Prelinger Archives',   icon: '🎞️' },
+        { key: 'educationalfilms',       label: 'Educational Films',    icon: '🎓' },
+        { key: 'artsandmusicvideos',     label: 'Arts & Music',         icon: '🎵' },
+        { key: 'sports',                 label: 'Sports',               icon: '⚽' }
     ];
 
     // These collections are carried unfiltered. The public-domain corner of archive.org
@@ -1150,6 +1230,205 @@ document.addEventListener('DOMContentLoaded', function() {
     // the library is labelled 18+ rather than curated.
     // Formats archive.org derives, in descending order of browser friendliness.
     const ARCHIVE_FORMAT_RANK = ['h.264 ia', 'h.264', 'mpeg4', '512kb mpeg4', 'ogg video', 'webm'];
+
+    /* ---------------------------------------------------------------------
+       VAULT ITEMS
+       ---------------------------------------------------------------------
+       Some archive.org items are single uploads holding hundreds of separate
+       films or a whole series. The old Movies.m3u hand-listed a few files out of
+       a handful of these; enumerating the items directly via /metadata/ picks up
+       everything in them instead, and keeps working as the uploader adds more.
+
+       Counts below are the browser-playable titles measured at the time of
+       writing and are only used for the sidebar hint — the real list always
+       comes from the live metadata call.
+       --------------------------------------------------------------------- */
+    const ARCHIVE_MOVIE_VAULTS = [
+        { id: 'peli8_202402', label: 'Movie Vault 8', icon: '🎬', approx: 260 },
+        { id: 'north-hollywood-2021', label: 'Movie Vault 7', icon: '🎬', approx: 243 },
+        { id: 'hexziasmovies', label: "Hexzia's Movie List", icon: '🎬', approx: 70 },
+        { id: 'duets-2000', label: '2000s Movies', icon: '🎬', approx: 69 },
+        { id: 'movie-bucket-i', label: 'Movie Bucket I', icon: '🎬', approx: 41 },
+        { id: 'peli9', label: 'Movie Vault 9', icon: '🎬', approx: 40 },
+        { id: 'the-family-man-2000', label: 'Christmas Movie Pack', icon: '🎄', approx: 20 }
+    ];
+
+    const ARCHIVE_SERIES_VAULTS = [
+        // Sourced from the playlists in ab19902020/Comedy and ab19902020/King. Reading the
+        // archive item directly rather than the M3U picks up everything the uploader has
+        // added since: Mayday listed 109 episodes in the playlist but holds 203.
+        { id: 'RobertBarrDetectiveSeries', label: 'The Inbetweeners', icon: '😂', approx: 18 },
+        { id: 'FawltyTowers', label: 'Fawlty Towers', icon: '🏨', approx: 12 },
+        { id: 'mayday-aci', label: 'Mayday · Air Crash Investigation', icon: '✈️', approx: 203 },
+        { id: 'mashmulti', label: 'M*A*S*H', icon: '📺', approx: 252 },
+        { id: 'leave-it-to-beaver-the-complete-series-1957-1963', label: 'Leave It to Beaver', icon: '📺', approx: 240 },
+        { id: 'the-golden-girls-complete-series', label: 'The Golden Girls', icon: '📺', approx: 172 },
+        { id: 'the-nanny-complete-series_20260128', label: 'The Nanny', icon: '📺', approx: 144 },
+        { id: 'The-Osbournes-Full-Series_202508', label: 'The Osbournes', icon: '📺', approx: 102 },
+        { id: 'bojack-horseman-eas-scenarios', label: 'BoJack Horseman', icon: '📺', approx: 77 },
+        { id: 'arcane-s01-4k-hdr-dv-2160p-bdremux-x265', label: 'Arcane', icon: '📺', approx: 9 },
+        { id: 'sonic-prime-complete-series-netflix-rip-in-mkv-format_202312', label: 'Sonic Prime', icon: '📺', approx: 152 },
+        { id: 'spider-man-1967-4k-uhd', label: 'Spider-Man (1967)', icon: '🕷️', approx: 54 },
+        { id: '20230120_20230120_0302', label: 'Naruto Shippuden', icon: '🍥', approx: 272 },
+        { id: 'ranma-12-1989-complete-tv-series-pt-br1080p', label: 'Ranma ½', icon: '🍥', approx: 188 },
+        { id: 'galaxy-express-999-the-tv-series-collection-discotek-bluray-rip', label: 'Galaxy Express 999', icon: '🍥', approx: 176 },
+        { id: 'jinzo-ningen-kikaida-complete-series', label: 'Jinzo Ningen Kikaida', icon: '🍥', approx: 9 },
+        { id: 'MyLittlePonyFull', label: 'My Little Pony: Friendship is Magic', icon: '🦄', approx: 226 },
+        { id: 'bob-the-builder-classic-full', label: 'Bob the Builder', icon: '👷', approx: 249 },
+        { id: 'BetweentheLionsFull', label: 'Between the Lions', icon: '🦁', approx: 225 },
+        { id: 'come-on-and-zoom-50th-anniversary-special', label: 'ZOOM (WGBH)', icon: '🎈', approx: 316 },
+        { id: 'wild-kratts-season-1-s-01-e-01-mom-of-a-croc', label: 'Wild Kratts', icon: '🐆', approx: 178 },
+        { id: 'ZoboomafooTVSeries', label: 'Zoboomafoo', icon: '🐒', approx: 127 },
+        { id: 'lazy-town-s-01-e-03-featuring-sports-day', label: 'LazyTown', icon: '🏃', approx: 78 },
+        { id: 'thomas-friends-full-series-1', label: 'Thomas & Friends', icon: '🚂', approx: 49 },
+        { id: 'super-why-s-01-e-03-the-tortoise-and-the-hare', label: 'Super Why!', icon: '📖', approx: 95 },
+        { id: 'nature-cat-s-01-e-07-where-have-all-the-butterflies-gone-for-the-birdies', label: 'Nature Cat', icon: '🐈', approx: 76 },
+        { id: 'clifford-the-big-red-dog-the-complete-first-season-2002-dvd-april-9-2002-full-dv_20250917', label: 'Clifford the Big Red Dog', icon: '🐕', approx: 29 },
+        { id: 'river-monsters-season-1-9-reupload', label: 'River Monsters', icon: '🐟', approx: 57 },
+        { id: 'discovery-channel-season-1-6-video-collections-disc-1', label: 'Discovery Channel', icon: '🔬', approx: 123 },
+        { id: 'MYTVSeries2011', label: 'Mr. Young', icon: '📺', approx: 80 },
+        { id: 'RebeldeWay', label: 'Rebelde Way', icon: '📺', approx: 139 },
+        { id: 'themedialist', label: 'TheMediaList', icon: '📺', approx: 90 },
+        { id: 'australia-and-new-zealand-tv-series', label: 'Australia & NZ TV', icon: '🇦🇺', approx: 289 },
+        { id: 'british-scottish-and-welsh-tv-series', label: 'British, Scottish & Welsh TV', icon: '🇬🇧', approx: 260 },
+        { id: 'balto-1995_202511', label: 'Edited Movies & TV', icon: '✂️', approx: 120 }
+    ];
+
+    // Item metadata is large (some vaults list 1,200+ files), so it is memoised for the
+    // session but deliberately never written to localStorage.
+    const archiveVaultCache = {};
+
+    /**
+     * archive.org's CDN nodes intermittently answer 502/503/500 under load — often enough
+     * that a single attempt leaves a collection looking empty when it is perfectly fine a
+     * second later. Every archive.org call goes through here.
+     */
+    async function archiveFetch(url, { tries = 3 } = {}) {
+        let lastError = new Error('The Internet Archive did not respond.');
+        for (let i = 0; i < tries; i++) {
+            try {
+                const res = await fetch(url, { cache: 'no-store' });
+                if (res.ok) return res;
+                // 4xx other than 429 is a real answer; retrying will not change it.
+                if (res.status < 500 && res.status !== 429) {
+                    throw new Error(`The Internet Archive returned HTTP ${res.status}.`);
+                }
+                lastError = new Error(`The Internet Archive is busy (HTTP ${res.status}).`);
+            } catch (err) {
+                lastError = err;
+            }
+            if (i < tries - 1) await new Promise(r => setTimeout(r, 600 * (i + 1)));
+        }
+        throw lastError;
+    }
+
+    // Release-encoding noise that carries no meaning for a viewer. Filenames on these
+    // items are raw scene/rip names, e.g.
+    //   "Golden-Girls 1985.09.14 S01E01 The-Engagement BWDIF-bob MPEG2.mp4"
+    //   "Arcane S01E01.4K HDR DV 2160p BDRemux Ita Eng x265-NAHOM.mp4"
+    const RELEASE_NOISE = new RegExp(
+        '\\b(' +
+        '4k|uhd|hdr10\\+?|hdr|dolby ?vision|dv|sdr|' +
+        '2160p|1440p|1080p|1080i|720p|576p|480p|360p|' +
+        'bdremux|remux|bluray|blu-ray|bdrip|brrip|dvdrip|dvd5|dvd9|dvd|webrip|web-?dl|web|hdtv|pdtv|vhsrip|tvrip|' +
+        'x26[45]|h ?26[45]|hevc|avc|xvid|divx|mpeg-?2|mpeg-?4|10bit|8bit|' +
+        'aac2? ?0?|ac3|eac3|dts(?:-hd)?|truehd|atmos|flac|mp3|2 0|5 1|7 1|' +
+        'pal|ntsc|bwdif|bob|yadif|deinterlaced|proper|repack|internal|extended|remastered|restored|' +
+        'ita|eng|esp|spa|fre|fra|ger|deu|jpn|dual|multi|subbed|dubbed|sub|dub' +
+        ')\\b', 'gi');
+
+    /**
+     * Build a human title from an archive.org filename.
+     *
+     * "Rambo First Blood 1982.mkv"                       -> "Rambo First Blood (1982)"
+     * "Golden-Girls 1985.09.14 S01E01 The-Engagement..."  -> "S01E01 · The Engagement"
+     * "Arcane S01E01.4K HDR ... x265-NAHOM.mp4"           -> "S01E01"
+     */
+    function titleFromFilename(path) {
+        let n = String(path).split('/').pop();
+        n = n.replace(/\.(mp4|m4v|mkv|avi|webm|ogv|mov)$/i, '').replace(/\.ia$/i, '');
+
+        // Separators. Dots are scene separators except between digits (9.99, 5.1).
+        n = n.replace(/_/g, ' ').replace(/\.(?!\d)/g, ' ').replace(/(?<!\d)\./g, ' ');
+
+        // Date stamps such as 1985 09 14 add nothing next to a season/episode number.
+        n = n.replace(/\b(19|20)\d{2}[ .-](0?[1-9]|1[0-2])[ .-](0?[1-9]|[12]\d|3[01])\b/g, ' ');
+
+        // A trailing -GROUP tag on the last token.
+        n = n.replace(/-[A-Za-z0-9]{2,12}\s*$/, ' ');
+
+        const ep = n.match(/\bS(\d{1,2})\s*E(\d{1,3})\b/i) || n.match(/\b(\d{1,2})x(\d{1,3})\b/);
+        n = n.replace(RELEASE_NOISE, ' ').replace(/[\[\](){}]/g, ' ');
+
+        if (ep) {
+            const season = String(parseInt(ep[1], 10)).padStart(2, '0');
+            const episode = String(parseInt(ep[2], 10)).padStart(2, '0');
+            // Whatever follows the episode marker is the episode name.
+            let rest = n.slice(n.indexOf(ep[0]) + ep[0].length);
+            rest = rest.replace(/-/g, ' ').replace(/\s{2,}/g, ' ').replace(/^[\s·.-]+|[\s·.-]+$/g, '');
+            return rest ? `S${season}E${episode} · ${rest}` : `S${season}E${episode}`;
+        }
+
+        n = n.replace(/\s*-\s*-\s*/g, ' - ').replace(/\s{2,}/g, ' ').trim().replace(/^[-\s]+|[-\s]+$/g, '');
+        if (!/\(\d{4}\)/.test(n)) n = n.replace(/\s((?:19|20)\d{2})\s*$/, ' ($1)');
+        return n.trim() || 'Untitled';
+    }
+
+    /**
+     * Enumerate one vault item into channel objects.
+     *
+     * Files are grouped by base name so an .mkv and its archive.org-derived .mp4 count as
+     * one title, and the browser-playable file wins. Titles with no playable derivative
+     * are dropped rather than listed as dead clicks — browsers cannot play Matroska.
+     */
+    async function loadArchiveVault(vault) {
+        if (archiveVaultCache[vault.id]) return archiveVaultCache[vault.id];
+
+        const res = await archiveFetch(`https://archive.org/metadata/${encodeURIComponent(vault.id)}`);
+        const meta = await res.json();
+        if (meta.is_dark) throw new Error('This collection has been withdrawn from the Internet Archive.');
+
+        const groups = new Map();
+        (meta.files || []).forEach(f => {
+            const name = f.name || '';
+            if (!/\.(mp4|m4v|mkv|avi|webm|ogv|mov)$/i.test(name)) return;
+            const key = name.replace(/\.(mp4|m4v|mkv|avi|webm|ogv|mov)$/i, '').replace(/\.ia$/i, '').toLowerCase();
+            if (!groups.has(key)) groups.set(key, []);
+            groups.get(key).push(f);
+        });
+
+        const channels = [];
+        groups.forEach(files => {
+            const playable = files.filter(f => archiveIsPlayableName(f.name));
+            if (!playable.length) return;
+            playable.sort((a, b) => {
+                const ra = ARCHIVE_FORMAT_RANK.indexOf((a.format || '').toLowerCase());
+                const rb = ARCHIVE_FORMAT_RANK.indexOf((b.format || '').toLowerCase());
+                const na = ra === -1 ? ARCHIVE_FORMAT_RANK.length : ra;
+                const nb = rb === -1 ? ARCHIVE_FORMAT_RANK.length : rb;
+                if (na !== nb) return na - nb;
+                return (parseInt(b.size, 10) || 0) - (parseInt(a.size, 10) || 0);
+            });
+            const pick = playable[0];
+            channels.push({
+                title: titleFromFilename(pick.name),
+                url: `archive:${vault.id}|${pick.name}`,
+                logo: archiveThumb(vault.id),
+                group: vault.label,
+                isVod: true,
+                isArchive: true,
+                archiveId: vault.id,
+                archiveFile: pick.name,
+                sourcePlaylistName: vault.label
+            });
+        });
+
+        const seen = new Set(archiveLoadedChannels.map(c => c.url));
+        channels.forEach(c => { if (!seen.has(c.url)) archiveLoadedChannels.push(c); });
+
+        archiveVaultCache[vault.id] = channels;
+        return channels;
+    }
 
     function archiveThumb(identifier) {
         return `https://archive.org/services/img/${encodeURIComponent(identifier)}`;
@@ -1194,8 +1473,7 @@ document.addEventListener('DOMContentLoaded', function() {
         params.set('page', page);
         params.set('output', 'json');
 
-        const res = await fetch(`${ARCHIVE_ENDPOINT}?${params.toString()}`, { cache: 'no-store' });
-        if (!res.ok) throw new Error(`Archive search failed (HTTP ${res.status})`);
+        const res = await archiveFetch(`${ARCHIVE_ENDPOINT}?${params.toString()}`);
         const json = await res.json();
         const docs = (json.response && json.response.docs) || [];
 
@@ -1210,12 +1488,30 @@ document.addEventListener('DOMContentLoaded', function() {
         return { channels, total: (json.response && json.response.numFound) || 0 };
     }
 
-    /** Resolve `archive:<identifier>` to a directly playable file URL. */
-    async function resolveArchiveStream(identifier) {
-        if (archiveStreamCache[identifier]) return archiveStreamCache[identifier];
+    function archiveDownloadUrl(identifier, file) {
+        // Each path segment is encoded separately: archive.org filenames may contain
+        // slashes for subdirectories, which must stay as separators.
+        const encFile = String(file).split('/').map(encodeURIComponent).join('/');
+        return `https://archive.org/download/${encodeURIComponent(identifier)}/${encFile}`;
+    }
 
-        const res = await fetch(`https://archive.org/metadata/${encodeURIComponent(identifier)}`, { cache: 'no-store' });
-        if (!res.ok) throw new Error(`Could not read archive metadata (HTTP ${res.status})`);
+    /**
+     * Resolve an `archive:` URL to a directly playable file.
+     *   archive:<identifier>          -> pick the best video in the item (collections)
+     *   archive:<identifier>|<file>   -> that exact file (vault items)
+     */
+    async function resolveArchiveStream(spec) {
+        if (archiveStreamCache[spec]) return archiveStreamCache[spec];
+
+        const sep = spec.indexOf('|');
+        if (sep > -1) {
+            const url = archiveDownloadUrl(spec.slice(0, sep), spec.slice(sep + 1));
+            archiveStreamCache[spec] = url;
+            return url;
+        }
+
+        const identifier = spec;
+        const res = await archiveFetch(`https://archive.org/metadata/${encodeURIComponent(identifier)}`);
         const meta = await res.json();
 
         if (meta.is_dark) throw new Error('This title has been withdrawn from the Internet Archive.');
@@ -1246,6 +1542,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     let BASE_PLAYLISTS = [
         // --- Highlights -----------------------------------------------------------
+        { name: 'My Movies', icon: '📼', isMyMovies: true, group: 'Highlights' },
+        { name: 'Movie Vault', icon: '🎬', isMovieVault: true, group: 'Highlights' },
+        { name: 'TV Box Sets', icon: '📺', isSeriesVault: true, group: 'Highlights' },
         { name: 'Free Cinema', icon: '🎞️', isArchiveMaster: true, group: 'Highlights', badge: '18+' },
         { name: 'Series & Shows', icon: '🍿', isVodMaster: true, group: 'Highlights' },
 
@@ -1654,7 +1953,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         selector.dataset.levelCount = hlsInstance.levels.length;
         selector.innerHTML = `
-            <div class="font-bold mb-2 px-1 text-[var(--accent-color)] tracking-widest text-xs flex justify-between items-center">
+            <div class="font-bold mb-2 px-1 text-[var(--accent-text)] tracking-widest text-xs flex justify-between items-center">
                 <span>QUALITY</span>
             </div>
         `;
@@ -1993,7 +2292,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const intro = document.createElement('div');
         intro.className = 'px-3 py-3 mx-1 mb-1 text-[11px] leading-relaxed text-[var(--text-muted)] border-b border-[var(--border-color)]';
         intro.innerHTML = `
-            <span class="inline-flex items-center gap-1.5 px-2 py-0.5 mb-2 rounded-full text-[10px] font-bold tracking-wider bg-red-500/15 text-red-500 border border-red-500/30">
+            <span class="inline-flex items-center gap-1.5 px-2 py-0.5 mb-2 rounded-full text-[10px] font-bold tracking-wider bg-red-500/15 text-red-700 dark:text-red-400 border border-red-500/40">
                 <span aria-hidden="true">🔞</span> 18+
             </span>
             <span class="block">Public-domain cinema streamed directly from the <strong class="text-[var(--text-color)]">Internet Archive</strong>. Free, legal, and always online.</span>
@@ -2007,7 +2306,7 @@ document.addEventListener('DOMContentLoaded', function() {
             div.setAttribute('role', 'button');
             div.setAttribute('tabindex', '0');
             div.innerHTML = `
-                <div class="flex-shrink-0 w-8 h-8 flex items-center justify-center text-xl opacity-80" style="color: var(--accent-color)">${col.icon}</div>
+                <div class="flex-shrink-0 w-8 h-8 flex items-center justify-center text-xl opacity-80" style="color: var(--accent-text)">${col.icon}</div>
                 <span class="flex-1 truncate font-medium text-slate-800 dark:text-slate-200">${col.label}</span>
                 <svg class="w-4 h-4 opacity-50" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>`;
             const open = () => displayArchiveCollection(col, 1);
@@ -2016,6 +2315,155 @@ document.addEventListener('DOMContentLoaded', function() {
             elements.playlistElement.appendChild(div);
         });
     }
+
+    /* ---------------- My Movies (the hand-built playlist, A–Z) ---------------- */
+
+    /**
+     * The site's own Movies.m3u, reinstated.
+     *
+     * 326 of its 766 entries pointed at the archive.org item `movies_202211`, which the
+     * Internet Archive has darkened — those return HTTP 403 and are filtered out here so
+     * they cannot fill the list with dead clicks. The remaining titles are grouped A–Z
+     * because the playlist carries no group-title tags of its own.
+     */
+    const MY_MOVIES_URL = 'https://raw.githubusercontent.com/ab19902020/Comedy/main/Movies.m3u';
+
+    /*
+     * Archive items from Movies.m3u that no longer resolve, verified against
+     * archive.org/metadata: `movies_202211` is darkened (326 of the playlist's entries),
+     * the rest were deleted or renamed. Together they account for 434 of the 766 entries.
+     * Filtering them out here is what keeps the list to titles that actually play.
+     *
+     * If a title reappears on the Archive, drop its identifier from this list.
+     */
+    const DEAD_ARCHIVE_ITEMS = new Set([
+        '1776-movie', 'A_Farewell_To_Arms', 'A_Star_is_Born', 'Charade_1963', 'Dementia13_201611',
+        'Metropolis_1927', 'Nosferatu_1922', 'Plan_9_from_Outer_Space_1959', 'Snows_of_Kilimanjaro',
+        'TheGeneral1926_974', 'TheLastManonEarth', 'ThePhantomOfTheOpera', 'TheStranger',
+        'The_Fast_and_the_Furious_1955', 'The_Hitch-Hiker_1953', 'Vampyr', 'all-studio-ghiblis-movies',
+        'beat_the_devil', 'betsys-wedding-1990-vhs', 'billy-owens-and-the-secret-of-the-runes',
+        'buffy-the-vampire-slayer-movie-1992', 'charlie-brown-cleans-the-air-1979', 'crossfire-1947',
+        'dead-for-a-dollar-2022-720p', 'detroit-rock-city-1999', 'django-unchained-2012', 'doa_1950',
+        'enemy-of-the-state-1998', 'ernest-goes-to-camp-1987', 'escape-from-alcatraz-1979',
+        'first-kid-1996', 'gleaming-the-cube-1989', 'gunslingers-2025', 'irma-la-douce-1963',
+        'jawbreaker-1999', 'jesus-christ-superstar', 'kansas_city_confidential',
+        'kikis-delivery-service-1989', 'kill-bill-the-whole-bloody-affair', 'less-than-zero-1987',
+        'little-nikita-1988', 'miracle-of-the-white-stallions-1963', 'mollies-movies', 'movies_202211',
+        'murder-at-highland-manor-2026', 'my-random-movies', 'needful-things', 'night_of_the_living_dead',
+        'nothing_sacred', 'other-disney-animated-films', 'paddle-to-the-sea-1966',
+        'rocky-horror-picture-show-1975', 'santa_claus_conquers_the_martians', 'scarlet_street',
+        'screwed-2000', 'serial-mom-1994', 'st-patrick-the-irish-legend-2000', 'susie-q-1996',
+        'the-adventures-of-the-american-rabbit', 'the-art-of-being-fully-human',
+        'the-benson-murder-case-1930', 'the-buttercream-gang-in-secret-of-treasure-mountain',
+        'the-easter-bunny-is-comin-to-town-1993', 'the-fifth-element', 'the-fisher-king',
+        'the-guardian-bagdad-cafe', 'the-lost-boys-1987', 'the-peanut-butter-solution-1985',
+        'the-prime-of-miss-jean-brodie-1969', 'the-ref-1994', 'the-vals-1983', 'the-woman-in-red-1984',
+        'the_great_flamarion', 'this-boys-life-1993', 'unstoppable-movie',
+        'vhs-recording-romy-micheles-high-school-reunion', 'young-guns-1988-young-guns-ii-1990',
+        'young-sherlock-holmes-1985'
+    ]);
+    let myMoviesGroups = null;
+
+    function movieSortKey(title) {
+        // Ignore a leading article so "The Matrix" files under M.
+        return String(title).replace(/^(the|a|an)\s+/i, '').trim().toUpperCase();
+    }
+
+    async function loadMyMovies(forceRefresh = false) {
+        if (myMoviesGroups && !forceRefresh) return myMoviesGroups;
+
+        const data = await fetchWithFallback(MY_MOVIES_URL, 2, forceRefresh);
+        const parsed = await parseM3U(data, 'My Movies');
+
+        const live = parsed.channels.filter(ch => {
+            const m = ch.url.match(/\/download\/([^/]+)\//);
+            return !m || !DEAD_ARCHIVE_ITEMS.has(m[1]);
+        });
+
+        const groups = {};
+        live.forEach(ch => {
+            ch.isVod = true;
+            ch.title = cleanTitleForSearch(titleFromFilename(ch.title));
+            const first = movieSortKey(ch.title).charAt(0);
+            const bucket = /[A-Z]/.test(first) ? first : '#';
+            (groups[bucket] = groups[bucket] || []).push(ch);
+        });
+        Object.values(groups).forEach(list =>
+            list.sort((a, b) => movieSortKey(a.title).localeCompare(movieSortKey(b.title))));
+
+        myMoviesGroups = { groups, all: live, dropped: parsed.channels.length - live.length };
+        return myMoviesGroups;
+    }
+
+    async function displayMyMovies(forceRefresh = false) {
+        showSidebarSkeleton('Loading your movie library…');
+        try {
+            const { groups, all, dropped } = await loadMyMovies(forceRefresh);
+            if (!all.length) {
+                showSidebarError('Your movie playlist is empty.',
+                    'Every entry pointed at an archive item that has since been taken down.');
+                return;
+            }
+            allChannelsInPlaylist = all;
+            await displayCategories(groups, null, 'My Movies');
+            const note = dropped
+                ? `${all.length} titles · ${dropped} removed (source taken down)`
+                : `${all.length} titles`;
+            showToast(`My Movies — ${note}`, 'success', 2600);
+        } catch (e) {
+            showSidebarError('Could not load your movie playlist.', e.message || 'Try again in a moment.');
+        }
+    }
+
+    /* ---------------- Vault browsing (Movie Vault / TV Box Sets) ---------------- */
+
+    function displayVaultIndex(vaults, blurb, kind) {
+        elements.playlistElement.innerHTML = '';
+        updateFeaturedGrid([], '');
+
+        const intro = document.createElement('div');
+        intro.className = 'px-3 py-3 mx-1 mb-1 text-[11px] leading-relaxed text-[var(--text-muted)] border-b border-[var(--border-color)]';
+        intro.innerHTML = blurb;
+        elements.playlistElement.appendChild(intro);
+
+        renderInChunks(vaults, elements.playlistElement, (vault) => {
+            const div = document.createElement('div');
+            div.className = 'category-item flex items-center space-x-3 p-3 cursor-pointer transition-colors duration-200 border-b border-[var(--border-color)] text-sm mx-1';
+            div.setAttribute('role', 'button');
+            div.setAttribute('tabindex', '0');
+            div.innerHTML = `
+                <div class="flex-shrink-0 w-8 h-8 flex items-center justify-center text-xl opacity-80" aria-hidden="true">${vault.icon || '📁'}</div>
+                <span class="flex-1 truncate font-medium text-slate-800 dark:text-slate-200">${escapeHtml(vault.label)}</span>
+                <span class="count-chip text-[10px] px-2 py-1 rounded">${vault.approx || '?'}</span>`;
+            const open = () => displayVaultTitles(vault, kind);
+            div.addEventListener('click', open);
+            div.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); } });
+            return div;
+        });
+    }
+
+    async function displayVaultTitles(vault, kind) {
+        showSidebarSkeleton(`Opening ${vault.label}…`);
+        try {
+            const channels = await loadArchiveVault(vault);
+            if (!channels.length) {
+                showSidebarError(`Nothing playable in ${vault.label}.`,
+                    'Every file in this collection is in a format browsers cannot play.');
+                return;
+            }
+            allChannelsInPlaylist = channels;
+            const back = kind === 'series'
+                ? () => displayVaultIndex(ARCHIVE_SERIES_VAULTS, SERIES_VAULT_BLURB, 'series')
+                : () => displayVaultIndex(ARCHIVE_MOVIE_VAULTS, MOVIE_VAULT_BLURB, 'movie');
+            await populatePlaylistUI(channels, true, back, vault.label);
+            showToast(`${channels.length.toLocaleString()} titles in ${vault.label}`, 'success', 1800);
+        } catch (e) {
+            showSidebarError(`Could not open ${vault.label}.`, e.message || 'Try again in a moment.');
+        }
+    }
+
+    const MOVIE_VAULT_BLURB = `Full-length feature films hosted on the <strong class="text-[var(--text-color)]">Internet Archive</strong>. Each collection is read live, so new uploads appear automatically.`;
+    const SERIES_VAULT_BLURB = `Complete box sets from the <strong class="text-[var(--text-color)]">Internet Archive</strong> — every episode, sorted by season.`;
 
     async function displayArchiveCollection(col, page = 1) {
         showSidebarSkeleton(`Loading ${col.label}…`);
@@ -2076,7 +2524,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const backBtn = document.createElement('button');
             backBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg> <span>Go Back</span>`;
             backBtn.className = 'w-[calc(100%-16px)] mx-2 my-2 flex items-center justify-center space-x-2 py-3 px-4 text-center bg-white/80 hover:bg-white/90 dark:bg-black/60 dark:hover:bg-black/90 border border-black/10 dark:border-white/10 rounded-xl shadow-lg sticky top-0 z-10 text-xs font-bold uppercase tracking-wider transition-all backdrop-blur-md';
-            backBtn.style.color = "var(--accent-color)";
+            backBtn.style.color = "var(--accent-text)";
             backBtn.addEventListener('click', () => {
                 const newPath = path.slice(0, -1);
                 if (newPath.length === 0 && onBackToRoot) onBackToRoot();
@@ -2106,14 +2554,14 @@ document.addEventListener('DOMContentLoaded', function() {
             let iconHTML = categoryIcons[key] || categoryIcons['Default'];
             
             if (isChannelList) {
-                categoryDiv.innerHTML = `<div class="flex-shrink-0 w-8 h-8 flex items-center justify-center text-xl opacity-80" style="color: var(--accent-color)">${iconHTML}</div> <span class="flex-1 truncate font-medium text-slate-800 dark:text-slate-200">${escapeHtml(key)}</span> <span class="text-[10px] bg-black/5 dark:bg-black/40 px-2 py-1 rounded font-bold text-slate-800 dark:text-slate-200">${nextLevel.length}</span>`;
+                categoryDiv.innerHTML = `<div class="flex-shrink-0 w-8 h-8 flex items-center justify-center text-xl opacity-80" style="color: var(--accent-text)">${iconHTML}</div> <span class="flex-1 truncate font-medium text-slate-800 dark:text-slate-200">${escapeHtml(key)}</span> <span class="count-chip text-[10px] px-2 py-1 rounded">${nextLevel.length}</span>`;
                 categoryDiv.addEventListener('click', () => {
                     allChannelsInPlaylist = nextLevel;
                     populatePlaylistUI(nextLevel, true, () => displayNestedStructure(path, structure, sourceName, onBackToRoot), key);
                 });
             } else {
                 const subItemCount = Object.keys(nextLevel).length;
-                categoryDiv.innerHTML = `<div class="flex-shrink-0 w-8 h-8 flex items-center justify-center text-xl opacity-80" style="color: var(--accent-color)">${iconHTML}</div> <span class="flex-1 truncate font-medium text-slate-800 dark:text-slate-200">${escapeHtml(key)}</span> <span class="text-[10px] bg-black/5 dark:bg-black/40 px-2 py-1 rounded font-bold text-slate-800 dark:text-slate-200">${subItemCount}</span>`;
+                categoryDiv.innerHTML = `<div class="flex-shrink-0 w-8 h-8 flex items-center justify-center text-xl opacity-80" style="color: var(--accent-text)">${iconHTML}</div> <span class="flex-1 truncate font-medium text-slate-800 dark:text-slate-200">${escapeHtml(key)}</span> <span class="count-chip text-[10px] px-2 py-1 rounded">${subItemCount}</span>`;
                 categoryDiv.addEventListener('click', () => { displayNestedStructure([...path, key], structure, sourceName, onBackToRoot); });
             }
             elements.playlistElement.appendChild(categoryDiv);
@@ -2146,7 +2594,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     elements.playlistElement.innerHTML = `
                     <div class="flex flex-col items-center justify-center mt-10 space-y-4 px-4 text-center">
                         <p class="text-red-500 font-bold">Failed to load ${escapeHtml(country.name)}</p>
-                        <button onclick="document.getElementById('refresh-playlist-btn').click()" class="px-5 py-2.5 rounded-lg text-white font-bold text-sm uppercase shadow-lg flex items-center space-x-2" style="background-color: var(--accent-color)">
+                        <button onclick="document.getElementById('refresh-playlist-btn').click()" class="px-5 py-2.5 rounded-lg text-white font-bold text-sm uppercase shadow-lg flex items-center space-x-2" style="background-color: var(--accent-solid)">
                             <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
                             <span>Force Refresh</span>
                         </button>
@@ -2171,6 +2619,24 @@ document.addEventListener('DOMContentLoaded', function() {
         if (playlist.region) {
             updateFeaturedGrid([], '');
             displayWorldTvRegion(playlist.region);
+            if (elements.refreshIcon) elements.refreshIcon.classList.remove('spin-anim');
+            return;
+        }
+
+        if (playlist.isMyMovies) {
+            await displayMyMovies(forceRefresh);
+            if (elements.refreshIcon) elements.refreshIcon.classList.remove('spin-anim');
+            return;
+        }
+
+        if (playlist.isMovieVault) {
+            displayVaultIndex(ARCHIVE_MOVIE_VAULTS, MOVIE_VAULT_BLURB, 'movie');
+            if (elements.refreshIcon) elements.refreshIcon.classList.remove('spin-anim');
+            return;
+        }
+
+        if (playlist.isSeriesVault) {
+            displayVaultIndex(ARCHIVE_SERIES_VAULTS, SERIES_VAULT_BLURB, 'series');
             if (elements.refreshIcon) elements.refreshIcon.classList.remove('spin-anim');
             return;
         }
@@ -2282,7 +2748,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const backButton = document.createElement('button');
             backButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg> <span>Go Back</span>`;
             backButton.className = 'w-[calc(100%-16px)] mx-2 my-2 flex items-center justify-center space-x-2 py-3 px-4 text-center bg-white/80 hover:bg-white/90 dark:bg-black/60 dark:hover:bg-black/90 border border-black/10 dark:border-white/10 rounded-xl shadow-lg sticky top-0 z-10 text-xs font-bold uppercase tracking-wider transition-all backdrop-blur-md';
-            backButton.style.color = "var(--accent-color)";
+            backButton.style.color = "var(--accent-text)";
             backButton.addEventListener('click', backFunction);
             elements.playlistElement.appendChild(backButton);
         }
@@ -2290,7 +2756,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (allChannelsInPlaylist.length > 0 && Object.keys(groupedChannels).length > 1) {
             const allChannelsDiv = document.createElement('div');
             allChannelsDiv.className = 'category-item flex items-center space-x-3 p-3 cursor-pointer transition-colors duration-200 border-b border-[var(--border-color)] text-sm bg-black/5 dark:bg-white/5 animate-cascade mx-1';
-            allChannelsDiv.innerHTML = `<div class="flex-shrink-0 w-6 h-6 flex items-center justify-center text-xl">📚</div> <span class="font-bold text-slate-900 dark:text-white">All Channels</span> <span class="text-[10px] bg-white/80 dark:bg-black/50 px-2 py-1 rounded font-bold ml-auto text-slate-800 dark:text-slate-200">${allChannelsInPlaylist.length}</span>`;
+            allChannelsDiv.innerHTML = `<div class="flex-shrink-0 w-6 h-6 flex items-center justify-center text-xl">📚</div> <span class="font-bold text-slate-900 dark:text-white">All Channels</span> <span class="count-chip text-[10px] px-2 py-1 rounded ml-auto">${allChannelsInPlaylist.length}</span>`;
             allChannelsDiv.addEventListener('click', () => populatePlaylistUI(allChannelsInPlaylist, true, () => displayCategories(groupedChannels, backFunction, sourceTitle), 'All Channels'));
             elements.playlistElement.appendChild(allChannelsDiv);
         }
@@ -2307,7 +2773,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const sortedIconKeys = Object.keys(categoryIcons).sort((a, b) => b.length - a.length);
             const iconKey = Object.keys(categoryIcons).find(key => key === category) || sortedIconKeys.find(key => category.toLowerCase().includes(key.toLowerCase())) || 'Default';
             const iconHTML = categoryIcons[iconKey];
-            categoryDiv.innerHTML = `<div class="flex-shrink-0 w-6 h-6 flex items-center justify-center text-xl opacity-80" style="color: var(--accent-color)">${iconHTML}</div> <span class="flex-1 truncate font-medium text-slate-800 dark:text-slate-200">${escapeHtml(category)}</span> <span class="text-[10px] bg-black/5 dark:bg-black/40 px-2 py-1 rounded font-bold text-slate-800 dark:text-slate-200">${channels.length}</span>`;
+            categoryDiv.innerHTML = `<div class="flex-shrink-0 w-6 h-6 flex items-center justify-center text-xl opacity-80" style="color: var(--accent-text)">${iconHTML}</div> <span class="flex-1 truncate font-medium text-slate-800 dark:text-slate-200">${escapeHtml(category)}</span> <span class="count-chip text-[10px] px-2 py-1 rounded">${channels.length}</span>`;
             categoryDiv.addEventListener('click', () => {
                 populatePlaylistUI(channels, true, () => displayCategories(groupedChannels, backFunction, sourceTitle), category);
             });
@@ -2323,7 +2789,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const backButton = document.createElement('button');
             backButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg> <span>Go Back</span>`;
             backButton.className = 'w-[calc(100%-16px)] mx-2 my-2 flex items-center justify-center space-x-2 py-3 px-4 text-center bg-white/80 hover:bg-white/90 dark:bg-black/60 dark:hover:bg-black/90 border border-black/10 dark:border-white/10 rounded-xl shadow-lg sticky top-0 z-10 text-xs font-bold uppercase tracking-wider transition-all backdrop-blur-md';
-            backButton.style.color = "var(--accent-color)";
+            backButton.style.color = "var(--accent-text)";
             backButton.addEventListener('click', backFunction || (() => {
                 const activePill = document.querySelector('.playlist-pill.active');
                 if(activePill) loadDataForSource(activePill.dataset.name);
@@ -2535,7 +3001,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function renderPlaylistOptions(playlistsToRender) {
         elements.topPlaylistBar.innerHTML = '';
         const savedActive = hasConsent ? localStorage.getItem('iptv_last_source') : null;
-        const currentActive = playlistsToRender.some(p => p.name === savedActive) ? savedActive : 'Free Cinema';
+        const currentActive = playlistsToRender.some(p => p.name === savedActive) ? savedActive : 'Movie Vault';
 
         // The source list is long enough now that an undifferentiated pill run is hard to
         // scan, so pills are emitted in labelled runs: Highlights, Live TV, Free Networks,
@@ -2559,7 +3025,7 @@ document.addEventListener('DOMContentLoaded', function() {
             pillBtn.dataset.name = playlist.name;
             pillBtn.setAttribute('aria-pressed', isActive ? 'true' : 'false');
             const badge = playlist.badge
-                ? `<span class="ml-1 px-1.5 py-0.5 rounded text-[9px] font-bold leading-none bg-red-500/20 text-red-500 border border-red-500/30">${escapeHtml(playlist.badge)}</span>`
+                ? `<span class="ml-1 px-1.5 py-0.5 rounded text-[9px] font-bold leading-none bg-red-500/15 text-red-700 dark:text-red-400 border border-red-500/40">${escapeHtml(playlist.badge)}</span>`
                 : '';
             pillBtn.innerHTML = `<span aria-hidden="true">${playlist.icon || '📁'}</span> <span>${escapeHtml(playlist.name)}</span>${badge}`;
 
@@ -2651,7 +3117,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
                 <div class="flex-1 overflow-hidden">
                     <div class="text-sm font-bold text-slate-900 dark:text-white truncate">${escapeHtml(channel.title || 'Unknown')}</div>
-                    <div class="text-xs font-semibold uppercase tracking-wider" style="color: var(--accent-color)">${escapeHtml(badge || channel.group || 'Media')}</div>
+                    <div class="text-xs font-semibold uppercase tracking-wider" style="color: var(--accent-text)">${escapeHtml(badge || channel.group || 'Media')}</div>
                 </div>
                 <svg class="w-6 h-6 text-slate-500 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>`;
             const go = () => {
@@ -2898,7 +3364,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Sources are loaded on demand now, so first paint is not blocked on the
         // series playlists finishing their round-trip.
         const savedSource = hasConsent ? localStorage.getItem('iptv_last_source') : null;
-        const lastSourceName = allPlaylists.some(p => p.name === savedSource) ? savedSource : 'Free Cinema';
+        const lastSourceName = allPlaylists.some(p => p.name === savedSource) ? savedSource : 'Movie Vault';
         loadDataForSource(lastSourceName);
 
         registerPWA();
