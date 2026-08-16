@@ -126,13 +126,32 @@ Below the player the app is a browse surface rather than a single list:
 ### TMDB
 
 Playlist entries carry only a filename, so artwork and metadata come from The Movie
-Database, matched on the cleaned title plus the year when the filename has one (a year
-that matches nothing is dropped and the search retried — filename years are often a
-different cut or region).
+Database. Matching runs in tiers and stops at the first result that passes a similarity
+check:
 
-Lookups are memoised in `tmdbMemCache`, persisted to localStorage, queued 4-at-a-time, and
-only fired when a card scrolls into view. A rail of 20 posters must never fire 20 requests
-before it is scrolled to.
+1. cleaned title + filename year
+2. same title, no year (filename years are often a different cut or region)
+3. title with a trailing subtitle dropped (`Film - Special Edition`, `Film: Subtitle`)
+4. the first four words
+
+`tmdbQueryFrom()` strips release noise, bracketed tags, disc/volume markers, trailing
+release-group suffixes and leftover empty parentheses. `extractYear()` also catches a year
+glued to the title (`Mr Beans Holiday2007`).
+
+**`titlesLookAlike()` is the important part.** TMDB answers almost any query, so without a
+guard a short title takes something unrelated — `Grave` came back as *The Mechanical
+Grave*. A wrong poster is worse than no poster. The check folds accents (`Pokémon` =
+`Pokemon`), normalises roman numerals (`Rocky 5` = `Rocky V`), ignores word-break
+differences (`Mocking Bird` = `Mockingbird`), and requires a near-exact match for anything
+under nine characters.
+
+Measured against 240 real vault filenames: **100% matched, 100% with posters**, no false
+matches across the guard's test cases.
+
+Lookups are memoised in `tmdbMemCache`, persisted to localStorage, and queued 8-at-a-time.
+Cards enrich when they scroll into view, but each rail also eagerly fills its first ten —
+cards sitting off the right-hand edge of a horizontal rail never intersect the viewport, so
+the observer alone left every rail looking half-finished until it was scrolled sideways.
 
 ### Live channel logos
 
@@ -169,3 +188,7 @@ Failures retry with backoff, then offer a proxy hop, an external open, and a VLC
   `dark:` utility then follows the visitor's OS instead of the site's own toggle, which
   put near-white text on white panels in day mode.
 - **Retry archive.org.** Its nodes 5xx intermittently; one failed call is not a dead item.
+- **Never accept a TMDB result without checking the titles match.** The API answers almost
+  anything; an unrelated poster is worse than a placeholder.
+- **Horizontal rails need eager loading as well as an observer.** Off-screen-right cards
+  never intersect the viewport.

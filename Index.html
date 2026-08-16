@@ -460,6 +460,27 @@
         .channel-item:hover { background-color: color-mix(in srgb, var(--accent-color) 18%, transparent); }
         .category-item:hover { background-color: color-mix(in srgb, var(--accent-color) 14%, transparent); }
 
+        /*
+         * Idle player.
+         *
+         * A full-width 16:9 player is ~600px tall on a desktop, and with the now-playing
+         * bar and sponsor slot beneath it the first row of content started around
+         * 1,500px down — a long scroll before a visitor sees anything to watch, and far
+         * enough down that lazy-loaded artwork never even started fetching.
+         *
+         * While nothing is playing the player collapses to a banner. Starting playback
+         * removes the class and it returns to full 16:9.
+         */
+        #player-container.idle-compact {
+            aspect-ratio: auto !important;
+            height: 200px;
+        }
+        @media (min-width: 768px) { #player-container.idle-compact { height: 240px; } }
+        #player-container.idle-compact #player-idle { padding: 12px; }
+        #player-container.idle-compact #player-idle .idle-hero { font-size: 1.35rem; }
+        #player-container.idle-compact #player-idle .idle-sub { font-size: 0.8rem; }
+        #player-container.idle-compact #player-idle .idle-mark { font-size: 2rem; margin-bottom: 0.25rem; }
+
         /* ================= BROWSE SURFACE ================= */
 
         /* Horizontally scrolling poster rows. */
@@ -648,7 +669,7 @@
         </aside>
 
         <main id="main-view" class="flex-1 flex flex-col p-3 md:p-6 overflow-y-auto custom-scrollbar scroll-smooth">
-            <div id="player-container" class="relative w-full aspect-video bg-black rounded-xl flex-shrink-0 border border-black/10 dark:border-white/5 transition-all">
+            <div id="player-container" class="idle-compact relative w-full aspect-video bg-black rounded-xl flex-shrink-0 border border-black/10 dark:border-white/5 transition-all">
                 <video id="main-player" class="absolute top-0 left-0 w-full h-full rounded-xl object-contain z-10 bg-black" preload="auto" playsinline controls x-webkit-airplay="allow" disableRemotePlayback="false"></video>
                 
                 <button id="quality-toggle-btn" aria-label="Stream quality" class="hidden absolute top-4 right-4 bg-black/80 text-white p-2 rounded-full shadow-lg border border-white/10 z-30 hover:bg-white/20 transition-all backdrop-blur-md" title="Quality Settings">
@@ -671,9 +692,9 @@
                      says what this is and what to do until something is selected. -->
                 <div id="player-idle" class="absolute inset-0 flex flex-col items-center justify-center text-center p-6 rounded-xl z-[15] pointer-events-none select-none"
                      style="background: radial-gradient(circle at 50% 40%, color-mix(in srgb, var(--accent-color) 22%, #000) 0%, #05050a 70%)">
-                    <div class="text-5xl mb-4 drop-shadow-[0_0_20px_var(--accent-glow)]" aria-hidden="true">🎞️</div>
-                    <p class="header-title text-white text-2xl md:text-3xl font-bold tracking-wide mb-2">Streams Sphere</p>
-                    <p class="text-sm md:text-base text-white/70 max-w-md leading-relaxed">
+                    <div class="idle-mark text-5xl mb-4 drop-shadow-[0_0_20px_var(--accent-glow)]" aria-hidden="true">🎞️</div>
+                    <p class="idle-hero header-title text-white text-2xl md:text-3xl font-bold tracking-wide mb-2">Streams Sphere</p>
+                    <p class="idle-sub text-sm md:text-base text-white/70 max-w-md leading-relaxed">
                         Thousands of free films, classic TV and live channels. Pick something from the list, or hit
                         <kbd class="px-1.5 py-0.5 mx-0.5 rounded bg-white/15 border border-white/20 text-xs font-mono">/</kbd> to search.
                     </p>
@@ -1251,7 +1272,9 @@ document.addEventListener('DOMContentLoaded', function() {
             task().then(resolve).catch(reject).finally(() => { this.running--; this.runNext(); });
         }
     }
-    const tmdbQueue = new PromiseQueue(4);
+    // TMDB's public limit is generous (~50 req/s); 8 in flight fills a rail quickly
+    // without ever approaching it.
+    const tmdbQueue = new PromiseQueue(8);
 
     function saveTmdbCache() {
         if (!hasConsent) return;
@@ -1318,21 +1341,23 @@ document.addEventListener('DOMContentLoaded', function() {
     // This allows featured grid items at the bottom of the page to trigger image fetches.
     const tmdbObserver = new IntersectionObserver((entries, observer) => {
         entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const channelDiv = entry.target;
-                const channelUrl = channelDiv.dataset.url || (channelDiv.dataset.channel ? JSON.parse(channelDiv.dataset.channel).url : null);
-                if (!channelUrl) return;
-                
-                const channel = allChannelsInPlaylist.find(c => c.url === channelUrl) || watchHistory.find(c => c.url === channelUrl);
-                const img = channelDiv.querySelector('.channel-logo') || channelDiv.querySelector('.dvd-case-img');
-                
-                if (channel && channel.isVod && (!channel.logo || (img && img.dataset.dead === 'true'))) {
-                    fetchTMDBDataForChannel(channel, channelDiv);
-                }
-                observer.unobserve(channelDiv);
-            }
+            if (!entry.isIntersecting) return;
+            const channelDiv = entry.target;
+            observer.unobserve(channelDiv);
+
+            // The element carries the channel object directly where possible; the URL
+            // lookup is the fallback for rows rendered before that was the case.
+            const channelUrl = channelDiv.dataset.url;
+            const channel = channelDiv._channel
+                || allChannelsInPlaylist.find(c => c.url === channelUrl)
+                || watchHistory.find(c => c.url === channelUrl);
+            if (!channel) return;
+
+            const img = channelDiv.querySelector('.channel-logo') || channelDiv.querySelector('.dvd-case-img');
+            const wants = channel.needsArt || (channel.isVod && (!channel.logo || (img && img.dataset.dead === 'true')));
+            if (wants) fetchTMDBDataForChannel(channel, channelDiv);
         });
-    }, { rootMargin: '200px' });
+    }, { rootMargin: '800px' });
 
     // NOTE on VOD sources: the old 'Movies' entry pointed every one of its 766 titles at
     // the archive.org item `movies_202211`, which the Internet Archive has since darkened
@@ -1623,6 +1648,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 group: vault.label,
                 isVod: true,
                 isArchive: true,
+                // Every title in a vault otherwise shares the one item thumbnail, so
+                // artwork has to come from TMDB per title.
+                needsArt: true,
                 archiveId: vault.id,
                 archiveFile: pick.name,
                 sourcePlaylistName: vault.label
@@ -1657,6 +1685,7 @@ document.addEventListener('DOMContentLoaded', function() {
             group: collectionLabel,
             isVod: true,
             isArchive: true,
+            needsArt: true,
             archiveId: doc.identifier,
             sourcePlaylistName: 'Free Cinema'
         };
@@ -1956,8 +1985,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             });
             
+            el._channel = ch;
             elements.featuredChannelsGrid.appendChild(el);
-            if (ch.isVod && !ch.logo) tmdbObserver.observe(el);
+            if (ch.needsArt || (ch.isVod && !ch.logo)) tmdbObserver.observe(el);
         });
     }
 
@@ -2525,16 +2555,93 @@ document.addEventListener('DOMContentLoaded', function() {
     const tmdbPoster = (p, size = 'w342') => (p ? `${TMDB_IMG}/${size}${p}` : null);
     const tmdbBackdrop = (p, size = 'w1280') => (p ? `${TMDB_IMG}/${size}${p}` : null);
 
-    /** Pull a 4-digit year out of "Blade Runner (1982)" or "Blade Runner 1982". */
+    /** Pull a 4-digit year out of "Blade Runner (1982)", "Blade Runner 1982" or "Holiday2007". */
     function extractYear(title) {
-        const m = String(title).match(/\((19|20)(\d{2})\)|\b(19|20)(\d{2})\b/);
+        const m = String(title).match(/\((19|20)(\d{2})\)|\b(19|20)(\d{2})\b|(?:\D)(19|20)(\d{2})\s*$/);
         if (!m) return null;
-        const y = m[1] ? `${m[1]}${m[2]}` : `${m[3]}${m[4]}`;
-        return parseInt(y, 10);
+        const y = m[1] ? `${m[1]}${m[2]}` : (m[3] ? `${m[3]}${m[4]}` : `${m[5]}${m[6]}`);
+        const n = parseInt(y, 10);
+        return n >= 1890 && n <= new Date().getFullYear() + 2 ? n : null;
     }
 
     function stripYear(title) {
-        return String(title).replace(/\((19|20)\d{2}\)/g, '').replace(/\b(19|20)\d{2}\b/g, '').trim();
+        return String(title)
+            .replace(/\((19|20)\d{2}\)/g, ' ')
+            .replace(/\b(19|20)\d{2}\b/g, ' ')
+            .replace(/(\D)(19|20)\d{2}\s*$/, '$1')   // "Holiday2007"
+            .replace(/\s{2,}/g, ' ')
+            .trim();
+    }
+
+    /**
+     * Reduce a messy filename-derived title to something TMDB can match.
+     * Handles the leftovers the release-noise pass doesn't: bracketed tags, disc and
+     * volume markers, and trailing descriptors like "English captions".
+     */
+    function tmdbQueryFrom(rawTitle) {
+        let c = String(rawTitle).split('/').pop();
+        c = c.replace(/\.(mp4|m4v|mkv|avi|webm|ogv|mov)$/i, '');
+        c = c.replace(/_+/g, ' ');
+        // Scene names separate words with dots. Keep dots that sit between digits (9.99).
+        c = c.replace(/\.(?!\d)/g, ' ').replace(/(?<!\d)\./g, ' ');
+        c = c.replace(/\[[^\]]*\]/g, ' ').replace(/\{[^}]*\}/g, ' ');
+        c = c.replace(RELEASE_NOISE, ' ');
+        c = c.replace(/\b(?:d|disc|disk|vol|volume|part|pt|cd)\s*\.?\s*\d+\b/gi, ' ');
+        c = c.replace(/\b(english|spanish|french|german|italian)?\s*(captions?|subtitles?|subs|sample)\b/gi, ' ');
+        c = c.replace(/-\s*[A-Za-z0-9]{2,12}\s*$/, ' ');   // trailing -RELEASEGROUP
+        // A parenthetical left holding only a year, language code or nothing is noise.
+        c = c.replace(/\(\s*(?:(19|20)\d{2})?\s*[a-z]{0,3}\s*\)/gi, ' ');
+        c = c.replace(/\s{2,}/g, ' ');
+        return c.replace(/^[\s\-._]+|[\s\-._]+$/g, '');
+    }
+
+    /**
+     * Guard against confident-looking nonsense.
+     *
+     * TMDB will answer almost any query, so a short or generic title happily matches
+     * something unrelated — "Grave" came back as "The Mechanical Grave". A wrong poster
+     * is worse than no poster, so a result is only accepted when the two titles are
+     * genuinely close.
+     */
+    // Sequel numbering is written both ways: "Pumpkinhead 2" vs "Pumpkinhead II".
+    const ROMAN_NUMERALS = { i: '1', ii: '2', iii: '3', iv: '4', v: '5', vi: '6',
+                             vii: '7', viii: '8', ix: '9', x: '10' };
+
+    function titlesLookAlike(query, candidate) {
+        const norm = s => String(s)
+            // Fold accents so "Pokémon" and "Pokemon" are the same title.
+            .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+            .toLowerCase()
+            .replace(/&/g, ' and ')
+            .replace(/[^a-z0-9 ]+/g, ' ')
+            .split(/\s+/)
+            .map(w => ROMAN_NUMERALS[w] || w)
+            .join(' ')
+            .replace(/\b(the|a|an|of|and|part)\b/g, ' ')
+            .replace(/\s+/g, ' ').trim();
+        const q = norm(query), c = norm(candidate);
+        if (!q || !c) return false;
+        if (q === c) return true;
+
+        // "To Kill a Mocking Bird" vs "To Kill a Mockingbird" — same title, different
+        // word breaks, so compare with the spaces taken out as well.
+        const qz = q.replace(/ /g, ''), cz = c.replace(/ /g, '');
+        if (qz === cz) return true;
+
+        const qw = q.split(' '), cw = c.split(' ');
+
+        // A short query is far too easy to match by accident — "Grave" would happily
+        // take "The Mechanical Grave" — so it has to match almost exactly. Length is
+        // the right test rather than word count: "Pumpkinhead 2" is only two words but
+        // distinctive enough to accept "Pumpkinhead II: Blood Wings" as its sequel.
+        if (qz.length <= 8) {
+            return cz.startsWith(qz) && cz.length - qz.length <= 3;
+        }
+        if (qw.length <= 2) return cz.startsWith(qz);
+
+        const cset = new Set(cw);
+        const shared = qw.filter(w => cset.has(w)).length;
+        return shared / Math.min(qw.length, cw.length) >= 0.75;
     }
 
     /**
@@ -2545,49 +2652,58 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!TMDB_API_KEY || !rawTitle) return null;
 
         const year = extractYear(rawTitle);
-        const query = cleanTitleForSearch(stripYear(rawTitle));
+        const cleaned = tmdbQueryFrom(rawTitle);
+        const query = stripYear(cleaned);
         if (!query || query.length < 2) return null;
 
-        const cacheKey = `tmdb_v2_${kind}_${query.toLowerCase()}_${year || ''}`;
+        const cacheKey = `tmdb_v3_${kind}_${query.toLowerCase()}_${year || ''}`;
         if (cacheKey in tmdbMemCache) return tmdbMemCache[cacheKey];
 
         return tmdbQueue.add(async () => {
             if (cacheKey in tmdbMemCache) return tmdbMemCache[cacheKey];
-            const params = new URLSearchParams({ api_key: TMDB_API_KEY, query });
-            if (year) params.set(kind === 'tv' ? 'first_air_date_year' : 'year', String(year));
+
+            const search = async (q, withYear) => {
+                const params = new URLSearchParams({ api_key: TMDB_API_KEY, query: q });
+                if (withYear && year) params.set(kind === 'tv' ? 'first_air_date_year' : 'year', String(year));
+                const res = await fetch(`https://api.themoviedb.org/3/search/${kind}?${params}`);
+                if (!res.ok) return null;
+                const results = (await res.json()).results || [];
+                // Prefer a well-known result over an obscure same-name one.
+                results.sort((a, b) => (b.vote_count || 0) - (a.vote_count || 0));
+                return results.find(r => titlesLookAlike(q, r.title || r.name)) || null;
+            };
+
+            let hit = null;
+            try {
+                // Tiered: exact with year, then without (filename years are often the
+                // wrong cut), then dropping a trailing subtitle, then the leading words.
+                hit = await search(query, true);
+                if (!hit && year) hit = await search(query, false);
+                if (!hit && query.includes(' - ')) hit = await search(query.split(' - ')[0].trim(), false);
+                if (!hit && query.includes(':')) hit = await search(query.split(':')[0].trim(), false);
+                if (!hit) {
+                    const words = query.split(/\s+/);
+                    if (words.length > 4) hit = await search(words.slice(0, 4).join(' '), false);
+                }
+            } catch (e) { /* offline or rate-limited — the miss is cached below */ }
 
             let record = null;
-            try {
-                const res = await fetch(`https://api.themoviedb.org/3/search/${kind}?${params}`);
-                if (res.ok) {
-                    const data = await res.json();
-                    let hit = (data.results || [])[0];
-
-                    // A year filter that finds nothing is worse than no filter — the year in
-                    // a filename is often the release of a different cut or region.
-                    if (!hit && year) {
-                        params.delete(kind === 'tv' ? 'first_air_date_year' : 'year');
-                        const retry = await fetch(`https://api.themoviedb.org/3/search/${kind}?${params}`);
-                        if (retry.ok) hit = ((await retry.json()).results || [])[0];
-                    }
-
-                    if (hit) {
-                        const date = hit.release_date || hit.first_air_date || '';
-                        record = {
-                            tmdbId: hit.id,
-                            kind,
-                            name: hit.title || hit.name || rawTitle,
-                            year: date ? parseInt(date.slice(0, 4), 10) : null,
-                            overview: hit.overview || '',
-                            rating: hit.vote_average ? Math.round(hit.vote_average * 10) / 10 : null,
-                            votes: hit.vote_count || 0,
-                            poster: tmdbPoster(hit.poster_path),
-                            backdrop: tmdbBackdrop(hit.backdrop_path),
-                            genres: (hit.genre_ids || []).map(id => TMDB_GENRE_MAP[id]).filter(Boolean)
-                        };
-                    }
-                }
-            } catch (e) { /* offline or rate-limited — cache the miss below */ }
+            if (hit) {
+                const date = hit.release_date || hit.first_air_date || '';
+                record = {
+                    tmdbId: hit.id,
+                    kind,
+                    name: hit.title || hit.name || rawTitle,
+                    year: date ? parseInt(date.slice(0, 4), 10) : null,
+                    overview: hit.overview || '',
+                    rating: hit.vote_average ? Math.round(hit.vote_average * 10) / 10 : null,
+                    votes: hit.vote_count || 0,
+                    poster: tmdbPoster(hit.poster_path),
+                    posterLarge: tmdbPoster(hit.poster_path, 'w500'),
+                    backdrop: tmdbBackdrop(hit.backdrop_path),
+                    genres: (hit.genre_ids || []).map(id => TMDB_GENRE_MAP[id]).filter(Boolean)
+                };
+            }
 
             tmdbMemCache[cacheKey] = record;
             saveTmdbCache();
@@ -2599,8 +2715,13 @@ document.addEventListener('DOMContentLoaded', function() {
     async function enrichChannel(channel) {
         if (channel._tmdb !== undefined) return channel._tmdb;
         const kind = channel.isSeries || channel.isEpisode ? 'tv' : 'movie';
-        // For an episode, look up the show rather than the episode title.
-        const subject = kind === 'tv' && channel.group ? channel.group : channel.title;
+
+        // For an episode, look the show up rather than the episode title — `group` holds
+        // the show name. A box-set card is the show itself, and its `group` is a count
+        // like "252 episodes", so that one has to use its own title.
+        const subject = (kind === 'tv' && channel.group && !channel._vault)
+            ? channel.group
+            : channel.title;
         const rec = await tmdbLookup(subject, kind);
         channel._tmdb = rec || null;
         if (rec) {
@@ -2610,20 +2731,32 @@ document.addEventListener('DOMContentLoaded', function() {
         return channel._tmdb;
     }
 
+    /** Fill a sidebar row or grid card with TMDB artwork once it scrolls into view. */
     async function fetchTMDBDataForChannel(channel, channelDiv) {
-        let details = null;
-        if (channel.isSeries && channel.group) details = await fetchTvShowDetailsFromTMDB(channel.group);
-        else if (channel.title) details = await fetchMovieDetailsFromTMDB(channel.title);
-        
-        if (details && details.logo) {
-            channel.logo = details.logo;
-            const img = channelDiv.querySelector('.channel-logo') || channelDiv.querySelector('.dvd-case-img');
-            const fallback = channelDiv.querySelector('.channel-logo-fallback');
-            if (img) {
-                img.dataset.dead = 'false';
-                img.src = details.logo;
-                if (fallback) img.onload = () => { img.style.display = 'block'; fallback.style.display = 'none'; };
-            }
+        const rec = await enrichChannel(channel).catch(() => null);
+        if (!rec || !rec.poster || !channelDiv.isConnected) return;
+
+        const img = channelDiv.querySelector('.channel-logo')
+            || channelDiv.querySelector('.dvd-case-img')
+            || channelDiv.querySelector('.poster-art');
+        const fallback = channelDiv.querySelector('.channel-logo-fallback');
+        if (!img) return;
+
+        img.dataset.dead = 'false';
+        img.dataset.hasArt = '1';
+        img.src = rec.poster;
+        if (fallback) {
+            img.addEventListener('load', () => {
+                img.style.display = 'block';
+                fallback.style.display = 'none';
+            }, { once: true });
+        }
+
+        // Surface the year/rating the lookup came back with where there is room for it.
+        const sub = channelDiv.querySelector('.poster-sub');
+        if (sub) {
+            const bits = [rec.year, rec.genres[0]].filter(Boolean);
+            if (bits.length) sub.textContent = bits.join(' · ');
         }
     }
 
@@ -2766,7 +2899,8 @@ document.addEventListener('DOMContentLoaded', function() {
         const groups = {};
         live.forEach(ch => {
             ch.isVod = true;
-            ch.title = cleanTitleForSearch(titleFromFilename(ch.title));
+            ch.needsArt = true;
+            ch.title = titleFromFilename(ch.title);
             const first = movieSortKey(ch.title).charAt(0);
             const bucket = /[A-Z]/.test(first) ? first : '#';
             (groups[bucket] = groups[bucket] || []).push(ch);
@@ -2847,34 +2981,46 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Cards enrich themselves from TMDB only once they are actually on screen —
     // a rail of 20 posters must not fire 20 API calls before it is scrolled to.
+    /** Look a card's title up and paint the poster, year/genre and rating onto it. */
+    function fillCardArtwork(card) {
+        const channel = card && card._channel;
+        if (!channel || channel._tmdbRequested) return;
+        channel._tmdbRequested = true;
+
+        return enrichChannel(channel).then(rec => {
+            if (!rec || !card.isConnected) return;
+            const art = card.querySelector('.poster-art');
+            if (rec.poster && art) { art.src = rec.poster; art.dataset.hasArt = '1'; }
+
+            // Prefer TMDB's title: the filename-derived one repeats the year the
+            // subtitle already shows, and often keeps odd capitalisation.
+            const nameEl = card.querySelector('.poster-name');
+            if (nameEl && rec.name) nameEl.textContent = rec.name;
+
+            const sub = card.querySelector('.poster-sub');
+            if (sub) {
+                const bits = [rec.year, rec.genres[0]].filter(Boolean);
+                if (bits.length) sub.textContent = bits.join(' · ');
+            }
+            if (rec.rating) {
+                let badge = card.querySelector('.poster-badge');
+                if (!badge) {
+                    badge = document.createElement('span');
+                    badge.className = 'poster-badge';
+                    card.prepend(badge);
+                }
+                badge.textContent = `★ ${rec.rating}`;
+            }
+        }).catch(() => {});
+    }
+
     const cardObserver = new IntersectionObserver((entries, obs) => {
         entries.forEach(entry => {
             if (!entry.isIntersecting) return;
             obs.unobserve(entry.target);
-            const card = entry.target;
-            const channel = card._channel;
-            if (!channel || channel._tmdb !== undefined) return;
-            enrichChannel(channel).then(rec => {
-                if (!rec || !card.isConnected) return;
-                const art = card.querySelector('.poster-art');
-                if (rec.poster && art) { art.src = rec.poster; art.dataset.hasArt = '1'; }
-                const sub = card.querySelector('.poster-sub');
-                if (sub) {
-                    const bits = [rec.year, rec.genres[0]].filter(Boolean);
-                    if (bits.length) sub.textContent = bits.join(' · ');
-                }
-                if (rec.rating) {
-                    let badge = card.querySelector('.poster-badge');
-                    if (!badge) {
-                        badge = document.createElement('span');
-                        badge.className = 'poster-badge';
-                        card.prepend(badge);
-                    }
-                    badge.textContent = `★ ${rec.rating}`;
-                }
-            });
+            fillCardArtwork(entry.target);
         });
-    }, { rootMargin: '300px' });
+    }, { rootMargin: '1400px' });
 
     function makePosterCard(channel, opts = {}) {
         const card = document.createElement('article');
@@ -2888,7 +3034,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const sub = rawSub === 'Uncategorized' ? (opts.live ? 'Live channel' : '') : rawSub;
         card.innerHTML = `
             ${opts.live ? '<span class="poster-live">LIVE</span>' : ''}
-            <img class="poster-art" alt="" loading="lazy" src="${escapeHtml(art)}">
+            <img class="poster-art" alt="" loading="lazy" decoding="async" src="${escapeHtml(art)}">
             <div class="poster-meta">
                 <div class="poster-name">${escapeHtml(channel.title || 'Untitled')}</div>
                 <div class="poster-sub">${escapeHtml(sub)}</div>
@@ -2953,12 +3099,19 @@ document.addEventListener('DOMContentLoaded', function() {
         loader().then(channels => {
             if (!channels || !channels.length) { section.remove(); return; }
             railEl.innerHTML = '';
-            channels.slice(0, limit).forEach((ch, i) => {
+            const cards = channels.slice(0, limit).map((ch, i) => {
                 const card = makePosterCard(ch, { channelStyle, live });
                 card.style.animationDelay = `${(i % 10) * 0.04}s`;
                 card.setAttribute('role', 'listitem');
                 railEl.appendChild(card);
+                return card;
             });
+
+            // Cards sitting off the right-hand edge of a rail never intersect the
+            // viewport, so relying on the observer alone leaves every rail looking
+            // half-finished until it is scrolled sideways. Eagerly enrich roughly one
+            // screen's worth; the observer picks up the rest on scroll.
+            if (!channelStyle) cards.slice(0, 10).forEach(fillCardArtwork);
         }).catch(() => section.remove());
     }
 
@@ -3065,7 +3218,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (channel.group && channel.group !== 'Uncategorized') bits.push(channel.group);
             metaEl.innerHTML = bits.map(b => `<span>${escapeHtml(b)}</span>`).join('<span aria-hidden="true">•</span>');
             overviewEl.textContent = rec.overview || 'No synopsis available for this title.';
-            if (rec.poster) posterEl.src = rec.poster;
+            if (rec.posterLarge || rec.poster) posterEl.src = rec.posterLarge || rec.poster;
             if (rec.backdrop) { backdropEl.src = rec.backdrop; backdropEl.style.display = 'block'; }
         } else {
             overviewEl.textContent = 'No synopsis available for this title.';
@@ -3087,18 +3240,18 @@ document.addEventListener('DOMContentLoaded', function() {
         renderNetworkShelf();
 
         addRail({
+            title: 'Your movie library',
+            subtitle: 'From your own playlist',
+            loader: async () => shuffled((await loadMyMovies()).all, 20),
+            onMore: () => loadDataForSource('My Movies')
+        });
+
+        addRail({
             title: 'Live right now',
             subtitle: 'Free ad-supported channels from Pluto TV',
             channelStyle: true, live: true,
             loader: () => sampleFromPlaylist(`${IPTV_STREAMS}/us_pluto.m3u`, 'Pluto TV', 20),
             onMore: () => loadDataForSource('Live TV')
-        });
-
-        addRail({
-            title: 'Your movie library',
-            subtitle: 'From your own playlist',
-            loader: async () => shuffled((await loadMyMovies()).all, 20),
-            onMore: () => loadDataForSource('My Movies')
         });
 
         ARCHIVE_MOVIE_VAULTS.slice(0, 3).forEach(vault => {
@@ -3684,8 +3837,9 @@ document.addEventListener('DOMContentLoaded', function() {
             // Hold the channel object itself rather than round-tripping it through a
             // JSON string in a DOM attribute, which broke on titles containing quotes.
             channelDiv.querySelector('.favorite-btn')._channel = channel;
+            channelDiv._channel = channel;
 
-            if (channel.isVod && !channel.logo) tmdbObserver.observe(channelDiv);
+            if (channel.needsArt || (channel.isVod && !channel.logo)) tmdbObserver.observe(channelDiv);
             return channelDiv;
         });
     }
@@ -3701,6 +3855,8 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('loading-subtext').innerText = "Please wait, connecting to media...";
         
         elements.playerIdle?.classList.add('hidden');
+        // Playback expands the player back to full 16:9.
+        elements.playerContainer?.classList.remove('idle-compact');
 
         currentlyPlayingUrl = url;
         const videoId = extractVideoID(url);
