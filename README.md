@@ -109,6 +109,39 @@ tag and will only play from a UK connection.
 M3U playlists hosted in sibling GitHub repositories, grouped into shows and sorted by
 season/episode.
 
+## The browse surface
+
+Below the player the app is a browse surface rather than a single list:
+
+- **Network shelf** — Pluto (US/UK/CA/DE), Samsung TV+ (US/UK), Plex, Tubi, Xumo, Stirr,
+  Roku, Rakuten, DistroTV, KlowdTV and Vizio as tiles, always one click from home. These
+  were briefly demoted into the Live TV hub and that was a mistake: they are the most
+  reliable content in the app and the brands people recognise, so they stay on the surface.
+- **Poster rails** — horizontally scrolling rows built by `renderHomeRows()`: live now,
+  your movie library, film vaults, box sets, free cinema, sport, news, kids.
+- **Detail sheet** — every VOD poster opens a sheet with backdrop, synopsis, rating, year
+  and genre before playing. Live channels skip it and play immediately, because a live
+  channel has no synopsis to show.
+
+### TMDB
+
+Playlist entries carry only a filename, so artwork and metadata come from The Movie
+Database, matched on the cleaned title plus the year when the filename has one (a year
+that matches nothing is dropped and the search retried — filename years are often a
+different cut or region).
+
+Lookups are memoised in `tmdbMemCache`, persisted to localStorage, queued 4-at-a-time, and
+only fired when a card scrolls into view. A rail of 20 posters must never fire 20 requests
+before it is scrolled to.
+
+### Live channel logos
+
+The per-network playlists under `streams/` carry `tvg-id` but no `tvg-logo`, so those
+channels would render as blank tiles. `ensureLiveLogoMap()` fetches the US and UK country
+playlists once (~400 KB, which do carry logos for ~98% of entries) and builds an
+id → logo map that back-fills the network lists. iptv-org also publishes `logos.json`, but
+that is 7 MB — too much to pull on every visit for what two playlists already give.
+
 ## Playback
 
 | Kind | Handling |
