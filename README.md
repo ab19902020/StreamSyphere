@@ -41,6 +41,17 @@ Rather than hand-listing files in an M3U, these are enumerated live from
 `archive.org/metadata/<identifier>`, so anything the uploader adds appears automatically —
 the Mayday playlist listed 109 episodes where the item holds 203.
 
+**28 film vaults (~2,240 titles)** and **70 box sets (~19,600 episodes)**, each verified
+live with a browser-playable count before being added.
+
+Found by sweeping archive.org's search API for large multi-title items. The raw sweep
+returned far more than shipped here; deliberately excluded were game-capture dumps
+mislabelled as films, hentai and adult production-house items, YouTube-personality
+archives (several built around hateful or violent creators), religious proselytising
+channels, trailer/promo reels, and unlabelled bulk dumps. Curation is the point — the
+search API alone will happily hand back 4,400 Counter-Strike clips as a "movie
+collection".
+
 Files are grouped by base name so an `.mkv` and its archive-derived `.mp4` count as one
 title, and the browser-playable file wins. Titles with no playable derivative are dropped
 rather than listed as dead clicks: browsers cannot play Matroska.
@@ -65,17 +76,33 @@ include vintage adult and exploitation titles alongside classic cinema.
 | `archive:<identifier>` | pick the best video in the item (Free Cinema) |
 | `archive:<identifier>\|<file>` | that exact file (vaults) |
 
-### Live TV — iptv-org
+### Live TV
 
-Country, category and per-network playlists come from
-[iptv-org/iptv](https://github.com/iptv-org/iptv). The free ad-supported networks
-(Pluto TV, Samsung TV Plus, Tubi, Xumo, Plex, Stirr, Roku) are the most reliable sources
-in the app — spot checks put them at ~100% uptime, versus roughly 50–80% for the
-general country and category lists, which are community-maintained and go dark often.
+~78 verified playlists from [iptv-org/iptv](https://github.com/iptv-org/iptv) and
+[Free-TV/IPTV](https://github.com/Free-TV/IPTV), reached through the **Live TV** hub
+rather than as top-level pills — 78 pills in a scroll strip is not navigable, and
+country / genre / language / network is how people actually look for a channel.
+
+| Section | Contents |
+| --- | --- |
+| By Country | every country iptv-org carries, grouped into five regions |
+| Free TV Networks | Pluto (9 countries), Samsung TV Plus (4), Rakuten TV (5), Tubi, Xumo, Plex, Stirr, Roku, KlowdTV, DistroTV, Vizio |
+| By Genre | 30 categories |
+| By Language | 15 languages |
+| Everything | full index, plus the Free-TV community aggregators |
+
+The ad-supported networks are by far the most reliable — spot checks put them near 100%
+uptime, against roughly 50–80% for the community country and category lists.
 
 > Per-network playlists live under `streams/` in the iptv-org **repo**, not under
 > `/networks/` on their GitHub Pages site. That path was removed upstream and is what
 > previously broke the Pluto TV and Samsung TV Plus sources.
+
+**Freely (UK) cannot be added.** It has no public playlist: its streams are DRM-protected
+and only delivered through the Freely app and certified TVs, so there is nothing a browser
+can embed. The channels its line-up covers (BBC One/Two/Four/News, ITV, Channel 4/5) are
+already reachable through the United Kingdom source — though many carry a `[Geo-blocked]`
+tag and will only play from a UK connection.
 
 ### Series & Shows
 

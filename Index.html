@@ -1250,7 +1250,30 @@ document.addEventListener('DOMContentLoaded', function() {
         { id: 'duets-2000', label: '2000s Movies', icon: '🎬', approx: 69 },
         { id: 'movie-bucket-i', label: 'Movie Bucket I', icon: '🎬', approx: 41 },
         { id: 'peli9', label: 'Movie Vault 9', icon: '🎬', approx: 40 },
-        { id: 'the-family-man-2000', label: 'Christmas Movie Pack', icon: '🎄', approx: 20 }
+        { id: 'the-family-man-2000', label: 'Christmas Movie Pack', icon: '🎄', approx: 20 },
+
+        // --- discovered by sweeping archive.org for large multi-film items ---
+        { id: 'disneyanimatedshorts', label: "Disney Animated Shorts", icon: '🐭', approx: 253 },
+        { id: 'armitage-iii-ova-and-movie-collection-dvd-052025', label: "Armitage III", icon: '🤖', approx: 180 },
+        { id: 'parody-film-collection-part-i_202602', label: "Parody Films", icon: '😜', approx: 163 },
+        { id: '106-utopia-1951', label: "Laurel & Hardy", icon: '🎩', approx: 107 },
+        { id: 'CharlieChalin_Lando18', label: "Charlie Chaplin", icon: '🎩', approx: 81 },
+        { id: 'busterkeaton-lando18', label: "Buster Keaton", icon: '🎩', approx: 81 },
+        { id: 'little-einsteins_202508', label: "Little Einsteins", icon: '🎵', approx: 67 },
+        { id: 'jackiechanmoviescollection', label: "Jackie Chan", icon: '🥋', approx: 66 },
+        { id: 'walt-disney-animation-studios-1937-present_202502', label: "Walt Disney Animation Studios", icon: '🏰', approx: 63 },
+        { id: 'wombles-1973-77', label: "The Wombles", icon: '🐾', approx: 61 },
+        { id: 'SoadHosny', label: "Soad Hosny", icon: '🇪🇬', approx: 50 },
+        { id: 'nu-image-movies-collection', label: "Nu Image Films", icon: '💥', approx: 50 },
+        { id: 'HaroldLloyd_Lando18', label: "Harold Lloyd", icon: '🎩', approx: 46 },
+        { id: 'abbottandcostellomoviecollection', label: "Abbott & Costello", icon: '🎭', approx: 36 },
+        { id: 'disney-channel-original-movies', label: "Disney Channel Original Movies", icon: '🏰', approx: 35 },
+        { id: 'barbie-movie-collection', label: "Barbie Movies", icon: '🎀', approx: 35 },
+        { id: 'stan-brakhage-film-collection', label: "Stan Brakhage", icon: '🎨', approx: 30 },
+        { id: 'jackie-chan-action-man2', label: "Jackie Chan \u00b7 1980s", icon: '🥋', approx: 26 },
+        { id: 'us-1930s-film-collection', label: "US 1930s Films", icon: '🎞️', approx: 26 },
+        { id: 'jackie-chan-action-man3', label: "Jackie Chan \u00b7 1990s", icon: '🥋', approx: 24 },
+        { id: 'doraemon-movies_202606', label: "Doraemon Classic Movies", icon: '🐱', approx: 21 }
     ];
 
     const ARCHIVE_SERIES_VAULTS = [
@@ -1291,7 +1314,44 @@ document.addEventListener('DOMContentLoaded', function() {
         { id: 'themedialist', label: 'TheMediaList', icon: '📺', approx: 90 },
         { id: 'australia-and-new-zealand-tv-series', label: 'Australia & NZ TV', icon: '🇦🇺', approx: 289 },
         { id: 'british-scottish-and-welsh-tv-series', label: 'British, Scottish & Welsh TV', icon: '🇬🇧', approx: 260 },
-        { id: 'balto-1995_202511', label: 'Edited Movies & TV', icon: '✂️', approx: 120 }
+        { id: 'balto-1995_202511', label: 'Edited Movies & TV', icon: '✂️', approx: 120 },
+
+        // --- discovered by sweeping archive.org for full-series items ---
+        { id: 'anpanman-episodes-1-600', label: "Anpanman", icon: '🥐', approx: 977 },
+        { id: 'bananas-in-pyjamas-the-complete-collection-1992-2001', label: "Bananas in Pyjamas", icon: '🍌', approx: 278 },
+        { id: 'baywatch_202212', label: "Baywatch", icon: '🏖️', approx: 564 },
+        { id: 'BBCHorizonCollection512Episodes', label: "BBC Horizon", icon: '🔬', approx: 507 },
+        { id: 'benson-complete-tv-series-ctv', label: "Benson", icon: '🤵', approx: 158 },
+        { id: 'Big_Cartoon', label: "Big Cartoon Archive", icon: '📼', approx: 389 },
+        { id: 'Cartoons-and-Anime', label: "Cartoons & Anime", icon: '✏️', approx: 243 },
+        { id: 'chespirito-sitcom-archive', label: "Chespirito", icon: '🇲🇽', approx: 173 },
+        { id: 'dark-shadows_202210', label: "Dark Shadows", icon: '🦇', approx: 1239 },
+        { id: 'disney-anthology-television-series', label: "Disney Anthology TV", icon: '🏰', approx: 413 },
+        { id: 'dungeons-dragons-tv-series', label: "Dungeons & Dragons", icon: '🐉', approx: 182 },
+        { id: 'hokuto_no_ken_by_wilmer29_d9qm239', label: "Fist of the North Star", icon: '👊', approx: 161 },
+        { id: 'forensic-files-collection', label: "Forensic Files", icon: '🔍', approx: 396 },
+        { id: 'garfield-and-friends-complete-series', label: "Garfield and Friends", icon: '🐈', approx: 363 },
+        { id: 'GreenAcresCompleteSeries', label: "Green Acres", icon: '🌾', approx: 169 },
+        { id: 'hamtaro_complete_series', label: "Hamtaro", icon: '🐹', approx: 296 },
+        { id: 'kinnikuman-1983-hn-g-muscle-subs', label: "Kinnikuman", icon: '💪', approx: 279 },
+        { id: 'little-house-on-the-prairie-1974-1983-full-tv-series', label: "Little House on the Prairie", icon: '🏡', approx: 208 },
+        { id: 'mash-series_202509', label: "M*A*S*H (no laugh track)", icon: '🚁', approx: 256 },
+        { id: 'malcolm-in-the-middle-complete-series-2000-2006', label: "Malcolm in the Middle", icon: '😜', approx: 151 },
+        { id: '001-nypd-blue', label: "NYPD Blue", icon: '🚓', approx: 260 },
+        { id: 'Ranma-half-1989', label: "Ranma \u00bd (English)", icon: '🥋', approx: 165 },
+        { id: 'ReadingRainbowTVSeries', label: "Reading Rainbow", icon: '🌈', approx: 155 },
+        { id: 'RichardScarrysBusyTown', label: "Richard Scarry's Busytown", icon: '🐛', approx: 154 },
+        { id: 'the-bill-complete-series-1-to-26', label: "The Bill", icon: '🚔', approx: 2401 },
+        { id: 'the-fairly-oddparents-the-complete-series_202507', label: "The Fairly OddParents", icon: '🧚', approx: 166 },
+        { id: 'the-lucy-show-lucy-buys-a-boat', label: "The Lucy Show", icon: '💃', approx: 152 },
+        { id: 'mr-men-show-episodes', label: "The Mr. Men Show", icon: '🎩', approx: 200 },
+        { id: 'weakest-link-15th-september-2006', label: "The Weakest Link", icon: '❓', approx: 233 },
+        { id: 'thomas-and-friends-the-complete-series-uk', label: "Thomas & Friends (UK)", icon: '🚂', approx: 599 },
+        { id: '126-buddies-thicker-than-water-1962_202401', label: "Tom and Jerry", icon: '🐭', approx: 240 },
+        { id: 'top-gear-complete-collection', label: "Top Gear", icon: '🚗', approx: 1824 },
+        { id: 'total-drama-all-episodes', label: "Total Drama", icon: '🏝️', approx: 351 },
+        { id: 'urusei-yatsura-1981', label: "Urusei Yatsura", icon: '👽', approx: 197 },
+        { id: 'wwf-1999-complete-collection', label: "WWF 1999", icon: '🤼', approx: 240 }
     ];
 
     // Item metadata is large (some vaults list 1,200+ files), so it is memoised for the
@@ -1534,6 +1594,108 @@ document.addEventListener('DOMContentLoaded', function() {
         return url;
     }
 
+    /* =====================================================================
+       LIVE TV
+       ---------------------------------------------------------------------
+       ~75 verified playlists. They live in a browsable hub rather than as
+       top-level pills — a 75-pill scroll strip is unusable, and the hierarchy
+       (country / genre / language / network) is how people actually look for a
+       channel. Every URL below was checked to return a real M3U with CORS.
+       ===================================================================== */
+    const IPTV_ORG_BASE = 'https://iptv-org.github.io/iptv';
+    const IPTV_STREAMS_BASE = 'https://raw.githubusercontent.com/iptv-org/iptv/master/streams';
+    const FREE_TV_BASE = 'https://raw.githubusercontent.com/Free-TV/IPTV/master';
+
+    const cat = (slug, label, icon) => ({ name: label, icon, url: `${IPTV_ORG_BASE}/categories/${slug}.m3u` });
+    const lang = (code, label) => ({ name: label, icon: '🗣️', url: `${IPTV_ORG_BASE}/languages/${code}.m3u` });
+    const net = (file, label, icon) => ({ name: label, icon, url: `${IPTV_STREAMS_BASE}/${file}.m3u` });
+
+    const LIVE_TV_SECTIONS = [
+        {
+            key: 'networks', label: 'Free TV Networks', icon: '📶',
+            blurb: 'Ad-supported networks — the most reliable live streams here.',
+            sources: [
+                net('us_pluto', 'Pluto TV · USA', '🪐'),
+                net('uk_pluto', 'Pluto TV · UK', '🪐'),
+                net('ca_pluto', 'Pluto TV · Canada', '🪐'),
+                net('mx_pluto', 'Pluto TV · Mexico', '🪐'),
+                net('de_pluto', 'Pluto TV · Germany', '🪐'),
+                net('fr_pluto', 'Pluto TV · France', '🪐'),
+                net('es_pluto', 'Pluto TV · Spain', '🪐'),
+                net('it_pluto', 'Pluto TV · Italy', '🪐'),
+                net('br_pluto', 'Pluto TV · Brazil', '🪐'),
+                net('us_samsung', 'Samsung TV Plus · USA', '📱'),
+                net('uk_samsung', 'Samsung TV Plus · UK', '📱'),
+                net('au_samsung', 'Samsung TV Plus · Australia', '📱'),
+                net('it_samsung', 'Samsung TV Plus · Italy', '📱'),
+                net('uk_rakuten', 'Rakuten TV · UK', '🔴'),
+                net('fr_rakuten', 'Rakuten TV · France', '🔴'),
+                net('de_rakuten', 'Rakuten TV · Germany', '🔴'),
+                net('es_rakuten', 'Rakuten TV · Spain', '🔴'),
+                net('it_rakuten', 'Rakuten TV · Italy', '🔴'),
+                net('us_tubi', 'Tubi', '🔶'),
+                net('us_xumo', 'Xumo', '🟣'),
+                net('us_plex', 'Plex', '▶️'),
+                net('us_stirr', 'Stirr', '🌀'),
+                net('us_roku', 'Roku Channel', '🟪'),
+                net('us_klowdtv', 'KlowdTV', '☁️'),
+                net('us_distro', 'DistroTV', '📡'),
+                net('us_vizio', 'Vizio WatchFree', '📺')
+            ]
+        },
+        {
+            key: 'genres', label: 'By Genre', icon: '🎭',
+            blurb: 'Every live channel the index carries, split by what it shows.',
+            sources: [
+                cat('movies', 'Movies', '🎬'), cat('series', 'Series', '📺'),
+                cat('sports', 'Sports', '⚽'), cat('news', 'News', '📰'),
+                cat('kids', 'Kids', '👶'), cat('animation', 'Animation', '✏️'),
+                cat('music', 'Music', '🎵'), cat('comedy', 'Comedy', '😂'),
+                cat('documentary', 'Documentary', '🎥'), cat('entertainment', 'Entertainment', '🎭'),
+                cat('general', 'General', '🌐'), cat('classic', 'Classic', '🏛️'),
+                cat('culture', 'Culture', '🏺'), cat('education', 'Education', '🎓'),
+                cat('science', 'Science', '🔬'), cat('travel', 'Travel', '✈️'),
+                cat('cooking', 'Cooking', '🍳'), cat('lifestyle', 'Lifestyle', '💅'),
+                cat('family', 'Family', '👨‍👩‍👧'), cat('outdoor', 'Outdoor', '🏕️'),
+                cat('business', 'Business', '💼'), cat('weather', 'Weather', '🌦️'),
+                cat('auto', 'Auto', '🚗'), cat('religious', 'Religious', '⛪'),
+                cat('shop', 'Shopping', '🛍️'), cat('legislative', 'Legislative', '🏛️'),
+                cat('relax', 'Relax', '🧘'), cat('health', 'Health', '⚕️'),
+                cat('history', 'History', '📜'), cat('hobby', 'Hobby', '🎨')
+            ]
+        },
+        {
+            key: 'languages', label: 'By Language', icon: '🗣️',
+            blurb: 'Channels grouped by the language they broadcast in.',
+            sources: [
+                lang('eng', 'English'), lang('spa', 'Spanish'), lang('por', 'Portuguese'),
+                lang('fra', 'French'), lang('deu', 'German'), lang('ita', 'Italian'),
+                lang('rus', 'Russian'), lang('ara', 'Arabic'), lang('hin', 'Hindi'),
+                lang('zho', 'Chinese'), lang('jpn', 'Japanese'), lang('kor', 'Korean'),
+                lang('tur', 'Turkish'), lang('pol', 'Polish'), lang('nld', 'Dutch')
+            ]
+        },
+        {
+            key: 'everything', label: 'Everything', icon: '📚',
+            blurb: 'The complete index, plus community aggregators.',
+            sources: [
+                { name: 'All Channels', icon: '📺', url: `${IPTV_ORG_BASE}/index.m3u` },
+                { name: 'All Channels · by country', icon: '🌍', url: `${IPTV_ORG_BASE}/index.country.m3u` },
+                { name: 'All Channels · by category', icon: '🎭', url: `${IPTV_ORG_BASE}/index.category.m3u` },
+                { name: 'All Channels · by language', icon: '🗣️', url: `${IPTV_ORG_BASE}/index.language.m3u` },
+                { name: 'Free-TV Community', icon: '🤝', url: `${FREE_TV_BASE}/playlist.m3u8` },
+                { name: 'Free-TV · UK', icon: '🇬🇧', url: `${FREE_TV_BASE}/playlists/playlist_uk.m3u8` },
+                { name: 'Free-TV · USA', icon: '🇺🇸', url: `${FREE_TV_BASE}/playlists/playlist_usa.m3u8` }
+            ]
+        }
+    ];
+
+    const LIVE_TV_REGIONS = [
+        { name: 'Europe', icon: '🌍' }, { name: 'Americas', icon: '🌎' },
+        { name: 'Asia', icon: '🌏' }, { name: 'Africa', icon: '🌍' },
+        { name: 'Oceania', icon: '🏝️' }
+    ];
+
     const IPTV_ORG = 'https://iptv-org.github.io/iptv';
     // The iptv-org project removed its /networks/ folder, which is why the old Pluto TV
     // and Samsung TV Plus pills silently returned a GitHub 404 page. The per-network
@@ -1541,51 +1703,21 @@ document.addEventListener('DOMContentLoaded', function() {
     const IPTV_STREAMS = 'https://raw.githubusercontent.com/iptv-org/iptv/master/streams';
 
     let BASE_PLAYLISTS = [
-        // --- Highlights -----------------------------------------------------------
+        // Every live-TV source now lives inside the Live TV hub instead of being its own
+        // pill — there are ~75 of them, and a 75-pill scroll strip is not navigable.
         { name: 'My Movies', icon: '📼', isMyMovies: true, group: 'Highlights' },
         { name: 'Movie Vault', icon: '🎬', isMovieVault: true, group: 'Highlights' },
         { name: 'TV Box Sets', icon: '📺', isSeriesVault: true, group: 'Highlights' },
         { name: 'Free Cinema', icon: '🎞️', isArchiveMaster: true, group: 'Highlights', badge: '18+' },
         { name: 'Series & Shows', icon: '🍿', isVodMaster: true, group: 'Highlights' },
 
-        // --- Live TV by region ----------------------------------------------------
-        { name: 'All Channels', url: `${IPTV_ORG}/index.m3u`, icon: '📺', group: 'Live TV' },
+        { name: 'Live TV', icon: '📡', isLiveTvHub: true, group: 'Live TV' },
         { name: 'United Kingdom', url: `${IPTV_ORG}/countries/uk.m3u`, icon: '🇬🇧', group: 'Live TV' },
         { name: 'USA', url: `${IPTV_ORG}/countries/us.m3u`, icon: '🇺🇸', group: 'Live TV' },
-        { name: 'Canada', url: `${IPTV_ORG}/countries/ca.m3u`, icon: '🇨🇦', group: 'Live TV' },
-        { name: 'Australia', url: `${IPTV_ORG}/countries/au.m3u`, icon: '🇦🇺', group: 'Live TV' },
-        { name: 'India', url: `${IPTV_ORG}/countries/in.m3u`, icon: '🇮🇳', group: 'Live TV' },
-        { name: 'Europe TV', icon: '🌍', region: 'Europe', group: 'Live TV' },
-        { name: 'Americas TV', icon: '🌎', region: 'Americas', group: 'Live TV' },
-        { name: 'Asia TV', icon: '🌏', region: 'Asia', group: 'Live TV' },
-        { name: 'Africa TV', icon: '🌍', region: 'Africa', group: 'Live TV' },
-        { name: 'Oceania TV', icon: '🏝️', region: 'Oceania', group: 'Live TV' },
-
-        // --- Free ad-supported networks (highest reliability of every source here) --
-        { name: 'Pluto TV', url: `${IPTV_STREAMS}/us_pluto.m3u`, icon: '🪐', group: 'Free Networks' },
-        { name: 'Pluto TV UK', url: `${IPTV_STREAMS}/uk_pluto.m3u`, icon: '🪐', group: 'Free Networks' },
-        { name: 'Samsung TV Plus', url: `${IPTV_STREAMS}/us_samsung.m3u`, icon: '📱', group: 'Free Networks' },
-        { name: 'Tubi', url: `${IPTV_STREAMS}/us_tubi.m3u`, icon: '🔶', group: 'Free Networks' },
-        { name: 'Xumo', url: `${IPTV_STREAMS}/us_xumo.m3u`, icon: '🟣', group: 'Free Networks' },
-        { name: 'Plex', url: `${IPTV_STREAMS}/us_plex.m3u`, icon: '▶️', group: 'Free Networks' },
-        { name: 'Stirr', url: `${IPTV_STREAMS}/us_stirr.m3u`, icon: '🌀', group: 'Free Networks' },
-        { name: 'Roku', url: `${IPTV_STREAMS}/us_roku.m3u`, icon: '🟪', group: 'Free Networks' },
-
-        // --- Live channels by genre ------------------------------------------------
-        { name: 'Movies (Live)', url: `${IPTV_ORG}/categories/movies.m3u`, icon: '🎬', group: 'Genres' },
-        { name: 'Sports (Live)', url: `${IPTV_ORG}/categories/sports.m3u`, icon: '⚽', group: 'Genres' },
-        { name: 'News (Live)', url: `${IPTV_ORG}/categories/news.m3u`, icon: '📰', group: 'Genres' },
-        { name: 'Kids (Live)', url: `${IPTV_ORG}/categories/kids.m3u`, icon: '👶', group: 'Genres' },
-        { name: 'Music (Live)', url: `${IPTV_ORG}/categories/music.m3u`, icon: '🎵', group: 'Genres' },
-        { name: 'Entertainment', url: `${IPTV_ORG}/categories/entertainment.m3u`, icon: '🎭', group: 'Genres' },
-        { name: 'Documentary', url: `${IPTV_ORG}/categories/documentary.m3u`, icon: '🎥', group: 'Genres' },
-        { name: 'Comedy', url: `${IPTV_ORG}/categories/comedy.m3u`, icon: '😂', group: 'Genres' },
-        { name: 'Animation', url: `${IPTV_ORG}/categories/animation.m3u`, icon: '✏️', group: 'Genres' },
-        { name: 'Classic', url: `${IPTV_ORG}/categories/classic.m3u`, icon: '🏛️', group: 'Genres' },
-        { name: 'Science', url: `${IPTV_ORG}/categories/science.m3u`, icon: '🔬', group: 'Genres' },
-        { name: 'Travel', url: `${IPTV_ORG}/categories/travel.m3u`, icon: '✈️', group: 'Genres' },
-        { name: 'Cooking', url: `${IPTV_ORG}/categories/cooking.m3u`, icon: '🍳', group: 'Genres' },
-        { name: 'Outdoor', url: `${IPTV_ORG}/categories/outdoor.m3u`, icon: '🏕️', group: 'Genres' },
+        { name: 'Sports', url: `${IPTV_ORG}/categories/sports.m3u`, icon: '⚽', group: 'Live TV' },
+        { name: 'News', url: `${IPTV_ORG}/categories/news.m3u`, icon: '📰', group: 'Live TV' },
+        { name: 'Kids', url: `${IPTV_ORG}/categories/kids.m3u`, icon: '👶', group: 'Live TV' },
+        { name: 'Pluto TV', url: `${IPTV_STREAMS}/us_pluto.m3u`, icon: '🪐', group: 'Live TV' },
 
         { name: 'YT Live', icon: '🔴', group: 'Live TV', channels: [
             { title: 'The Osbournes Podcast', url: 'https://www.youtube.com/live/mozvQNIsvik', logo: "", sourcePlaylistName: 'YT Live' },
@@ -2415,18 +2547,106 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    /* ---------------- Live TV hub ---------------- */
+
+    function sidebarIntro(html) {
+        const intro = document.createElement('div');
+        intro.className = 'px-3 py-3 mx-1 mb-1 text-[11px] leading-relaxed text-[var(--text-muted)] border-b border-[var(--border-color)]';
+        intro.innerHTML = html;
+        return intro;
+    }
+
+    function sidebarRow({ icon, label, count, onOpen }) {
+        const div = document.createElement('div');
+        div.className = 'category-item flex items-center space-x-3 p-3 cursor-pointer transition-colors duration-200 border-b border-[var(--border-color)] text-sm mx-1';
+        div.setAttribute('role', 'button');
+        div.setAttribute('tabindex', '0');
+        div.innerHTML = `
+            <div class="flex-shrink-0 w-8 h-8 flex items-center justify-center text-xl opacity-80" aria-hidden="true">${icon || '📁'}</div>
+            <span class="flex-1 truncate font-medium text-slate-800 dark:text-slate-200">${escapeHtml(label)}</span>
+            ${count != null ? `<span class="count-chip text-[10px] px-2 py-1 rounded">${count}</span>` : ''}
+            <svg class="w-4 h-4 opacity-50 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>`;
+        div.addEventListener('click', onOpen);
+        div.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onOpen(); } });
+        return div;
+    }
+
+    function displayLiveTvHub() {
+        elements.playlistElement.innerHTML = '';
+        updateFeaturedGrid([], '');
+
+        const total = LIVE_TV_SECTIONS.reduce((n, s) => n + s.sources.length, 0);
+        elements.playlistElement.appendChild(sidebarIntro(
+            `<strong class="text-[var(--text-color)]">${total}</strong> live sources across free networks, genres, languages and every country.`));
+
+        elements.playlistElement.appendChild(sidebarRow({
+            icon: '🌍', label: 'By Country', count: Object.keys(countryMap).length,
+            onOpen: () => displayLiveTvRegions()
+        }));
+
+        LIVE_TV_SECTIONS.forEach(section => {
+            elements.playlistElement.appendChild(sidebarRow({
+                icon: section.icon, label: section.label, count: section.sources.length,
+                onOpen: () => displayLiveTvSection(section)
+            }));
+        });
+    }
+
+    function backRow(onClick) {
+        const btn = document.createElement('button');
+        btn.innerHTML = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg> <span>Go Back</span>`;
+        btn.className = 'w-[calc(100%-16px)] mx-2 my-2 flex items-center justify-center space-x-2 py-3 px-4 text-center bg-white/80 hover:bg-white/90 dark:bg-black/60 dark:hover:bg-black/90 border border-black/10 dark:border-white/10 rounded-xl shadow-lg sticky top-0 z-10 text-xs font-bold uppercase tracking-wider transition-all backdrop-blur-md';
+        btn.style.color = 'var(--accent-text)';
+        btn.addEventListener('click', onClick);
+        return btn;
+    }
+
+    function displayLiveTvRegions() {
+        elements.playlistElement.innerHTML = '';
+        updateFeaturedGrid([], '');
+        elements.playlistElement.appendChild(backRow(displayLiveTvHub));
+        elements.playlistElement.appendChild(sidebarIntro('Pick a region, then a country.'));
+        LIVE_TV_REGIONS.forEach(r => {
+            const codes = CONTINENT_MAP[r.name] || [];
+            elements.playlistElement.appendChild(sidebarRow({
+                icon: r.icon, label: r.name, count: codes.length,
+                onOpen: () => displayWorldTvRegion(r.name, displayLiveTvRegions)
+            }));
+        });
+    }
+
+    function displayLiveTvSection(section) {
+        elements.playlistElement.innerHTML = '';
+        updateFeaturedGrid([], '');
+        elements.playlistElement.appendChild(backRow(displayLiveTvHub));
+        elements.playlistElement.appendChild(sidebarIntro(section.blurb));
+
+        renderInChunks(section.sources, elements.playlistElement, (src) => sidebarRow({
+            icon: src.icon,
+            label: src.name,
+            onOpen: () => loadM3USource(src.name, src.url, () => displayLiveTvSection(section))
+        }));
+    }
+
     /* ---------------- Vault browsing (Movie Vault / TV Box Sets) ---------------- */
 
     function displayVaultIndex(vaults, blurb, kind) {
         elements.playlistElement.innerHTML = '';
         updateFeaturedGrid([], '');
 
+        const total = vaults.reduce((n, v) => n + (v.approx || 0), 0);
         const intro = document.createElement('div');
         intro.className = 'px-3 py-3 mx-1 mb-1 text-[11px] leading-relaxed text-[var(--text-muted)] border-b border-[var(--border-color)]';
-        intro.innerHTML = blurb;
+        intro.innerHTML = `${blurb}<br><strong class="text-[var(--text-color)]">${vaults.length}</strong> collections · roughly <strong class="text-[var(--text-color)]">${total.toLocaleString()}</strong> titles.`;
         elements.playlistElement.appendChild(intro);
 
-        renderInChunks(vaults, elements.playlistElement, (vault) => {
+        // Box sets are looked up by name, so sort them A-Z; film vaults are browsed for
+        // volume, so lead with the largest.
+        const ordered = [...vaults].sort(kind === 'series'
+            ? (a, b) => a.label.localeCompare(b.label)
+            : (a, b) => (b.approx || 0) - (a.approx || 0));
+
+        renderInChunks(ordered, elements.playlistElement, (vault) => {
             const div = document.createElement('div');
             div.className = 'category-item flex items-center space-x-3 p-3 cursor-pointer transition-colors duration-200 border-b border-[var(--border-color)] text-sm mx-1';
             div.setAttribute('role', 'button');
@@ -2568,8 +2788,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    function displayWorldTvRegion(regionName) {
+    function displayWorldTvRegion(regionName, backFunction = null) {
         elements.playlistElement.innerHTML = '';
+        if (backFunction) elements.playlistElement.appendChild(backRow(backFunction));
         const codes = CONTINENT_MAP[regionName] || [];
         const countriesInRegion = WORLD_TV_COUNTRIES.filter(c => codes.includes(c.code));
 
@@ -2589,7 +2810,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     const data = await fetchWithFallback(country.url, 2, false);
                     const parsed = await parseM3U(data, country.name);
                     allChannelsInPlaylist = parsed.channels;
-                    await displayCategories(parsed.groups, () => displayWorldTvRegion(regionName), country.name);
+                    await displayCategories(parsed.groups, () => displayWorldTvRegion(regionName, backFunction), country.name);
                 } catch(e) {
                     elements.playlistElement.innerHTML = `
                     <div class="flex flex-col items-center justify-center mt-10 space-y-4 px-4 text-center">
@@ -2619,6 +2840,12 @@ document.addEventListener('DOMContentLoaded', function() {
         if (playlist.region) {
             updateFeaturedGrid([], '');
             displayWorldTvRegion(playlist.region);
+            if (elements.refreshIcon) elements.refreshIcon.classList.remove('spin-anim');
+            return;
+        }
+
+        if (playlist.isLiveTvHub) {
+            displayLiveTvHub();
             if (elements.refreshIcon) elements.refreshIcon.classList.remove('spin-anim');
             return;
         }
@@ -2690,54 +2917,62 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
         
-        const cacheKey = `iptv_cache_${playlist.name}`;
-        if (forceRefresh && hasConsent) { try{ localStorage.removeItem(cacheKey); } catch(e){} }
+        await loadM3USource(playlist.name, playlist.url, null, forceRefresh);
+        if (elements.refreshIcon) elements.refreshIcon.classList.remove('spin-anim');
+    }
+
+    /**
+     * Fetch, cache, parse and render one M3U playlist.
+     *
+     * Factored out of loadDataForSource so the Live TV hub can load any of its ~75
+     * sources without each one needing to exist as a top-level pill.
+     */
+    async function loadM3USource(name, url, backFunction = null, forceRefresh = false) {
+        showSidebarSkeleton(`Loading ${name}…`);
+        const cacheKey = `iptv_cache_${name}`;
+        if (forceRefresh && hasConsent) { try { localStorage.removeItem(cacheKey); } catch (e) {} }
 
         try {
-            if(hasConsent && !forceRefresh) {
+            if (hasConsent && !forceRefresh) {
                 const cachedItem = localStorage.getItem(cacheKey);
                 if (cachedItem) {
                     const { timestamp, data } = JSON.parse(cachedItem);
                     if ((Date.now() - timestamp) < 86400000 && isValidPlaylist(data)) {
-                        const parsed = await parseM3U(data, playlist.name);
+                        const parsed = await parseM3U(data, name);
                         if (parsed.channels && parsed.channels.length > 0) {
                             allChannelsInPlaylist = parsed.channels;
-                            groupedChannels = parsed.groups;
-                            await displayCategories(groupedChannels, null, playlist.name);
-                            if (elements.refreshIcon) elements.refreshIcon.classList.remove('spin-anim');
-                            showToast(`Loaded ${playlist.name} from cache`, "success", 1600);
-                            return;
+                            await displayCategories(parsed.groups, backFunction, name);
+                            showToast(`${name} — ${parsed.channels.length.toLocaleString()} channels (cached)`, "success", 1600);
+                            return true;
                         }
                     }
                 }
             }
-            
-            const data = await fetchWithFallback(playlist.url, 2, forceRefresh);
+
+            const data = await fetchWithFallback(url, 2, forceRefresh);
 
             // A moved or deleted playlist answers with a 200 HTML error page, not an M3U.
             // Without this guard the source used to render as an empty, silent list.
-            if (!isValidPlaylist(data)) {
-                throw new Error('That source no longer returns a valid playlist.');
-            }
+            if (!isValidPlaylist(data)) throw new Error('That source no longer returns a valid playlist.');
 
             if (hasConsent) {
-                try { localStorage.setItem(cacheKey, JSON.stringify({ timestamp: Date.now(), data: data })); } catch(e) { console.warn("Storage full"); }
+                try { localStorage.setItem(cacheKey, JSON.stringify({ timestamp: Date.now(), data })); }
+                catch (e) { /* quota — the list still renders, it just won't be cached */ }
             }
-            const parsed = await parseM3U(data, playlist.name);
+            const parsed = await parseM3U(data, name);
             if (!parsed.channels.length) throw new Error('That source came back empty.');
 
             allChannelsInPlaylist = parsed.channels;
-            groupedChannels = parsed.groups;
-            await displayCategories(groupedChannels, null, playlist.name);
-            showToast(`Loaded ${parsed.channels.length.toLocaleString()} channels from ${playlist.name}`, "success", 1600);
+            await displayCategories(parsed.groups, backFunction, name);
+            showToast(`${name} — ${parsed.channels.length.toLocaleString()} channels`, "success", 1600);
+            return true;
         } catch (error) {
             showSidebarError(
-                `Could not load ${playlist.name}.`,
-                `${error.message || 'The playlist may be blocked or offline.'} Other sources in the bar above should still work.`
+                `Could not load ${name}.`,
+                `${error.message || 'The playlist may be blocked or offline.'} Other sources should still work.`
             );
-            showToast(`Failed to load ${playlist.name}`, "error");
+            return false;
         }
-        if (elements.refreshIcon) elements.refreshIcon.classList.remove('spin-anim');
     }
 
     async function displayCategories(groupedChannels, backFunction = null, sourceTitle = 'Channels') {
