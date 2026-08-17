@@ -1395,6 +1395,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // TMDB's public limit is generous (~50 req/s); 8 in flight fills a rail quickly
     // without ever approaching it.
     const tmdbQueue = new PromiseQueue(8);
+    // archive.org metadata documents are big and its nodes 5xx under a burst, so vault
+    // reads are paced too.
+    const archiveQueue = new PromiseQueue(6);
 
     function saveTmdbCache() {
         if (!hasConsent) return;
@@ -1519,7 +1522,11 @@ document.addEventListener('DOMContentLoaded', function() {
         // `additional_collections_video` (1.9M) are deliberately left out — they are
         // unfiltered upload dumps, and a browse surface full of phone footage is worse
         // than a smaller shelf of actual films.
-        { key: 'moviesandfilms',         label: 'Movies & Films',       icon: '🍿' },
+        // Sorted by recent traffic rather than all-time downloads, and with the upload
+        // batches filtered out: by all-time downloads the top of this collection is four
+        // "Publicvideos 2009 batch" dumps, which are not films.
+        { key: 'moviesandfilms',         label: 'Movies & Films',       icon: '🍿',
+          sort: 'week desc', exclude: 'batch' },
         { key: 'anime',                  label: 'Anime',                icon: '🎌' },
         { key: 'nasa',                   label: 'NASA & Spaceflight',   icon: '🚀' },
         { key: 'avgeeks',                label: 'AV Geeks',             icon: '📽️' },
@@ -1574,7 +1581,52 @@ document.addEventListener('DOMContentLoaded', function() {
         { id: 'jackie-chan-action-man2', label: "Jackie Chan \u00b7 1980s", icon: '🥋', approx: 26 },
         { id: 'us-1930s-film-collection', label: "US 1930s Films", icon: '🎞️', approx: 26 },
         { id: 'jackie-chan-action-man3', label: "Jackie Chan \u00b7 1990s", icon: '🥋', approx: 24 },
-        { id: 'doraemon-movies_202606', label: "Doraemon Classic Movies", icon: '🐱', approx: 21 }
+        { id: 'doraemon-movies_202606', label: "Doraemon Classic Movies", icon: '🐱', approx: 21 },
+
+        /* Second sweep. Same curation bar as the first: game-capture dumps, hentai,
+           trailer reels, fan edits, sound-effect and logo archives, music-video packs and
+           YouTube-personality collections were all discarded. Every identifier below was
+           re-checked against /metadata immediately before being added — seven of them came
+           back empty on the first pass and live on the retry, which is archive.org's
+           intermittent 5xx rather than a dead item. */
+        { id: 'publicmovies212', label: "Public Domain Movies", icon: '🏛️', approx: 981 },
+        { id: 'mini-espias-4-los-ladrones-del-tiempo-2011-pelicula-cuevana-3', label: "Saga de Pel\u00edculas", icon: '🇪🇸', approx: 768 },
+        { id: '20260304_20260304_2348', label: "Marvel & DC Films", icon: '🦸', approx: 534 },
+        { id: 'walt-disney-theatrical-cartoon-collection-1928-1969-plus-extras_', label: "Disney Theatrical Cartoons", icon: '🐭', approx: 528 },
+        { id: 'shin-chan-filmes-episodios-portugues-de-portugal', label: "Shin Chan", icon: '🖍️', approx: 451 },
+        { id: 'kung-fu-action-theater_202302', label: "Kung Fu Action Theater", icon: '🥋', approx: 285 },
+        { id: 'kung-fu-movies-70s-and-80s-part-3_20260324', label: "Kung Fu \u00b7 70s & 80s", icon: '🥋', approx: 108 },
+        { id: 'tom-and-jerry-cartoon-collection', label: "Tom & Jerry Cartoons", icon: '🐱', approx: 240 },
+        { id: '20260113_20260113_0816', label: "Collection of Movies", icon: '🎞️', approx: 239 },
+        { id: 'cacada-no-canal-da-morte-1988', label: "Horror & Trash Cinema", icon: '🩸', approx: 196 },
+        { id: 'fanatismo-macabro-1965-dublado', label: "Horror & Trash Cinema 2", icon: '🩸', approx: 174 },
+        { id: 'shakma-a-furia-assassina-1990', label: "Horror & Trash Cinema 3", icon: '🩸', approx: 157 },
+        { id: 'memorias-de-um-medico-1949', label: "Film Noir & Mystery", icon: '🕵️', approx: 171 },
+        { id: 'the-detective', label: "Cinema Collection \u00b7 Film Noir", icon: '🚬', approx: 85 },
+        { id: 'mawaali-1983-hindi.-ntsc.-dv-drip.-480p.-x-264.-aac.-5.1.-esubs.-chapters.-by.juleyano', label: "Bollywood Classics I", icon: '🇮🇳', approx: 163 },
+        { id: 'nayakan-1987-hindi.-dubbed.-webrip.-720p.x-264.-aac.-esub.-enigma..-by.juleyano', label: "Bollywood Classics II", icon: '🇮🇳', approx: 169 },
+        { id: 'black-mail-1973-hindi.-web.-dl.-1080p.-avcx-264.-aac.-esubs.-by-juleyano', label: "Bollywood Classics III", icon: '🇮🇳', approx: 155 },
+        { id: 'muqaddar-ka-faisla-1987-hindi.-ntsc.-dv-drip.-576p.-x-264.-aac.-5.1.-esubs.-chapters.-by.juleyano', label: "Bollywood Classics IV", icon: '🇮🇳', approx: 154 },
+        { id: 'thakshak-1999-hindi.-dv-drip.-720p.-x-264.-aac.-5.1.-hon-3y.-e.-sub.-by.juleyano', label: "Bollywood Classics V", icon: '🇮🇳', approx: 158 },
+        { id: 'chalaak-1973-hindi.-web.-dl.-480p.-amazon.-avc.x-264.-aac.-esubs.-by-juleyano', label: "Bollywood Classics VI", icon: '🇮🇳', approx: 174 },
+        { id: 'Marvel-DC-and-Dark-Horse-Comics-Live-action-and-animated-films_202602', label: "Comic-Book Films", icon: '💥', approx: 165 },
+        { id: 'the-pink-panther-classic-cartoon-collection', label: "The Pink Panther", icon: '🐾', approx: 161 },
+        { id: 'disc-1-woody-woodpecker-and-friends', label: "Woody Woodpecker & Friends", icon: '🐦', approx: 124 },
+        { id: 'WoodyWoodpeckerPantryPanic', label: "Public Domain Cartoons", icon: '✏️', approx: 112 },
+        { id: 'disc-10_202601', label: "Giant Cartoon Collection", icon: '🎨', approx: 97 },
+        { id: '100-rifles-faroeste-completo-dublado-hd', label: "Westerns", icon: '🤠', approx: 108 },
+        { id: 'a-era-do-gelo-1-2-3-4', label: "Animated Features", icon: '🧊', approx: 102 },
+        { id: 'a-queda-do-imperio-romano-filme-dublado-1964', label: "Classics & Epics", icon: '🏛️', approx: 99 },
+        { id: 'the-lady-vanishes-1938_202204', label: "Cult Cinema", icon: '🎩', approx: 80 },
+        { id: '7venplay-filmes', label: "7venplay Films", icon: '🍿', approx: 125 },
+        { id: 'toddworld-hi-im-todd', label: "Ultimate Kids DVDs", icon: '🧸', approx: 420 },
+        { id: 'meet-strawberry-shortcake-2003', label: "Ultimate Kids DVDs 2", icon: '🍓', approx: 336 },
+        { id: 'thomas-the-tank-engine-friends-uk-vhs-and-dvd-collection', label: "Thomas \u00b7 UK VHS & DVD", icon: '🚂', approx: 170 },
+        { id: 'sooty-uk-vhs-and-dvd-collection', label: "Sooty", icon: '🐻', approx: 166 },
+        { id: 'postman-pat-uk-vhs-and-dvd-collection', label: "Postman Pat", icon: '📮', approx: 129 },
+        { id: 'blues-clues-blues-room-dvd-and-vhs', label: "Blue's Clues", icon: '🐶', approx: 132 },
+        { id: 'sonic-shout-factory-dvd-collection', label: "Sonic \u00b7 Shout! Factory", icon: '🦔', approx: 261 },
+        { id: 'tenchi-muyo-movies-1-2-3-1996-97-99-english-dubbed-hd-1080p-love-1-daughter-of-darknesslove-2', label: "Tenchi Muyo! Movies", icon: '🌸', approx: 182 }
     ];
 
     const ARCHIVE_SERIES_VAULTS = [
@@ -1652,7 +1704,61 @@ document.addEventListener('DOMContentLoaded', function() {
         { id: 'top-gear-complete-collection', label: "Top Gear", icon: '🚗', approx: 1824 },
         { id: 'total-drama-all-episodes', label: "Total Drama", icon: '🏝️', approx: 351 },
         { id: 'urusei-yatsura-1981', label: "Urusei Yatsura", icon: '👽', approx: 197 },
-        { id: 'wwf-1999-complete-collection', label: "WWF 1999", icon: '🤼', approx: 240 }
+        { id: 'wwf-1999-complete-collection', label: "WWF 1999", icon: '🤼', approx: 240 },
+
+        /* Second sweep — see the note in ARCHIVE_MOVIE_VAULTS. Channel-continuity
+           recordings (BBC closedowns, ITV idents, "TV REPAIR" off-air captures) were
+           dropped as well: they are archive material, not programmes. */
+        { id: 'gsn-raw-recordings-collection', label: "Game Show Network", icon: '🎰', approx: 2104 },
+        { id: 'cops-s-28-e-22-1080p-amazon-web-dl-dd-2.0-x-264-troll-hd', label: "COPS (1989-2025)", icon: '🚔', approx: 1085 },
+        { id: 'hetalia_dvd_archive', label: "Hetalia", icon: '🌍', approx: 783 },
+        { id: 'pokemon-seasons-1-16-finnish', label: "Pok\u00e9mon \u00b7 Seasons 1-16", icon: '⚡', approx: 664 },
+        { id: 'claro-video-anime-series-pack-web-dl', label: "Anime Pack \u00b7 Claro", icon: '🎌', approx: 581 },
+        { id: 'yt-anime-series-pack', label: "Anime Pack II", icon: '🎌', approx: 543 },
+        { id: 'saint-seiya-the-hades-chapter-s-01-e-13-the-morning-of-determination', label: "Anime Pack \u00b7 Tubi", icon: '🎌', approx: 496 },
+        { id: 'movistar-anime-series-pack-web-dl', label: "Anime Pack \u00b7 Movistar", icon: '🎌', approx: 166 },
+        { id: 'blim-anime-series-web-dl', label: "Anime Pack \u00b7 Blim", icon: '🎌', approx: 147 },
+        { id: 'howls-flying-castle', label: "Anime Series & OVAs", icon: '🍥', approx: 178 },
+        { id: 'code-geass-2006-1080p', label: "Code Geass", icon: '♟️', approx: 158 },
+        { id: 'naruto-cartoon-network-censored-version', label: "Naruto \u00b7 Cartoon Network", icon: '🍜', approx: 213 },
+        { id: 'sky-at-night-ep-803-mars-planet-of-dreams-10-aug-2020', label: "BBC Sky at Night", icon: '🔭', approx: 527 },
+        { id: 'bbc-documentary-fullhd-4', label: "BBC Documentaries HD", icon: '🎥', approx: 457 },
+        { id: 'bbc-documentary-hd-6', label: "BBC Documentaries HD II", icon: '🎥', approx: 318 },
+        { id: 'BBCNaturalWorld180EpisodeCollection', label: "BBC Natural World", icon: '🦋', approx: 180 },
+        { id: 'WildlifeOnOneEp95OasisDavidAttenborough23Feb1988', label: "Wildlife on One", icon: '🐘', approx: 208 },
+        { id: 'RIXmasLectures1997Ep5Of5FearfulSymmetryProf.IanStewart', label: "RI Christmas Lectures", icon: '🎓', approx: 214 },
+        { id: 'bbc-red-dwarf', label: "Red Dwarf", icon: '🚀', approx: 232 },
+        { id: 'Odd_Squad_BBC', label: "Odd Squad", icon: '🕵️', approx: 242 },
+        { id: 'itv-corrie', label: "Coronation Street", icon: '🇬🇧', approx: 222 },
+        { id: 'dealornodealitv', label: "Deal or No Deal", icon: '💼', approx: 157 },
+        { id: 'smurfs-1981-complete-series-nbc', label: "The Smurfs", icon: '💙', approx: 417 },
+        { id: 'digimon-digital-monsters-the-complete-seasons-1-4-collection-1999-2003-saban-ent', label: "Digimon", icon: '🐲', approx: 409 },
+        { id: 's-7-ep-17-slovenian', label: "Winx Club \u00b7 Dubs", icon: '🧚', approx: 407 },
+        { id: 'afv-11x-03', label: "America's Funniest Home Videos", icon: '📹', approx: 397 },
+        { id: 'madtv-s-01-e-04', label: "MADtv", icon: '😜', approx: 373 },
+        { id: 'snl-season-1-15', label: "Saturday Night Live", icon: '🎤', approx: 286 },
+        { id: 'Hindidubbedcartoons', label: "Hindi-Dubbed Cartoons", icon: '🇮🇳', approx: 319 },
+        { id: 'ka-blam-wont-crack-or-peel-nogglevision_202602', label: "Classic Nickelodeon", icon: '🟠', approx: 302 },
+        { id: 'the-big-picture-docuseries', label: "The Big Picture", icon: '🖼️', approx: 260 },
+        { id: 'little-singham-full-episodes', label: "Little Singham", icon: '🦸', approx: 250 },
+        { id: 'familymatters_202507', label: "Family Matters", icon: '👨‍👩‍👧', approx: 214 },
+        { id: 'ancientalienscollection', label: "Ancient Aliens", icon: '👽', approx: 212 },
+        { id: 'tpir-7275-bmp', label: "The Price is Right", icon: '💰', approx: 186 },
+        { id: 'Seinfeld.Complete.Series', label: "Seinfeld", icon: '☕', approx: 181 },
+        { id: 'figure-it-out-complete-series-proper', label: "Figure It Out", icon: '❓', approx: 159 },
+        { id: 'the-doki-archive-hd', label: "Doki", icon: '🐕', approx: 158 },
+        { id: 'Pingu_Season_1to6', label: "Pingu", icon: '🐧', approx: 157 },
+        { id: 'hi-5-usa-tv-series', label: "Hi-5 USA", icon: '🖐️', approx: 155 },
+        { id: 's-01-e-05.-the-booze-hangs-high-bosko-4-hd', label: "Looney Tunes \u00b7 1930s", icon: '🐰', approx: 147 },
+        { id: 'the-boondocks-complete', label: "The Boondocks", icon: '✊', approx: 145 },
+        { id: 'UntalkativeBunnyEps', label: "Untalkative Bunny", icon: '🐇', approx: 140 },
+        { id: 'rvb-original-site-versions-1-8', label: "Red vs Blue", icon: '🎮', approx: 247 },
+        { id: 'digitalized-serbian-bought-and-dubbed-old-cartoons-and-movies-digitalizovani-srp', label: "Serbian-Dubbed Cartoons", icon: '🇷🇸', approx: 349 },
+        { id: 'bro-daddy-2022', label: "South Indian \u00b7 Bangla Dub", icon: '🎬', approx: 272 },
+        { id: 'how-to-train-your-dragon-dreamworks-dragons', label: "DreamWorks Dragons", icon: '🐉', approx: 127 },
+        { id: 'mxc-dvd-collection', label: "MXC", icon: '🏆', approx: 144 },
+        { id: 'sally-bollywood-super-detective-full-series', label: "Sally Bollywood", icon: '🔍', approx: 104 },
+        { id: 'towards-the-republic-dvd-68e', label: "Towards the Republic", icon: '🇨🇳', approx: 80 }
     ];
 
     // Item metadata is large (some vaults list 1,200+ files), so it is memoised for the
@@ -1825,10 +1931,14 @@ document.addEventListener('DOMContentLoaded', function() {
      * Query archive.org. `collection` may be null when running a free-text search.
      * Returns { channels, total }.
      */
-    async function archiveSearch({ collection, label, term = '', page = 1, rows = ARCHIVE_PAGE_SIZE, sort = 'downloads desc' }) {
+    async function archiveSearch({ collection, label, term = '', page = 1, rows = ARCHIVE_PAGE_SIZE,
+                                  sort = 'downloads desc', exclude = '' }) {
         const clauses = ['mediatype:(movies)'];
         if (collection) clauses.push(`collection:(${collection})`);
         if (term) clauses.push(`title:(${term.replace(/[^\w\s'-]/g, ' ').trim()})`);
+        // Some collections are dominated by bulk upload batches that are not films at
+        // all; excluding them by title is what makes the shelf worth showing.
+        if (exclude) clauses.push(`-title:(${exclude.replace(/[^\w\s'-]/g, ' ').trim()})`);
 
         const params = new URLSearchParams();
         params.set('q', clauses.join(' AND '));
@@ -3575,7 +3685,8 @@ document.addEventListener('DOMContentLoaded', function() {
         addRail({
             title: 'More free films',
             subtitle: 'The wider archive.org film library',
-            loader: async () => (await archiveSearch({ collection: 'moviesandfilms', label: 'Movies & Films', rows: 20 })).channels,
+            loader: async () => (await archiveSearch({ collection: 'moviesandfilms', label: 'Movies & Films',
+                rows: 20, sort: 'week desc', exclude: 'batch' })).channels,
             onMore: () => loadDataForSource('Free Cinema')
         });
 
@@ -3589,20 +3700,8 @@ document.addEventListener('DOMContentLoaded', function() {
         status.textContent = 'Building your genre shelves…';
         genreHost.appendChild(status);
 
-        const movies = await ensureMovieCatalogue();
-        if (myToken !== sectionToken) return;
-        status.textContent = `Sorting ${movies.length.toLocaleString()} films into genres…`;
-
-        // Enrich in waves and repaint the genre rails after each, so shelves appear
-        // progressively instead of the page sitting empty for a couple of thousand lookups.
-        for (let wave = 0; wave < 6; wave++) {
-            const more = await enrichNextBatch(movies, 60);
-            if (myToken !== sectionToken) return;
-            paintGenreRails(genreHost, movies, status);
-            if (!more) break;
-        }
-
-        // Then the collections themselves, for people who browse by source.
+        // The collections themselves, for people who browse by source. Added before the
+        // awaits below so the page has content while the catalogue is still loading.
         ARCHIVE_MOVIE_VAULTS.slice(0, 6).forEach(vault => {
             addRail({
                 title: vault.label,
@@ -3611,6 +3710,31 @@ document.addEventListener('DOMContentLoaded', function() {
                 onMore: () => loadDataForSource('Movie Vault')
             });
         });
+
+        /*
+         * Two passes over two pools, because the full catalogue is 66 archive.org items
+         * now and waiting for all of them left the shelves empty for far too long. The
+         * seed pool — the site's own playlist plus the eight largest vaults — is enough
+         * to fill every major genre, and the full pool repaints over it when it lands.
+         */
+        const shelves = async (pool, waves) => {
+            for (let wave = 0; wave < waves; wave++) {
+                const more = await enrichNextBatch(pool, 60);
+                if (myToken !== sectionToken) return false;
+                paintGenreRails(genreHost, pool, status);
+                if (!more) break;
+            }
+            return true;
+        };
+
+        const seed = await ensureSeedCatalogue();
+        if (myToken !== sectionToken) return;
+        status.textContent = `Sorting ${seed.length.toLocaleString()} films into genres…`;
+        if (!await shelves(seed, 6)) return;
+
+        const movies = await ensureMovieCatalogue();
+        if (myToken !== sectionToken) return;
+        await shelves(movies, 10);
     }
 
     function paintGenreRails(host, pool, status) {
@@ -4279,25 +4403,55 @@ document.addEventListener('DOMContentLoaded', function() {
        page blocking on ~2,200 lookups before showing anything.
        ===================================================================== */
     const catalogue = {
+        seed: null, seedPromise: null,
         movies: null, moviesPromise: null,
         series: null, seriesPromise: null,
         enrichedUpTo: 0
     };
 
     /** Every film we can play, from the site playlist and all film vaults. */
+    function dedupeByUrl(chunks) {
+        const byUrl = new Map();
+        chunks.flat().forEach(ch => { if (ch && ch.url && !byUrl.has(ch.url)) byUrl.set(ch.url, ch); });
+        return [...byUrl.values()];
+    }
+
+    /**
+     * A first slice of the library, quickly.
+     *
+     * The site's own playlist plus the eight largest vaults — around 2,000 films, enough
+     * to fill every major genre shelf, and it lands in a fraction of the time the whole
+     * catalogue takes.
+     */
+    function ensureSeedCatalogue() {
+        if (catalogue.seed) return Promise.resolve(catalogue.seed);
+        if (catalogue.seedPromise) return catalogue.seedPromise;
+
+        catalogue.seedPromise = (async () => {
+            const chunks = await Promise.all([
+                loadMyMovies().then(r => r.all).catch(() => []),
+                ...ARCHIVE_MOVIE_VAULTS.slice(0, 8).map(v => archiveQueue.add(() => loadArchiveVault(v)).catch(() => []))
+            ]);
+            catalogue.seed = dedupeByUrl(chunks);
+            return catalogue.seed;
+        })();
+        return catalogue.seedPromise;
+    }
+
     function ensureMovieCatalogue() {
         if (catalogue.movies) return Promise.resolve(catalogue.movies);
         if (catalogue.moviesPromise) return catalogue.moviesPromise;
 
         catalogue.moviesPromise = (async () => {
+            // Paced through a queue rather than fired all at once: this is 66 archive.org
+            // items now, and some of their metadata documents list thousands of files.
+            // Sixty-six simultaneous multi-megabyte responses is how you get a stalled tab
+            // and a burst of 5xx from their CDN.
             const chunks = await Promise.all([
                 loadMyMovies().then(r => r.all).catch(() => []),
-                ...ARCHIVE_MOVIE_VAULTS.map(v => loadArchiveVault(v).catch(() => []))
+                ...ARCHIVE_MOVIE_VAULTS.map(v => archiveQueue.add(() => loadArchiveVault(v)).catch(() => []))
             ]);
-
-            const byUrl = new Map();
-            chunks.flat().forEach(ch => { if (ch && ch.url && !byUrl.has(ch.url)) byUrl.set(ch.url, ch); });
-            catalogue.movies = [...byUrl.values()];
+            catalogue.movies = dedupeByUrl(chunks);
             return catalogue.movies;
         })();
         return catalogue.moviesPromise;
@@ -4576,7 +4730,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 collection: col.key,
                 label: col.label,
                 page,
-                rows: ARCHIVE_PAGE_SIZE
+                rows: ARCHIVE_PAGE_SIZE,
+                sort: col.sort || 'downloads desc',
+                exclude: col.exclude || ''
             });
 
             if (!channels.length) {

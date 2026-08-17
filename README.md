@@ -41,16 +41,31 @@ Rather than hand-listing files in an M3U, these are enumerated live from
 `archive.org/metadata/<identifier>`, so anything the uploader adds appears automatically —
 the Mayday playlist listed 109 episodes where the item holds 203.
 
-**28 film vaults (~2,240 titles)** and **70 box sets (~19,600 episodes)**, each verified
+**66 film vaults (~11,100 titles)** and **120 box sets (~36,100 episodes)**, each verified
 live with a browser-playable count before being added.
 
-Found by sweeping archive.org's search API for large multi-title items. The raw sweep
-returned far more than shipped here; deliberately excluded were game-capture dumps
-mislabelled as films, hentai and adult production-house items, YouTube-personality
-archives (several built around hateful or violent creators), religious proselytising
-channels, trailer/promo reels, and unlabelled bulk dumps. Curation is the point — the
-search API alone will happily hand back 4,400 Counter-Strike clips as a "movie
-collection".
+Found by sweeping archive.org's search API for large multi-title items, over two passes.
+The second pass ran 52 query angles, returned 724 verified items holding 68,000 titles
+between them, and about an eighth of that was kept.
+
+Deliberately excluded: game-capture dumps mislabelled as films, hentai and adult
+production-house items, YouTube-personality archives (several built around hateful or
+violent creators), religious proselytising channels, trailer and promo reels, fan edits,
+sound-effect and channel-logo archives, music-video packs, and — new in the second pass —
+channel-continuity recordings (BBC closedowns, ITV idents, "TV REPAIR" off-air captures),
+which are archive material rather than programmes.
+
+Curation is the point. The search API alone will happily hand back 4,400 Counter-Strike
+clips as a "movie collection", and by all-time downloads the single most popular item
+matching "movie collection" is a folder of Pixar sound effects.
+
+Every shipped identifier was re-checked against `/metadata` immediately before being
+added. Seven came back empty on the first attempt and live on a retry — archive.org's
+intermittent 5xx, not a dead item, which is exactly what `archiveFetch()` exists for.
+
+Vault reads go through `archiveQueue` (6 at a time). Sixty-six simultaneous metadata
+documents, some listing thousands of files, is how you get a stalled tab and a burst of
+5xx from their CDN.
 
 Files are grouped by base name so an `.mkv` and its archive-derived `.mp4` count as one
 title, and the browser-playable file wins. Titles with no playable derivative are dropped
