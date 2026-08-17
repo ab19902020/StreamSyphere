@@ -481,6 +481,26 @@
         #player-container.idle-compact #player-idle .idle-sub { font-size: 0.8rem; }
         #player-container.idle-compact #player-idle .idle-mark { font-size: 2rem; margin-bottom: 0.25rem; }
 
+        /* Sky-style section tabs. Fewer, larger targets than the old source pills. */
+        .section-tab {
+            flex: 0 0 auto;
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 9px 18px; border-radius: 999px;
+            font-size: 13px; font-weight: 700; letter-spacing: 0.02em;
+            color: var(--text-muted);
+            background: transparent;
+            border: 1px solid transparent;
+            transition: color .18s, background-color .18s, border-color .18s, box-shadow .18s;
+            white-space: nowrap;
+        }
+        .section-tab:hover { color: var(--text-color); background: var(--row-hover); }
+        .section-tab.active {
+            color: #fff;
+            background: var(--accent-solid);
+            border-color: var(--accent-solid);
+            box-shadow: 0 4px 16px var(--accent-glow);
+        }
+
         /* ================= BROWSE SURFACE ================= */
 
         /* Horizontally scrolling poster rows. */
@@ -3076,6 +3096,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function addRail({ title, subtitle, loader, onMore, channelStyle = false, live = false, limit = 20 }) {
         const host = document.getElementById('home-rows');
         if (!host) return;
+        const myToken = sectionToken;
 
         const section = document.createElement('section');
         section.className = 'mt-7 px-1';
@@ -3094,9 +3115,11 @@ document.addEventListener('DOMContentLoaded', function() {
             `<div class="poster-card${channelStyle ? ' channel-card' : ''}"><div class="skeleton poster-art"></div><div class="poster-meta"><div class="skeleton h-3 rounded"></div></div></div>`).join('');
 
         if (onMore) section.querySelector('.rail-more').addEventListener('click', onMore);
+        if (myToken !== sectionToken) return;
         host.appendChild(section);
 
         loader().then(channels => {
+            if (myToken !== sectionToken) { section.remove(); return; }
             if (!channels || !channels.length) { section.remove(); return; }
             railEl.innerHTML = '';
             const cards = channels.slice(0, limit).map((ch, i) => {
@@ -3232,6 +3255,314 @@ document.addEventListener('DOMContentLoaded', function() {
 
     /* ---------------- Home composition ---------------- */
 
+    /* =====================================================================
+       SECTIONS  (Sky-style top-level tabs, Netflix-style rails inside)
+       ===================================================================== */
+    const SECTIONS = [
+        { key: 'home',   label: 'Home',     icon: '🏠' },
+        { key: 'movies', label: 'Movies',   icon: '🎬' },
+        { key: 'tv',     label: 'TV Shows', icon: '📺' },
+        { key: 'live',   label: 'Live TV',  icon: '📡' },
+        { key: 'kids',   label: 'Kids',     icon: '🧸' },
+        { key: 'mine',   label: 'My Stuff', icon: '⭐' }
+    ];
+    let activeSection = 'home';
+    let sectionToken = 0;
+
+    function renderSectionTabs() {
+        const bar = elements.topPlaylistBar;
+        bar.innerHTML = '';
+        SECTIONS.forEach(sec => {
+            const btn = document.createElement('button');
+            btn.className = `section-tab ${sec.key === activeSection ? 'active' : ''}`;
+            btn.dataset.section = sec.key;
+            btn.setAttribute('aria-pressed', sec.key === activeSection ? 'true' : 'false');
+            btn.innerHTML = `<span aria-hidden="true">${sec.icon}</span><span>${sec.label}</span>`;
+            btn.addEventListener('click', () => openSection(sec.key));
+            bar.appendChild(btn);
+        });
+    }
+
+    function openSection(key) {
+        activeSection = key;
+        sectionToken++;
+        if (hasConsent) { try { localStorage.setItem('ss_section', key); } catch (e) {} }
+        renderSectionTabs();
+        if (typeof gtag === 'function') gtag('event', 'open_section', { section: key });
+
+        elements.mainView.scrollTo({ top: 0, behavior: 'auto' });
+        const host = document.getElementById('home-rows');
+        host.innerHTML = '';
+
+        // The network shelf is a home-screen feature; other sections carry their own.
+        document.getElementById('network-shelf').classList.toggle('hidden', key !== 'home');
+        elements.continueWatchingContainer.classList.toggle('hidden',
+            key !== 'home' && key !== 'mine' ? true : watchHistory.length === 0);
+
+        ({ home: renderHomeRows, movies: renderMoviesSection, tv: renderTvSection,
+           live: renderLiveSection, kids: renderKidsSection, mine: renderMineSection }[key] || renderHomeRows)();
+    }
+
+    /* ---- Movies ------------------------------------------------------- */
+
+    async function renderMoviesSection() {
+        const myToken = sectionToken;
+
+        const host = document.getElementById('home-rows');
+
+        addRail({
+            title: 'Public-domain cinema',
+            subtitle: 'Classic feature films, free and legal',
+            loader: async () => (await archiveSearch({ collection: 'feature_films', label: 'Free Cinema', rows: 20 })).channels,
+            onMore: () => loadDataForSource('Free Cinema')
+        });
+
+        // Genre rails appear here as enrichment fills the buckets.
+        const genreHost = document.createElement('div');
+        genreHost.id = 'genre-rails';
+        host.appendChild(genreHost);
+
+        const status = document.createElement('p');
+        status.className = 'px-2 mt-6 text-xs text-[var(--text-muted)]';
+        status.textContent = 'Building your genre shelves…';
+        genreHost.appendChild(status);
+
+        const movies = await ensureMovieCatalogue();
+        if (myToken !== sectionToken) return;
+        status.textContent = `Sorting ${movies.length.toLocaleString()} films into genres…`;
+
+        // Enrich in waves and repaint the genre rails after each, so shelves appear
+        // progressively instead of the page sitting empty for a couple of thousand lookups.
+        for (let wave = 0; wave < 6; wave++) {
+            const more = await enrichNextBatch(movies, 60);
+            if (myToken !== sectionToken) return;
+            paintGenreRails(genreHost, movies, status);
+            if (!more) break;
+        }
+
+        // Then the collections themselves, for people who browse by source.
+        ARCHIVE_MOVIE_VAULTS.slice(0, 6).forEach(vault => {
+            addRail({
+                title: vault.label,
+                subtitle: `${vault.approx} films`,
+                loader: async () => shuffled(await loadArchiveVault(vault), 20),
+                onMore: () => loadDataForSource('Movie Vault')
+            });
+        });
+    }
+
+    function paintGenreRails(host, pool, status) {
+        const buckets = bucketByGenre(pool);
+        const ordered = GENRE_ORDER.filter(g => (buckets.get(g) || []).length >= 6);
+        if (!ordered.length) return;
+
+        status.remove();
+        host.innerHTML = '';
+        ordered.forEach(genre => {
+            const items = buckets.get(genre);
+            const section = document.createElement('section');
+            section.className = 'mt-7 px-1';
+            section.innerHTML = `
+                <div class="rail-head">
+                    <div class="min-w-0">
+                        <h2 class="rail-title text-lg text-slate-900 dark:text-white header-title truncate">
+                            <span aria-hidden="true">${GENRE_ICON[genre] || '🎬'}</span> ${escapeHtml(genre)}
+                        </h2>
+                        <p class="text-[11px] text-[var(--text-muted)] mt-0.5">${items.length} films</p>
+                    </div>
+                    <button class="rail-more" type="button">Browse all</button>
+                </div>
+                <div class="rail" role="list"></div>`;
+            const rail = section.querySelector('.rail');
+            shuffled(items, 20).forEach((ch, i) => {
+                const card = makePosterCard(ch);
+                card.style.animationDelay = `${(i % 10) * 0.04}s`;
+                rail.appendChild(card);
+            });
+            section.querySelector('.rail-more').addEventListener('click', () => openGrid(`${genre} films`, items));
+            host.appendChild(section);
+        });
+    }
+
+    /* ---- TV Shows ----------------------------------------------------- */
+
+    async function renderTvSection() {
+        const myToken = sectionToken;
+
+        const host = document.getElementById('home-rows');
+
+        addRail({
+            title: 'Complete box sets',
+            subtitle: 'Every episode, ready to play',
+            loader: async () => shuffled(await ensureSeriesCatalogue(), 20),
+            onMore: async () => openGrid('All shows', await ensureSeriesCatalogue())
+        });
+
+        const genreHost = document.createElement('div');
+        genreHost.id = 'tv-genre-rails';
+        host.appendChild(genreHost);
+
+        const status = document.createElement('p');
+        status.className = 'px-2 mt-6 text-xs text-[var(--text-muted)]';
+        status.textContent = 'Building your genre shelves…';
+        genreHost.appendChild(status);
+
+        const shows = await ensureSeriesCatalogue();
+        if (myToken !== sectionToken) return;
+        for (let wave = 0; wave < 4; wave++) {
+            const more = await enrichNextBatch(shows, 40);
+            if (myToken !== sectionToken) return;
+            paintGenreRails(genreHost, shows, status);
+            if (!more) break;
+        }
+
+        addRail({
+            title: 'Classic TV',
+            subtitle: 'Public-domain television',
+            loader: async () => (await archiveSearch({ collection: 'classic_tv', label: 'Classic TV', rows: 20 })).channels,
+            onMore: () => loadDataForSource('Free Cinema')
+        });
+    }
+
+    /* ---- Live TV ------------------------------------------------------ */
+
+    async function renderLiveSection() {
+        const host = document.getElementById('home-rows');
+
+        const shelf = document.createElement('section');
+        shelf.className = 'mt-4 px-1';
+        shelf.innerHTML = `
+            <div class="rail-head">
+                <h2 class="rail-title text-lg text-slate-900 dark:text-white header-title">Free TV Networks</h2>
+                <button class="rail-more" type="button">All sources</button>
+            </div>
+            <div class="flex gap-3 overflow-x-auto no-scrollbar pb-2" id="live-network-strip"></div>`;
+        host.appendChild(shelf);
+        shelf.querySelector('.rail-more').addEventListener('click', displayLiveTvHub);
+
+        const strip = shelf.querySelector('#live-network-strip');
+        HOME_NETWORKS.forEach(n => {
+            const tile = document.createElement('button');
+            tile.className = 'network-tile';
+            tile.innerHTML = `
+                <span class="text-xl leading-none" aria-hidden="true">${n.icon}</span>
+                <span class="net-name">${escapeHtml(n.name)}</span>
+                <span class="net-sub">${escapeHtml(n.sub)}</span>`;
+            tile.addEventListener('click', () => loadM3USource(`${n.name} · ${n.sub}`, n.url));
+            strip.appendChild(tile);
+        });
+
+        [['Sports', 'sports', '⚽'], ['News', 'news', '📰'], ['Movies', 'movies', '🎬'],
+         ['Entertainment', 'entertainment', '🎭'], ['Documentary', 'documentary', '🎥'],
+         ['Music', 'music', '🎵']].forEach(([label, slug, icon]) => {
+            addRail({
+                title: `${icon} ${label}`,
+                channelStyle: true, live: true,
+                loader: () => sampleFromPlaylist(`${IPTV_ORG}/categories/${slug}.m3u`, label, 20),
+                onMore: () => loadM3USource(label, `${IPTV_ORG}/categories/${slug}.m3u`)
+            });
+        });
+    }
+
+    /* ---- Kids --------------------------------------------------------- */
+
+    async function renderKidsSection() {
+        addRail({
+            title: 'Kids TV, live',
+            channelStyle: true, live: true,
+            loader: () => sampleFromPlaylist(`${IPTV_ORG}/categories/kids.m3u`, 'Kids', 20),
+            onMore: () => loadM3USource('Kids', `${IPTV_ORG}/categories/kids.m3u`)
+        });
+
+        const kidsSets = ARCHIVE_SERIES_VAULTS.filter(v =>
+            /pony|bob the builder|thomas|zoboomafoo|lazytown|super why|nature cat|clifford|between the lions|zoom|wild kratts|sonic|garfield|hamtaro|bananas|anpanman|mr\. men|fairly odd|reading rainbow|busytown|total drama/i.test(v.label));
+
+        addRail({
+            title: 'Box sets for kids',
+            subtitle: `${kidsSets.length} complete series`,
+            loader: async () => kidsSets.map(v => ({
+                title: v.label, url: `vault:series:${v.id}`, logo: archiveThumb(v.id),
+                group: `${v.approx} episodes`, isSeries: true, needsArt: true, _vault: v
+            })),
+            onMore: () => loadDataForSource('TV Box Sets')
+        });
+
+        addRail({
+            title: 'Cartoons',
+            subtitle: 'Animation from the public-domain archive',
+            loader: async () => (await archiveSearch({ collection: 'animationandcartoons', label: 'Cartoons', rows: 20 })).channels,
+            onMore: () => loadDataForSource('Free Cinema')
+        });
+
+        addRail({
+            title: 'Family films',
+            loader: async () => (await archiveSearch({ collection: 'feature_films', label: 'Family', term: 'family', rows: 20 })).channels
+        });
+    }
+
+    /* ---- My Stuff ------------------------------------------------------ */
+
+    async function renderMineSection() {
+        const host = document.getElementById('home-rows');
+
+        if (!favorites.length && !watchHistory.length) {
+            host.innerHTML = `
+                <div class="mt-10 text-center px-6">
+                    <div class="text-5xl mb-3" aria-hidden="true">⭐</div>
+                    <p class="font-bold text-slate-900 dark:text-white text-lg">Nothing saved yet</p>
+                    <p class="text-sm text-[var(--text-muted)] mt-2 max-w-md mx-auto">
+                        Star anything from a list, or open a film and hit Favourite, and it will show up here.
+                    </p>
+                </div>`;
+            return;
+        }
+
+        if (favorites.length) {
+            addRail({
+                title: 'Your favourites',
+                subtitle: `${favorites.length} saved`,
+                loader: async () => favorites,
+                onMore: () => openGrid('Your favourites', favorites)
+            });
+        }
+        addRail({
+            title: 'Arcade',
+            subtitle: 'Instant-play games',
+            loader: async () => ARCADE_GAMES.map(g => ({
+                title: g.title, url: g.url, logo: '', group: g.subtitle, isGame: true
+            })),
+            onMore: () => elements.gameHubModal.classList.remove('hidden')
+        });
+    }
+
+    /* ---- Browse-all grid ---------------------------------------------- */
+
+    function openGrid(title, items) {
+        const host = document.getElementById('home-rows');
+        elements.mainView.scrollTo({ top: 0 });
+        document.getElementById('network-shelf').classList.add('hidden');
+        host.innerHTML = '';
+
+        const head = document.createElement('div');
+        head.className = 'flex items-center gap-3 px-2 mt-4 mb-4';
+        head.innerHTML = `
+            <button class="custom-btn px-3 py-2 text-xs font-bold uppercase tracking-wider">← Back</button>
+            <h2 class="header-title text-xl font-bold text-slate-900 dark:text-white truncate">${escapeHtml(title)}</h2>
+            <span class="count-chip text-[10px] px-2 py-1 rounded">${items.length}</span>`;
+        head.querySelector('button').addEventListener('click', () => openSection(activeSection));
+        host.appendChild(head);
+
+        const grid = document.createElement('div');
+        grid.className = 'grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-7 gap-3 px-2 pb-10';
+        host.appendChild(grid);
+
+        renderInChunks(items, grid, (ch) => {
+            const card = makePosterCard(ch);
+            card.style.width = '100%';
+            return card;
+        }, 40);
+    }
+
     async function renderHomeRows() {
         const host = document.getElementById('home-rows');
         if (!host) return;
@@ -3308,6 +3639,142 @@ document.addEventListener('DOMContentLoaded', function() {
             onMore: () => loadDataForSource('Kids')
         });
     }
+
+    /* =====================================================================
+       CATALOGUE
+       ---------------------------------------------------------------------
+       One pool of every film and one of every show, merged from all sources so
+       a visitor browses "Movies", not "which of eleven collections is it in".
+
+       Genre buckets come from TMDB, which means genres are only known for
+       titles that have been looked up. Enrichment therefore runs in background
+       batches and the genre rails re-render as buckets fill, rather than the
+       page blocking on ~2,200 lookups before showing anything.
+       ===================================================================== */
+    const catalogue = {
+        movies: null, moviesPromise: null,
+        series: null, seriesPromise: null,
+        enrichedUpTo: 0
+    };
+
+    /** Every film we can play, from the site playlist and all film vaults. */
+    function ensureMovieCatalogue() {
+        if (catalogue.movies) return Promise.resolve(catalogue.movies);
+        if (catalogue.moviesPromise) return catalogue.moviesPromise;
+
+        catalogue.moviesPromise = (async () => {
+            const chunks = await Promise.all([
+                loadMyMovies().then(r => r.all).catch(() => []),
+                ...ARCHIVE_MOVIE_VAULTS.map(v => loadArchiveVault(v).catch(() => []))
+            ]);
+
+            const byUrl = new Map();
+            chunks.flat().forEach(ch => { if (ch && ch.url && !byUrl.has(ch.url)) byUrl.set(ch.url, ch); });
+            catalogue.movies = [...byUrl.values()];
+            return catalogue.movies;
+        })();
+        return catalogue.moviesPromise;
+    }
+
+    /** Every show, as one card per series. */
+    function ensureSeriesCatalogue() {
+        if (catalogue.series) return Promise.resolve(catalogue.series);
+        if (catalogue.seriesPromise) return catalogue.seriesPromise;
+
+        catalogue.seriesPromise = (async () => {
+            const boxSets = ARCHIVE_SERIES_VAULTS.map(v => ({
+                title: v.label,
+                url: `vault:series:${v.id}`,
+                logo: archiveThumb(v.id),
+                group: `${v.approx} episodes`,
+                isSeries: true,
+                needsArt: true,
+                _vault: v
+            }));
+
+            // The M3U-backed shows are grouped by series name already.
+            let playlistShows = [];
+            try {
+                if (Object.keys(vodSeriesMaster).length === 0) await loadVodRepositoryQuietly();
+                playlistShows = Object.entries(vodSeriesMaster).map(([name, eps]) => ({
+                    title: name,
+                    url: `series:${name}`,
+                    logo: '',
+                    group: `${eps.length} episodes`,
+                    isSeries: true,
+                    needsArt: true,
+                    _episodes: eps
+                }));
+            } catch (e) { /* box sets alone are still a catalogue */ }
+
+            const byTitle = new Map();
+            [...boxSets, ...playlistShows].forEach(s => {
+                if (!byTitle.has(s.title.toLowerCase())) byTitle.set(s.title.toLowerCase(), s);
+            });
+            catalogue.series = [...byTitle.values()];
+            return catalogue.series;
+        })();
+        return catalogue.seriesPromise;
+    }
+
+    /** Load the series playlists without taking over the sidebar. */
+    async function loadVodRepositoryQuietly() {
+        const results = await Promise.all(VOD_SOURCES.map(async source => {
+            try {
+                const data = await fetchWithFallback(source.url, 1, false);
+                return { source, parsed: await parseM3U(data, 'Series & Shows') };
+            } catch (e) { return null; }
+        }));
+        results.filter(Boolean).forEach(({ source, parsed }) => {
+            parsed.channels.forEach(ch => {
+                ch.isVod = true;
+                ch.isSeries = true;
+                const name = (ch.group && ch.group !== 'Uncategorized')
+                    ? ch.group
+                    : (source.defaultGroup || extractSeriesNameFromTitle(ch.title) || 'Other Series');
+                ch.group = name;
+                ch.title = cleanEpisodeTitle(ch.title, name);
+                (vodSeriesMaster[name] = vodSeriesMaster[name] || []).push(ch);
+            });
+        });
+    }
+
+    /**
+     * Look up the next `count` un-enriched titles so genre buckets keep filling.
+     * Returns true while there is still work left.
+     */
+    async function enrichNextBatch(pool, count = 48) {
+        const pending = pool.filter(c => c._tmdb === undefined && !c._tmdbRequested).slice(0, count);
+        if (!pending.length) return false;
+        pending.forEach(c => { c._tmdbRequested = true; });
+        await Promise.all(pending.map(c => enrichChannel(c).catch(() => null)));
+        return true;
+    }
+
+    /** Bucket whatever has been enriched so far by TMDB genre. */
+    function bucketByGenre(pool) {
+        const buckets = new Map();
+        pool.forEach(c => {
+            const rec = c._tmdb;
+            if (!rec || !rec.genres || !rec.genres.length) return;
+            rec.genres.forEach(g => {
+                if (!buckets.has(g)) buckets.set(g, []);
+                buckets.get(g).push(c);
+            });
+        });
+        return buckets;
+    }
+
+    const GENRE_ORDER = ['Action', 'Adventure', 'Comedy', 'Drama', 'Thriller', 'Horror',
+        'Science Fiction', 'Fantasy', 'Animation', 'Family', 'Romance', 'Crime',
+        'Mystery', 'Documentary', 'War', 'Western', 'History', 'Music'];
+
+    const GENRE_ICON = {
+        Action: '💥', Adventure: '🧭', Comedy: '😂', Drama: '🎭', Thriller: '🔪',
+        Horror: '👻', 'Science Fiction': '👽', Fantasy: '🐉', Animation: '✏️',
+        Family: '👨‍👩‍👧', Romance: '❤️', Crime: '🚔', Mystery: '❓',
+        Documentary: '🎥', War: '⚔️', Western: '🤠', History: '📜', Music: '🎵'
+    };
 
     /* ---------------- Live TV hub ---------------- */
 
@@ -4267,7 +4734,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 customPlaylists.push({name, url, icon: '📁', isCustom: true});
                 localStorage.setItem('iptv_custom_playlists', JSON.stringify(customPlaylists));
                 setupAllPlaylists();
-                renderPlaylistOptions(allPlaylists);
+                renderSectionTabs();
                 elements.newPlaylistName.value = '';
                 elements.newPlaylistUrl.value = '';
                 elements.addPlaylistModal.classList.add('hidden');
@@ -4285,7 +4752,7 @@ document.addEventListener('DOMContentLoaded', function() {
             elements.cookieConsentBanner.classList.add('hidden');
             loadUserData();
             setupAllPlaylists();
-            renderPlaylistOptions(allPlaylists);
+            renderSectionTabs();
             showToast("Preferences saved. Welcome!", "success");
         });
         elements.declineCookiesBtn?.addEventListener('click', () => {
@@ -4389,15 +4856,12 @@ document.addEventListener('DOMContentLoaded', function() {
         bindAllEvents();
         initializePlayers();
         setupAllPlaylists();
-        renderPlaylistOptions(allPlaylists);
 
-        // Sources are loaded on demand now, so first paint is not blocked on the
-        // series playlists finishing their round-trip.
-        renderHomeRows();
-
-        const savedSource = hasConsent ? localStorage.getItem('iptv_last_source') : null;
-        const lastSourceName = allPlaylists.some(p => p.name === savedSource) ? savedSource : 'Movie Vault';
-        loadDataForSource(lastSourceName);
+        // The top bar is the section nav now. The sidebar still hosts deep source
+        // browsing, reached from each section's "Browse all" links.
+        const savedSection = hasConsent ? localStorage.getItem('ss_section') : null;
+        openSection(SECTIONS.some(x => x.key === savedSection) ? savedSection : 'home');
+        loadDataForSource('Movie Vault');
 
         registerPWA();
     }
