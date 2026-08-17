@@ -689,6 +689,20 @@
         }
         .channel-row:hover .ch-live, .channel-row:focus-visible .ch-live { opacity: 1; }
 
+        /* A channel a browser structurally cannot play. Dimmed, not hidden: it is still
+           real, and the VLC handoff still works. */
+        .ch-warn {
+            flex: 0 0 auto;
+            font-size: 8px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase;
+            padding: 3px 6px; border-radius: 4px; white-space: nowrap;
+            background: rgba(180, 83, 9, 0.18); color: #b45309;
+            border: 1px solid rgba(180, 83, 9, 0.35);
+        }
+        :root:not([data-theme]) .ch-warn, html.dark .ch-warn { color: #fbbf24; border-color: rgba(251,191,36,0.3); background: rgba(251,191,36,0.12); }
+        html.light .ch-warn { color: #92400e; border-color: rgba(146,64,14,0.35); background: rgba(180,83,9,0.14); }
+        .channel-row.ch-blocked { opacity: 0.72; }
+        .channel-row.ch-blocked:hover { opacity: 1; }
+
         /* Detail sheet. */
         #detail-backdrop-img {
             position: absolute; inset: 0; width: 100%; height: 100%;
@@ -2158,6 +2172,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
     let allPlaylists = [];
 
+    /*
+     * What to put back in the side list when a search is cleared, when a "Go Back" has no
+     * explicit target, or when Refresh is pressed. These used to be read off
+     * `.playlist-pill.active`, which stopped existing when the source pills became the
+     * section tabs — so all three quietly did nothing at all.
+     */
+    let sidebarSourceName = 'Movie Vault';
+    let sidebarReload = () => loadDataForSource('Movie Vault');
+
     function setupAllPlaylists() {
         allPlaylists = [...BASE_PLAYLISTS];
         if (hasConsent) {
@@ -2438,17 +2461,20 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    function showPlayerError(url, errMsg) {
+    function showPlayerError(url, errMsg, blocker = null) {
         destroyPlayers();
         elements.loadingOverlay.classList.remove('hidden');
         elements.loadingSpinner.style.display = 'none';
-        elements.loadingText.innerText = "This stream didn't open";
+        const copy = blocker && BLOCKER_COPY[blocker];
+        elements.loadingText.innerText = copy ? copy.short : "This stream didn't open";
 
         const isArchive = url.startsWith('archive:');
         const subtext = elements.loadingSubtext;
         subtext.innerHTML = `
-            <span class="block max-w-md mx-auto leading-relaxed">${escapeHtml(errMsg)}</span>
-            <span class="block text-[11px] mt-2 text-[var(--text-muted)]">Free channel lists go offline without warning — picking another channel usually just works.</span>
+            <span class="block max-w-md mx-auto leading-relaxed">${escapeHtml(copy ? copy.long : errMsg)}</span>
+            <span class="block text-[11px] mt-2 text-[var(--text-muted)]">${copy
+                ? 'Nothing on the page can change this — it is a limit of what a browser is allowed to send.'
+                : 'Free channel lists go offline without warning — picking another channel usually just works.'}</span>
             <div class="flex flex-wrap justify-center gap-2 mt-4" data-error-actions></div>`;
 
         const actions = subtext.querySelector('[data-error-actions]');
@@ -2460,11 +2486,15 @@ document.addEventListener('DOMContentLoaded', function() {
             actions.appendChild(b);
         };
 
-        addAction('Retry', () => playStream(url), 'bg-purple-600 hover:bg-purple-500');
+        // Retrying a stream the browser structurally cannot fetch is a button that lies.
+        if (!blocker) addAction('Retry', () => playStream(url), 'bg-purple-600 hover:bg-purple-500');
 
         if (!isArchive) {
             // A proxy hop and an external handoff only make sense for a real http(s) URL.
-            addAction('Try proxy', () => playStreamWithProxy(url), 'bg-indigo-600 hover:bg-indigo-500');
+            // For a plain-http source the proxy is the actual fix, so lead with it.
+            addAction(blocker === 'insecure' ? 'Play via proxy' : 'Try proxy',
+                () => playStreamWithProxy(url),
+                blocker === 'insecure' ? 'bg-emerald-600 hover:bg-emerald-500' : 'bg-indigo-600 hover:bg-indigo-500');
 
             const open = document.createElement('a');
             open.href = url;
@@ -2481,7 +2511,23 @@ document.addEventListener('DOMContentLoaded', function() {
             actions.appendChild(vlc);
         }
 
-        showToast("That stream didn't open — try another", "error");
+        showToast(copy ? copy.short : "That stream didn't open — try another", copy ? "info" : "error");
+    }
+
+    /**
+     * Play a channel, or explain immediately why it cannot be played here.
+     *
+     * Checking first is the difference between a labelled dead end with a VLC link and a
+     * spinner that runs for half a minute before failing for reasons nobody can see.
+     */
+    function playChannel(ch) {
+        const blocker = ch.blocker || browserBlocker(ch.url);
+        if (blocker) {
+            showPlayerError(ch.url, '', blocker);
+            return false;
+        }
+        playStream(ch.url);
+        return true;
     }
 
     window.playStreamWithProxy = function(url) {
@@ -2658,6 +2704,53 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 1200);
     }
 
+    /*
+     * Why a stream cannot play here, decided before anyone clicks it.
+     *
+     * A browser is not VLC, and community playlists are written for VLC. Three things in
+     * them can never work in a page, no matter which player you hand the URL to:
+     *
+     *   http-user-agent / http-referrer — the source only answers a spoofed VLC or
+     *     set-top identity. JavaScript cannot set User-Agent or Referer on a media
+     *     request; the browser owns those headers. This covers most "premium" entries.
+     *   plain http:// on an https:// page — mixed content, blocked before a request is
+     *     even made. A proxy hop is the only route, so say so up front.
+     *   .mpd with DRM, rtmp://, rtsp:// — no browser support at all.
+     *
+     * Detecting these turns a 30-second spinner and three silent retries into an honest
+     * label and a working alternative (proxy, external open, VLC handoff).
+     */
+    function browserBlocker(url, info = '') {
+        if (/http-user-agent="|http-referrer="|user-agent="/i.test(info)) return 'useragent';
+        if (/^rtmps?:|^rtsp:|^mms:/i.test(url)) return 'protocol';
+        if (/\.mpd(\?|$)/i.test(url)) return 'dash';
+        if (url.startsWith('http://') && location.protocol === 'https:') return 'insecure';
+        return null;
+    }
+
+    const BLOCKER_COPY = {
+        useragent: {
+            short: 'Needs a TV app',
+            long: 'This source only answers requests that identify themselves as VLC or a set-top box. '
+                + 'A browser will not send a fake User-Agent, so it cannot be played on the page — '
+                + 'the VLC handoff below is the only route.'
+        },
+        insecure: {
+            short: 'Insecure source',
+            long: 'This stream is served over plain http, and the browser blocks insecure media inside '
+                + 'an https page. The proxy hop below fetches it over https instead.'
+        },
+        dash: {
+            short: 'DRM stream',
+            long: 'This is a DASH stream, which normally carries DRM. Nothing on the open web can '
+                + 'decrypt it — that requires the broadcaster\'s own app.'
+        },
+        protocol: {
+            short: 'Unsupported protocol',
+            long: 'RTMP, RTSP and MMS predate browser video entirely. VLC can open it; a page cannot.'
+        }
+    };
+
     async function parseM3U(data, playlistName) {
         const lines = data.split(/\r?\n/);
         const channels = [];
@@ -2687,7 +2780,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     // playlists, which carry an id but no tvg-logo.
                     const idMatch = info.match(/tvg-id="([^"]*)"/);
                     const tvgId = idMatch ? idMatch[1] : '';
-                    const channelData = { title, logo, url, group, tvgId, sourcePlaylistName: playlistName };
+                    const channelData = {
+                        title, logo, url, group, tvgId, sourcePlaylistName: playlistName,
+                        blocker: browserBlocker(url, info)
+                    };
                     channels.push(channelData);
                     if (!groups[group]) groups[group] = [];
                     groups[group].push(channelData);
@@ -3538,11 +3634,37 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    /*
+     * The side list belongs to whatever section you are in.
+     *
+     * It used to be pinned to the Movie Vault index for the life of the page, so opening
+     * Live TV left a wall of channels in the main pane and a list of films down the side.
+     * Home is left alone deliberately: it is a mix of everything, so there is no one list
+     * it should be showing, and resetting it on every trip back to Home is worse than
+     * leaving the last thing you looked at.
+     */
+    const SECTION_SIDEBAR = {
+        movies: 'Movie Vault',
+        tv: 'TV Box Sets',
+        live: 'Live TV',
+        kids: 'Kids',
+        mine: 'Favorites'
+    };
+
+    function syncSidebarToSection(key) {
+        let name = SECTION_SIDEBAR[key];
+        if (!name) return;
+        // Favourites only exists as a source once the data policy is accepted.
+        if (name === 'Favorites' && !allPlaylists.some(p => p.name === 'Favorites')) name = 'My Movies';
+        loadDataForSource(name);
+    }
+
     function openSection(key) {
         activeSection = key;
         sectionToken++;
         if (hasConsent) { try { localStorage.setItem('ss_section', key); } catch (e) {} }
         renderSectionTabs();
+        syncSidebarToSection(key);
         if (typeof gtag === 'function') gtag('event', 'open_section', { section: key });
 
         elements.mainView.scrollTo({ top: 0, behavior: 'auto' });
@@ -3923,7 +4045,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 <span class="text-xl leading-none" aria-hidden="true">${n.icon}</span>
                 <span class="net-name">${escapeHtml(n.name)}</span>
                 <span class="net-sub">${escapeHtml(n.sub)}</span>`;
-            tile.addEventListener('click', () => renderChannelWall(`${n.name} · ${n.sub}`, n.url));
+            // The first two shelf entries are merged themed guides, not single playlists.
+            tile.addEventListener('click', () => n.wall
+                ? openThemedWall(n.wall)
+                : renderChannelWall(`${n.name} · ${n.sub}`, n.url));
             strip.appendChild(tile);
         });
 
@@ -4050,6 +4175,18 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const categoryOf = ch => (ch.group && ch.group !== 'Uncategorized') ? ch.group : 'Other';
 
+        // Put the same line-up down the side. The wall replaced what loadM3USource used
+        // to do, and it took the side list with it: you clicked Pluto TV and got 400
+        // channels in the main pane next to a list of films.
+        const sidebarGroups = {};
+        channels.forEach(c => { (sidebarGroups[categoryOf(c)] = sidebarGroups[categoryOf(c)] || []).push(c); });
+        sidebarSourceName = sourceName;
+        sidebarReload = () => {
+            allChannelsInPlaylist = channels;
+            displayCategories(sidebarGroups, null, sourceName);
+        };
+        sidebarReload();
+
         const groupsOf = () => {
             const m = new Map();
             channels.forEach(c => m.set(categoryOf(c), (m.get(categoryOf(c)) || 0) + 1));
@@ -4057,8 +4194,9 @@ document.addEventListener('DOMContentLoaded', function() {
         };
 
         function makeRow(ch) {
+            const blocker = ch.blocker || browserBlocker(ch.url);
             const row = document.createElement('button');
-            row.className = 'channel-row';
+            row.className = `channel-row${blocker ? ' ch-blocked' : ''}`;
             row.innerHTML = `
                 <span class="ch-num"></span>
                 <span class="ch-logo">
@@ -4068,12 +4206,14 @@ document.addEventListener('DOMContentLoaded', function() {
                     <span class="ch-name">${escapeHtml(ch.title)}</span>
                     <span class="ch-group">${escapeHtml((ch.group && ch.group !== 'Uncategorized') ? ch.group : 'Live')}</span>
                 </span>
-                <span class="ch-live">LIVE</span>`;
+                ${blocker
+                    ? `<span class="ch-warn" title="${escapeHtml(BLOCKER_COPY[blocker].long)}">${escapeHtml(BLOCKER_COPY[blocker].short)}</span>`
+                    : '<span class="ch-live">LIVE</span>'}`;
             row.querySelector('img').addEventListener('error', function () {
                 if (this.dataset.fb) return; this.dataset.fb = '1'; this.src = FALLBACK_ART;
             });
             row.addEventListener('click', () => {
-                playStream(ch.url);
+                if (!playChannel(ch)) return;
                 elements.nowPlayingTitle.textContent = ch.title;
                 elements.nowPlayingGenre.textContent = (ch.group && ch.group !== 'Uncategorized') ? ch.group : 'LIVE';
                 elements.mainView.scrollTo({ top: 0, behavior: 'smooth' });
@@ -4867,6 +5007,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     async function loadDataForSource(sourceKey, forceRefresh = false) {
+        sidebarSourceName = sourceKey;
+        sidebarReload = () => loadDataForSource(sourceKey);
         if (forceRefresh && elements.refreshIcon) elements.refreshIcon.classList.add('spin-anim');
         showSidebarSkeleton(`Loading ${sourceKey}…`);
         const playlist = allPlaylists.find(p => p.name === sourceKey);
@@ -5066,10 +5208,7 @@ document.addEventListener('DOMContentLoaded', function() {
             backButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg> <span>Go Back</span>`;
             backButton.className = 'w-[calc(100%-16px)] mx-2 my-2 flex items-center justify-center space-x-2 py-3 px-4 text-center bg-white/80 hover:bg-white/90 dark:bg-black/60 dark:hover:bg-black/90 border border-black/10 dark:border-white/10 rounded-xl shadow-lg sticky top-0 z-10 text-xs font-bold uppercase tracking-wider transition-all backdrop-blur-md';
             backButton.style.color = "var(--accent-text)";
-            backButton.addEventListener('click', backFunction || (() => {
-                const activePill = document.querySelector('.playlist-pill.active');
-                if(activePill) loadDataForSource(activePill.dataset.name);
-            }));
+            backButton.addEventListener('click', backFunction || (() => sidebarReload()));
             elements.playlistElement.appendChild(backButton);
         }
         
@@ -5151,6 +5290,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
             if (!isGame && currentChannel.logo) calculateAmbilight(currentChannel.logo);
             else applyTheme(userTheme);
+        }
+
+        // Some streams cannot be fetched from a page at all — a spoofed user-agent the
+        // browser will not send, plain http inside an https document, DASH/DRM, or an
+        // rtmp/rtsp URL. Checked here rather than only at the click sites so every route
+        // into the player gets the explanation instead of a spinner and a silent failure.
+        // A proxy retry is exempt: routing through https is precisely the fix.
+        if (!isGame && !isWebRTC && !videoId && !isProxyRetry) {
+            const blocker = (currentChannel && currentChannel.blocker) || browserBlocker(url);
+            if (blocker) { showPlayerError(url, '', blocker); return; }
         }
 
         destroyPlayers();
@@ -5515,8 +5664,7 @@ document.addEventListener('DOMContentLoaded', function() {
             clearTimeout(searchTimeout);
             const searchTerm = e.target.value.toLowerCase().trim();
             if (!searchTerm) {
-                const activePill = document.querySelector('.playlist-pill.active');
-                if(activePill) loadDataForSource(activePill.dataset.name);
+                sidebarReload();
                 return;
             }
             const filteredChannels = allChannelsInPlaylist.filter(c => c.title && c.title.toLowerCase().includes(searchTerm));
@@ -5524,11 +5672,11 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         elements.refreshPlaylistBtn?.addEventListener('click', () => {
-            const activePill = document.querySelector('.playlist-pill.active');
-            if (activePill) {
-                if (typeof gtag === 'function') gtag('event', 'refresh_playlist', { 'playlist_name': activePill.dataset.name });
-                loadDataForSource(activePill.dataset.name, true);
-            }
+            if (typeof gtag === 'function') gtag('event', 'refresh_playlist', { 'playlist_name': sidebarSourceName });
+            // A named source can be re-fetched past its cache; a merged wall's list can
+            // only be rebuilt from what is already in hand.
+            if (allPlaylists.some(p => p.name === sidebarSourceName)) loadDataForSource(sidebarSourceName, true);
+            else sidebarReload();
         });
         
         elements.addPlaylistBtn?.addEventListener('click', () => {
@@ -5669,10 +5817,12 @@ document.addEventListener('DOMContentLoaded', function() {
         setupAllPlaylists();
 
         // The top bar is the section nav now. The sidebar still hosts deep source
-        // browsing, reached from each section's "Browse all" links.
+        // browsing, and openSection points it at whatever the section is about — so it
+        // only needs a default here for Home, which has no single list of its own.
         const savedSection = hasConsent ? localStorage.getItem('ss_section') : null;
-        openSection(SECTIONS.some(x => x.key === savedSection) ? savedSection : 'home');
-        loadDataForSource('Movie Vault');
+        const startSection = SECTIONS.some(x => x.key === savedSection) ? savedSection : 'home';
+        openSection(startSection);
+        if (!SECTION_SIDEBAR[startSection]) loadDataForSource('Movie Vault');
 
         registerPWA();
     }

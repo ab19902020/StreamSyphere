@@ -266,6 +266,49 @@ no categories at all.
 
 Failures retry with backoff, then offer a proxy hop, an external open, and a VLC handoff.
 
+### What a browser cannot play, decided before the click
+
+Community playlists are written for VLC, and a large minority of their entries can never
+work in a page whatever player you hand the URL to. `browserBlocker()` recognises four
+cases and labels them on the row rather than letting them spin:
+
+| Blocker | Why |
+| --- | --- |
+| `http-user-agent` / `http-referrer` | the source only answers a spoofed VLC or set-top identity, and JavaScript cannot set `User-Agent` or `Referer` on a media request — the browser owns those headers |
+| plain `http://` inside an `https://` page | mixed content, blocked before a request is made; the proxy hop is the only route, so the error leads with it |
+| `.mpd` | DASH, which normally means DRM |
+| `rtmp://`, `rtsp://`, `mms://` | predate browser video entirely |
+
+Measured across the playlists this app ships:
+
+| Source | Entries | Unplayable in a browser |
+| --- | --- | --- |
+| `categories/sports` | 459 | **200 (43%)** — 103 need a spoofed user-agent, 97 are plain http |
+| `countries/uk` | 310 | 78 (25%) — 55 are DASH/DRM |
+| `streams/us_pluto` | 402 | **0** |
+| `streams/us_samsung` | 408 | **0** |
+
+That table is the argument for leading with the ad-supported networks: they are the only
+sources that are 100% browser-playable. The blocked entries stay listed and keep their VLC
+handoff — they are real channels, just not ones a page can open — and the error panel drops
+its Retry button when retrying cannot possibly help.
+
+### Sky Sports, TNT Sports and MUTV
+
+Asked for repeatedly, and still not added. Two independent reasons, and the second one is
+purely technical:
+
+1. They are subscription channels with no free feed in any territory, so every "free"
+   copy in the IPTV indexes is an unauthorised restream of a live broadcast.
+2. All 14 Sky Sports / MUTV entries in `categories/sports` are dead. Probed directly:
+   twelve return `403`/`410`, and the two that answer `200`/`302` return an empty body —
+   no manifest at all. Ten of the fourteen are also user-agent locked, so they could not
+   play here even if the sources came back.
+
+Nothing was removed to make this true: the community index is carried in full, so those
+entries still appear under Live TV → By Genre → Sports, now with a "Needs a TV app" label
+where that applies.
+
 ## Conventions worth keeping
 
 - **Never interpolate playlist data into `innerHTML` raw.** Titles, group names and logo
@@ -300,3 +343,12 @@ Failures retry with backoff, then offer a proxy hop, an external open, and a VLC
   screen.
 - **Don't invent data the sources don't have.** There is no free EPG feed for these
   channels; a guide with plausible-looking made-up times would be worse than no times.
+- **The side list belongs to the section.** It was pinned to the Movie Vault index for the
+  life of the page, so Live TV showed a wall of channels next to a list of films.
+  `openSection()` points it at the section's own source, and a channel wall mirrors its
+  line-up into it.
+- **Don't read UI state off elements that may not exist.** The sidebar's Refresh button,
+  its search-clear and its Go Back all resolved their target from
+  `.playlist-pill.active` — an element that stopped existing when the source pills became
+  section tabs, so all three silently did nothing. State like that belongs in a variable
+  (`sidebarReload`), not in the DOM.
