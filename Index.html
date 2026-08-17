@@ -1513,7 +1513,17 @@ document.addEventListener('DOMContentLoaded', function() {
         { key: 'prelinger',              label: 'Prelinger Archives',   icon: '🎞️' },
         { key: 'educationalfilms',       label: 'Educational Films',    icon: '🎓' },
         { key: 'artsandmusicvideos',     label: 'Arts & Music',         icon: '🎵' },
-        { key: 'sports',                 label: 'Sports',               icon: '⚽' }
+        { key: 'sports',                 label: 'Sports',               icon: '⚽' },
+        // Verified live against the search API: item counts are 110,609 / 37,632 /
+        // 13,731 / 2,349 / 634 respectively. `opensource_movies` (2.5M) and
+        // `additional_collections_video` (1.9M) are deliberately left out — they are
+        // unfiltered upload dumps, and a browse surface full of phone footage is worse
+        // than a smaller shelf of actual films.
+        { key: 'moviesandfilms',         label: 'Movies & Films',       icon: '🍿' },
+        { key: 'anime',                  label: 'Anime',                icon: '🎌' },
+        { key: 'nasa',                   label: 'NASA & Spaceflight',   icon: '🚀' },
+        { key: 'avgeeks',                label: 'AV Geeks',             icon: '📽️' },
+        { key: 'computerchronicles',     label: 'Computer Chronicles',  icon: '💾' }
     ];
 
     // These collections are carried unfiltered. The public-domain corner of archive.org
@@ -1919,15 +1929,29 @@ document.addEventListener('DOMContentLoaded', function() {
                 net('es_pluto', 'Pluto TV · Spain', '🪐'),
                 net('it_pluto', 'Pluto TV · Italy', '🪐'),
                 net('br_pluto', 'Pluto TV · Brazil', '🪐'),
+                net('se_pluto', 'Pluto TV · Sweden', '🪐'),
+                net('no_pluto', 'Pluto TV · Norway', '🪐'),
+                net('dk_pluto', 'Pluto TV · Denmark', '🪐'),
                 net('us_samsung', 'Samsung TV Plus · USA', '📱'),
                 net('uk_samsung', 'Samsung TV Plus · UK', '📱'),
                 net('au_samsung', 'Samsung TV Plus · Australia', '📱'),
+                net('nz_samsung', 'Samsung TV Plus · New Zealand', '📱'),
                 net('it_samsung', 'Samsung TV Plus · Italy', '📱'),
+                net('se_samsung', 'Samsung TV Plus · Sweden', '📱'),
+                net('nl_samsung', 'Samsung TV Plus · Netherlands', '📱'),
+                net('dk_samsung', 'Samsung TV Plus · Denmark', '📱'),
+                net('no_samsung', 'Samsung TV Plus · Norway', '📱'),
+                net('fi_samsung', 'Samsung TV Plus · Finland', '📱'),
+                net('ca_samsung', 'Samsung TV Plus · Canada', '📱'),
+                net('mx_samsung', 'Samsung TV Plus · Mexico', '📱'),
+                net('in_samsung', 'Samsung TV Plus · India', '📱'),
                 net('uk_rakuten', 'Rakuten TV · UK', '🔴'),
                 net('fr_rakuten', 'Rakuten TV · France', '🔴'),
                 net('de_rakuten', 'Rakuten TV · Germany', '🔴'),
                 net('es_rakuten', 'Rakuten TV · Spain', '🔴'),
                 net('it_rakuten', 'Rakuten TV · Italy', '🔴'),
+                net('pl_rakuten', 'Rakuten TV · Poland', '🔴'),
+                net('fi_rakuten', 'Rakuten TV · Finland', '🔴'),
                 net('us_tubi', 'Tubi', '🔶'),
                 net('us_xumo', 'Xumo', '🟣'),
                 net('us_plex', 'Plex', '▶️'),
@@ -1935,7 +1959,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 net('us_roku', 'Roku Channel', '🟪'),
                 net('us_klowdtv', 'KlowdTV', '☁️'),
                 net('us_distro', 'DistroTV', '📡'),
-                net('us_vizio', 'Vizio WatchFree', '📺')
+                net('us_vizio', 'Vizio WatchFree', '📺'),
+                net('us_amagi', 'Amagi · USA', '🎯'),
+                net('mx_amagi', 'Amagi · Mexico', '🎯')
             ]
         },
         {
@@ -3058,6 +3084,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
     /** Networks kept one click from the home screen. */
     const HOME_NETWORKS = [
+        // Two merged line-ups first: the thing people arrive looking for is a sport or a
+        // news channel, not a particular network's branding.
+        { name: 'Free Sports', sub: 'All networks', icon: '⚽', wall: 'sports' },
+        { name: 'Free News', sub: 'All networks', icon: '📰', wall: 'news' },
         { name: 'Pluto TV', sub: 'USA', icon: '🪐', url: `${IPTV_STREAMS}/us_pluto.m3u` },
         { name: 'Pluto TV', sub: 'UK', icon: '🪐', url: `${IPTV_STREAMS}/uk_pluto.m3u` },
         { name: 'Samsung TV+', sub: 'USA', icon: '📱', url: `${IPTV_STREAMS}/us_samsung.m3u` },
@@ -3087,6 +3117,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <span class="net-name">${escapeHtml(n.name)}</span>
                 <span class="net-sub">${escapeHtml(n.sub)}</span>`;
             tile.addEventListener('click', () => {
+                if (n.wall) { openThemedWall(n.wall); return; }
                 loadM3USource(`${n.name} · ${n.sub}`, n.url);
                 if (window.innerWidth < 768) {
                     elements.sidebar.classList.remove('-translate-x-full');
@@ -3541,6 +3572,13 @@ document.addEventListener('DOMContentLoaded', function() {
             onMore: () => loadDataForSource('Free Cinema')
         });
 
+        addRail({
+            title: 'More free films',
+            subtitle: 'The wider archive.org film library',
+            loader: async () => (await archiveSearch({ collection: 'moviesandfilms', label: 'Movies & Films', rows: 20 })).channels,
+            onMore: () => loadDataForSource('Free Cinema')
+        });
+
         // Genre rails appear here as enrichment fills the buckets.
         const genreHost = document.createElement('div');
         genreHost.id = 'genre-rails';
@@ -3654,12 +3692,93 @@ document.addEventListener('DOMContentLoaded', function() {
             loader: async () => (await archiveSearch({ collection: 'classic_tv', label: 'Classic TV', rows: 20 })).channels,
             onMore: () => loadDataForSource('Free Cinema')
         });
+
+        addRail({
+            title: 'Anime',
+            subtitle: 'From the archive.org anime collection',
+            loader: async () => (await archiveSearch({ collection: 'anime', label: 'Anime', rows: 20 })).channels,
+            onMore: () => loadDataForSource('Free Cinema')
+        });
     }
 
     /* ---- Live TV ------------------------------------------------------ */
 
+    /*
+     * Themed line-ups merged from the ad-supported networks.
+     *
+     * These are the official free feeds — Pluto, Samsung TV Plus, Tubi, Xumo, Stirr,
+     * Plex, Rakuten — so they are legal to link, they run 24/7 and they play in a
+     * browser. Between them they carry a lot of real sport: NFL Channel, MLB, The NBA
+     * Channel, NHL Network, beIN SPORTS XTRA, FOX Sports, NBC Sports NOW, CBS Sports HQ,
+     * fubo Sports, UFC, DAZN Ringside, Tennis Channel, RugbyPass TV, FIFA+, GolfPass,
+     * World Poker Tour, Fuel TV and Cricket Gold.
+     *
+     * What is deliberately not here: Sky Sports, TNT Sports and MUTV. Those are
+     * subscription channels with no free feed of any kind — every "free" version of them
+     * is an unauthorised restream, which is not something to build a front door to, and
+     * in any case they are locked to a custom user-agent a browser cannot send.
+     */
+    const NETWORK_SOURCES = [
+        { label: 'Pluto TV · USA', url: `${IPTV_STREAMS}/us_pluto.m3u` },
+        { label: 'Pluto TV · UK', url: `${IPTV_STREAMS}/uk_pluto.m3u` },
+        { label: 'Samsung TV+ · USA', url: `${IPTV_STREAMS}/us_samsung.m3u` },
+        { label: 'Samsung TV+ · UK', url: `${IPTV_STREAMS}/uk_samsung.m3u` },
+        { label: 'Tubi', url: `${IPTV_STREAMS}/us_tubi.m3u` },
+        { label: 'Xumo', url: `${IPTV_STREAMS}/us_xumo.m3u` },
+        { label: 'Stirr', url: `${IPTV_STREAMS}/us_stirr.m3u` },
+        { label: 'Plex', url: `${IPTV_STREAMS}/us_plex.m3u` },
+        { label: 'Roku Channel', url: `${IPTV_STREAMS}/us_roku.m3u` },
+        { label: 'Rakuten TV · UK', url: `${IPTV_STREAMS}/uk_rakuten.m3u` },
+        { label: 'Samsung TV+ · Australia', url: `${IPTV_STREAMS}/au_samsung.m3u` },
+        { label: 'Pluto TV · Canada', url: `${IPTV_STREAMS}/ca_pluto.m3u` },
+        { label: 'DistroTV', url: `${IPTV_STREAMS}/us_distro.m3u` },
+        { label: 'Vizio WatchFree', url: `${IPTV_STREAMS}/us_vizio.m3u` },
+        { label: 'KlowdTV', url: `${IPTV_STREAMS}/us_klowdtv.m3u` },
+        { label: 'Pluto TV · Germany', url: `${IPTV_STREAMS}/de_pluto.m3u` },
+        { label: 'Pluto TV · Italy', url: `${IPTV_STREAMS}/it_pluto.m3u` },
+        { label: 'Pluto TV · Spain', url: `${IPTV_STREAMS}/es_pluto.m3u` },
+        { label: 'Pluto TV · France', url: `${IPTV_STREAMS}/fr_pluto.m3u` },
+        { label: 'Pluto TV · Brazil', url: `${IPTV_STREAMS}/br_pluto.m3u` },
+        { label: 'Pluto TV · Mexico', url: `${IPTV_STREAMS}/mx_pluto.m3u` }
+    ];
+
+    /*
+     * Two halves to each pattern, and the difference matters.
+     *
+     * The first half anchors at a word start but not a word end, so GolfPass, PokerGO,
+     * SportsGrid and Newsmax are caught — station names glue words together constantly.
+     * "Transport" still fails because there is no word break before its "sport".
+     *
+     * The second half needs both boundaries, for words that are only sport in isolation:
+     * a loose "bein" would take Being Human, a loose "fight" would take Fighting Fit.
+     */
+    const SPORT_MATCH = /(\b(sport|nfl|nba|mlb|nhl|ufc|fifa|golf|tennis|rugby|cricket|soccer|football|boxing|ringside|wrestl|poker|racing|nascar|motorsport|motorvision|motortrend|olympic|athletic|surf|skateboard|bowling|darts|snooker|billiard|cycling|equestrian|fubo|dazn|swerve|combat|matchroom)|\b(bein|wwe|tna|speed|fight|fuel tv|formula 1|red bull)\b)/i;
+    const NEWS_MATCH = /(\b(news|weather|bloomberg|cnbc|reuters|euronews|politics)|\b(cnn|msnbc|al jazeera|france 24|dw|c-span|cspan)\b)/i;
+
+    /** Merge every network into one themed guide, grouped by which network carries it. */
+    function openThemedWall(kind) {
+        const spec = kind === 'news'
+            ? { title: 'Free news', match: NEWS_MATCH }
+            : { title: 'Free sports', match: SPORT_MATCH };
+        renderChannelWall(spec.title, NETWORK_SOURCES, { match: spec.match, groupBySource: true });
+    }
+
     async function renderLiveSection() {
         const host = document.getElementById('home-rows');
+
+        addBrowseAllBar(host, {
+            label: '⚽ Free sports, every network at once',
+            hint: 'NFL, MLB, NBA, NHL, UFC, beIN, FOX Sports, Tennis, RugbyPass, FIFA+ · legal and free',
+            action: 'Open sports guide',
+            onClick: btn => { btn.disabled = true; openThemedWall('sports'); }
+        });
+
+        addBrowseAllBar(host, {
+            label: '📰 24/7 news, every network at once',
+            hint: 'Sky News, BBC, CBS, NBC, CNN Headlines, Bloomberg, Euronews, Al Jazeera and more',
+            action: 'Open news guide',
+            onClick: btn => { btn.disabled = true; openThemedWall('news'); }
+        });
 
         const shelf = document.createElement('section');
         shelf.className = 'mt-4 px-1';
@@ -3697,6 +3816,51 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     /**
+     * Fetch one playlist, or merge several into a single line-up.
+     *
+     * `source` is either a URL string or a list of `{ label, url }`. A merged wall is how
+     * a themed line-up gets built — the free sports channels are spread across a dozen
+     * network playlists and no single source has more than a handful.
+     *
+     * `opts.match` keeps only channels whose name matches, and duplicates are collapsed
+     * on a normalised name because the same channel (beIN SPORTS XTRA, NFL Channel) is
+     * carried by four or five networks at once. Earlier sources win, so list the most
+     * reliable network first.
+     */
+    async function collectChannels(source, fallbackLabel, opts = {}) {
+        const list = typeof source === 'string' ? [{ label: fallbackLabel, url: source }] : source;
+
+        const results = await Promise.all(list.map(async src => {
+            try {
+                const data = await fetchWithFallback(src.url, 2, false);
+                if (!isValidPlaylist(data)) return [];
+                const parsed = await parseM3U(data, src.label || fallbackLabel);
+                parsed.channels.forEach(c => { c._sourceLabel = src.label || fallbackLabel; });
+                return parsed.channels;
+            } catch (e) {
+                return [];   // one dead network must not empty the whole wall
+            }
+        }));
+
+        const normalise = t => String(t || '')
+            .replace(/\((?:\d{3,4}[pi]|HD|SD|4K)\)/gi, '')
+            .replace(/\[[^\]]*\]/g, '')
+            .toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+
+        const seen = new Set();
+        const out = [];
+        results.flat().forEach(c => {
+            if (opts.match && !opts.match.test(c.title || '')) return;
+            const key = normalise(c.title);
+            if (!key || seen.has(key)) return;
+            seen.add(key);
+            out.push(c);
+        });
+        out.sort((a, b) => String(a.title).localeCompare(String(b.title)));
+        return out;
+    }
+
+    /**
      * Sky-style channel wall.
      *
      * A note on why there are no programme times: no free, CORS-accessible EPG exists
@@ -3706,7 +3870,7 @@ document.addEventListener('DOMContentLoaded', function() {
      * gives what a guide actually gives you minus the clock: numbered rows, station
      * identity, and a category filter over the whole line-up.
      */
-    async function renderChannelWall(sourceName, url) {
+    async function renderChannelWall(sourceName, url, opts = {}) {
         const host = document.getElementById('home-rows');
         // Bump the token first: rails the section was still loading must not land
         // on top of the wall when their fetches resolve.
@@ -3724,7 +3888,8 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
             <div data-chips class="flex gap-2 overflow-x-auto no-scrollbar pb-1"></div>
             <p data-count class="text-[11px] text-[var(--text-muted)] mt-2">Loading channels…</p>`;
-        head.querySelector('[data-back]').addEventListener('click', () => openSection('live'));
+        const backTo = activeSection;
+        head.querySelector('[data-back]').addEventListener('click', () => openSection(backTo));
         host.appendChild(head);
         scrollBrowseIntoView(head);
 
@@ -3734,12 +3899,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
         let channels = [];
         try {
-            const data = await fetchWithFallback(url, 2, false);
-            if (!isValidPlaylist(data)) throw new Error('not a playlist');
-            const parsed = await parseM3U(data, sourceName);
-            channels = parsed.channels;
+            channels = await collectChannels(url, sourceName, opts);
             if (!channels.length) throw new Error('empty');
             await applyLiveLogos(channels);
+            if (opts.groupBySource) channels.forEach(c => { c.group = c._sourceLabel; });
         } catch (e) {
             if (myToken !== sectionToken) return;
             // Community playlists move and time out; a dead end with no way back out
@@ -3826,6 +3989,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         paintChips();
         paint();
+        // Again, now that there is something to scroll to: a merged wall can take a
+        // while to fetch, and by then the first attempt's retry window has expired.
+        scrollBrowseIntoView(head);
     }
 
     /* ---- Kids --------------------------------------------------------- */

@@ -61,10 +61,17 @@ used — The Inbetweeners and Fawlty Towers (`Comedy`), Mayday (`King`).
 
 ### Free Cinema — public-domain collections
 
-Queried live from `archive.org/advancedsearch.php` across thirteen collections
-(`feature_films`, `SciFi_Horror`, `animationandcartoons`, `classic_tv`, `silent_films`,
-`short_films`, `prelinger`, `television`, and others), paged in the sidebar. A title is
-stored as `archive:<identifier>` and only resolved to a file URL when played.
+Queried live from `archive.org/advancedsearch.php` across eighteen collections
+(`feature_films`, `moviesandfilms`, `SciFi_Horror`, `anime`, `animationandcartoons`,
+`classic_tv`, `silent_films`, `short_films`, `prelinger`, `television`, `nasa`, `avgeeks`,
+`computerchronicles` and others), paged in the sidebar. A title is stored as
+`archive:<identifier>` and only resolved to a file URL when played.
+
+Collection sizes were checked against the search API before being listed —
+`moviesandfilms` alone is 110,609 items and `anime` is 37,632. `opensource_movies` (2.5M)
+and `additional_collections_video` (1.9M) are deliberately left out: they are unfiltered
+upload dumps, and a browse surface full of phone footage is worse than a smaller shelf of
+actual films.
 
 This library is **carried unfiltered and labelled 18+** — the public-domain collections
 include vintage adult and exploitation titles alongside classic cinema.
@@ -86,10 +93,39 @@ country / genre / language / network is how people actually look for a channel.
 | Section | Contents |
 | --- | --- |
 | By Country | every country iptv-org carries, grouped into five regions |
-| Free TV Networks | Pluto (9 countries), Samsung TV Plus (4), Rakuten TV (5), Tubi, Xumo, Plex, Stirr, Roku, KlowdTV, DistroTV, Vizio |
+| Free TV Networks | Pluto (12 countries), Samsung TV Plus (13), Rakuten TV (7), Tubi, Xumo, Plex, Stirr, Roku, KlowdTV, DistroTV, Vizio, Amagi |
 | By Genre | 30 categories |
 | By Language | 15 languages |
 | Everything | full index, plus the Free-TV community aggregators |
+
+Every network playlist above was probed before being listed — 726 candidate
+`<country>_<network>` combinations against the iptv-org repo, keeping the ones that return
+a real playlist with a non-zero channel count.
+
+### Free sports and free news
+
+`collectChannels()` merges 21 network playlists into one line-up and `SPORT_MATCH` /
+`NEWS_MATCH` filter it, giving a **79-channel sports guide** and a comparable news guide,
+grouped by which network carries each channel. Reachable from the tiles at the front of the
+home shelf and from the bars at the top of Live TV.
+
+It is all official, ad-supported and legal: NFL Channel, MLB, NBA FAST, NHL Network, beIN
+SPORTS XTRA, FOX Sports, NBC Sports NOW, CBS Sports HQ, fubo Sports, UFC, DAZN Ringside and
+Combat, Tennis Channel, RugbyPass TV, FIFA+, GolfPass, NASCAR, MODUS Darts, Pluto Snooker,
+Cricket Gold, Fuel TV, SportsGrid, Women's Sports Network.
+
+**Sky Sports, TNT Sports and MUTV are deliberately absent.** They are subscription
+channels with no free feed in any territory, so every "free" copy circulating in IPTV
+indexes is an unauthorised restream — not something to build a front door to. They would
+not work here regardless: those entries are pinned to a spoofed VLC user-agent, and a
+browser cannot send a custom `User-Agent` from JavaScript.
+
+The matching patterns have two halves. The first anchors at a word start but not a word
+end, so `GolfPass`, `PokerGO`, `SportsGrid` and `Newsmax` are caught — station names glue
+words together constantly — while `Transport` still fails, because there is no word break
+before its "sport". The second half needs both boundaries, for words that only mean sport
+in isolation: a loose `bein` would take *Being Human*, a loose `fight` would take
+*Fighting Fit*.
 
 The ad-supported networks are by far the most reliable — spot checks put them near 100%
 uptime, against roughly 50–80% for the community country and category lists.
