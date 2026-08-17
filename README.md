@@ -122,6 +122,42 @@ Below the player the app is a browse surface rather than a single list:
 - **Detail sheet** — every VOD poster opens a sheet with backdrop, synopsis, rating, year
   and genre before playing. Live channels skip it and play immediately, because a live
   channel has no synopsis to show.
+- **Browse-all grid** (`openGrid`) — the whole catalogue, with genre filter chips, a sort
+  control (A–Z / rating / newest / oldest) and a live count. Reached from the
+  **Browse all films** / **Browse all shows** bar at the top of Movies and TV Shows, and
+  from any genre shelf's *Browse all*. Rails only ever show a sample, so without this
+  entry point most of the library is unreachable.
+- **Channel wall** (`renderChannelWall`) — see below.
+
+### The browse-all grid
+
+Genre and rating only exist for titles TMDB has already answered for, so the chip row is
+built from what is known and grows as enrichment continues — the filter never hides a
+title for lacking metadata, and unknown genres stay visible under *All*. Twenty waves of
+sixty lookups covers the whole catalogue; every lookup is memoised, so it is a first-visit
+cost.
+
+`dedupeTitles()` collapses the same film appearing in more than one collection. Uploaders
+overlap heavily — Alita, Birds of Prey and Batman: The Long Halloween each sat in two
+vaults — and deduping by URL cannot catch it, because the two copies are genuinely
+different files. The key is the TMDB id where known (which also keeps remakes apart), and
+normalised name + year before a title has been matched.
+
+### The channel wall
+
+**There are no now/next programme times, and that is not an oversight.** No free,
+CORS-accessible EPG exists for these channels:
+
+| Source | Why not |
+| --- | --- |
+| iptv-org EPG | a grabber you install and run yourself, not a hosted feed |
+| Pluto's own API | returns 431 channels with empty timelines; CORS restricted to `pluto.tv` |
+| epg.pw | CORS is open but it returned zero programmes and every bulk endpoint 404s |
+
+Inventing schedule times would be worse than omitting them, so the wall gives what a guide
+gives you minus the clock: numbered rows, station identity, a category filter over the
+whole line-up, and one click to play. Network tiles and the Live TV genre rails both open
+it.
 
 ### TMDB
 
@@ -153,13 +189,19 @@ Cards enrich when they scroll into view, but each rail also eagerly fills its fi
 cards sitting off the right-hand edge of a horizontal rail never intersect the viewport, so
 the observer alone left every rail looking half-finished until it was scrolled sideways.
 
-### Live channel logos
+### Live channel logos and categories
 
-The per-network playlists under `streams/` carry `tvg-id` but no `tvg-logo`, so those
-channels would render as blank tiles. `ensureLiveLogoMap()` fetches the US and UK country
-playlists once (~400 KB, which do carry logos for ~98% of entries) and builds an
-id → logo map that back-fills the network lists. iptv-org also publishes `logos.json`, but
-that is 7 MB — too much to pull on every visit for what two playlists already give.
+The per-network playlists under `streams/` carry `tvg-id` but no `tvg-logo` and no
+`group-title`, so those channels would render as blank tiles with every one of them filed
+under "Other". `ensureLiveLogoMap()` reads the US, UK, Canada and Germany country
+playlists once (~800 KB, which do carry both for ~98% of entries) and builds an
+id → { logo, category } map that back-fills the network lists — that is what puts Series /
+Entertainment / Movies / News / Sport counts on the channel wall's filter chips. Four
+countries rather than two because Pluto and Samsung ship separate German and Canadian
+line-ups whose ids only appear in their own country list.
+
+iptv-org also publishes `logos.json`, but that is 7 MB against 800 KB here, and it carries
+no categories at all.
 
 ## Playback
 
@@ -192,3 +234,18 @@ Failures retry with backoff, then offer a proxy hop, an external open, and a VLC
   anything; an unrelated poster is worse than a placeholder.
 - **Horizontal rails need eager loading as well as an observer.** Off-screen-right cards
   never intersect the viewport.
+- **The scroller is `#main-view`, not the document.** `html` and `body` are
+  `overflow: hidden`, so `scrollIntoView()` silently does nothing — scroll positions have
+  to be computed against `#main-view` and set on it.
+- **Re-assert the scroll position across a repaint.** Emptying a list collapses the page
+  height, the browser clamps the scroll offset to what still fits, and the reader is thrown
+  back to the top every time they touch a filter chip. `keepScrollAcrossRepaint()` holds
+  the position for a few frames while the replacement content streams in; the same trick in
+  reverse (`scrollBrowseIntoView()`) is needed to scroll *to* a list that has not been
+  filled yet.
+- **Never let a slow fetch paint over a section the visitor has moved on to.** Anything
+  that awaits before rendering captures `sectionToken` first and re-checks it after —
+  otherwise a catalogue that takes twenty seconds drops on top of whatever is now on
+  screen.
+- **Don't invent data the sources don't have.** There is no free EPG feed for these
+  channels; a guide with plausible-looking made-up times would be worse than no times.

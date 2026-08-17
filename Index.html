@@ -589,6 +589,106 @@
         .network-tile .net-name { font-size: 12px; font-weight: 700; color: var(--text-color); line-height: 1.15; }
         .network-tile .net-sub { font-size: 9px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); }
 
+        /* "Browse all" bar: the way into the full catalogue from a section of samples. */
+        .browse-all-bar {
+            display: flex; align-items: center; justify-content: space-between; gap: 14px;
+            padding: 12px 14px;
+            border-radius: 14px;
+            border: 1px solid var(--border-color);
+            background: var(--glass-bg);
+        }
+        .accent-btn {
+            background: var(--accent-solid) !important;
+            border-color: var(--accent-solid) !important;
+            color: #fff !important;
+        }
+        .accent-btn:hover { box-shadow: 0 6px 18px var(--accent-glow); }
+        .accent-btn:disabled { opacity: 0.6; cursor: progress; }
+
+        /* Filter chips: genre pills on browse-all grids, category pills on the channel wall. */
+        .filter-chip {
+            flex: 0 0 auto;
+            font-size: 11px; font-weight: 700;
+            padding: 6px 12px; border-radius: 999px;
+            white-space: nowrap; cursor: pointer;
+            color: var(--text-muted);
+            background: var(--chip-bg);
+            border: 1px solid var(--border-color);
+            transition: color 0.18s, border-color 0.18s, background 0.18s, transform 0.18s;
+        }
+        .filter-chip:hover { color: var(--text-color); border-color: var(--accent-color); }
+        .filter-chip.active {
+            color: #fff;
+            background: var(--accent-solid);
+            border-color: var(--accent-solid);
+            box-shadow: 0 4px 14px var(--accent-glow);
+        }
+
+        /* ---- Channel wall: the guide, as a numbered line-up ---- */
+        .channel-wall {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 6px;
+        }
+        @media (min-width: 700px)  { .channel-wall { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+        @media (min-width: 1180px) { .channel-wall { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+
+        .channel-row {
+            display: flex; align-items: center; gap: 12px;
+            width: 100%; text-align: left; cursor: pointer;
+            padding: 8px 12px 8px 8px;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            background: var(--glass-bg);
+            transition: border-color 0.18s, background 0.18s, transform 0.18s, box-shadow 0.18s;
+        }
+        .channel-row:hover, .channel-row:focus-visible {
+            transform: translateX(3px);
+            border-color: var(--accent-color);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.16), 0 0 14px var(--accent-glow);
+        }
+        /*
+         * Tabular numerals keep the channel numbers in a straight column.
+         *
+         * Muted grey rather than the accent purple: #8A2BE2 on the dark glass measures
+         * 2.6:1, well under AA, and a column of numbers you have to squint at defeats
+         * the point of numbering them.
+         */
+        .ch-num {
+            flex: 0 0 34px;
+            font-size: 12px; font-weight: 800;
+            font-variant-numeric: tabular-nums;
+            letter-spacing: 0.02em;
+            color: var(--text-muted);
+            text-align: right;
+        }
+        .channel-row:hover .ch-num, .channel-row:focus-visible .ch-num { color: var(--text-color); }
+        .ch-logo {
+            flex: 0 0 52px; height: 34px;
+            display: flex; align-items: center; justify-content: center;
+            border-radius: 6px; overflow: hidden;
+            background: var(--chip-bg);
+        }
+        .ch-logo img { max-width: 100%; max-height: 100%; object-fit: contain; }
+        .ch-body { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+        .ch-name {
+            font-size: 13px; font-weight: 600; color: var(--text-color);
+            overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+        }
+        .ch-group {
+            font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em;
+            color: var(--text-muted);
+            overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+        }
+        .ch-live {
+            flex: 0 0 auto;
+            font-size: 8px; font-weight: 800; letter-spacing: 0.12em;
+            padding: 3px 6px; border-radius: 4px;
+            background: #e11d48; color: #fff;
+            opacity: 0; transition: opacity 0.18s;
+        }
+        .channel-row:hover .ch-live, .channel-row:focus-visible .ch-live { opacity: 1; }
+
         /* Detail sheet. */
         #detail-backdrop-img {
             position: absolute; inset: 0; width: 100%; height: 100%;
@@ -3139,15 +3239,18 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     /*
-     * Station logos for live channels.
+     * Logos and categories for live channels.
      *
-     * The per-network playlists under `streams/` carry only `tvg-id` — no artwork —
-     * so Pluto/Samsung/Tubi channels would all render as the fallback tile. The
-     * country playlists carry both `tvg-id` and `tvg-logo` for ~98% of entries, so
-     * one fetch of those builds an id -> logo map that covers the network lists too.
+     * The per-network playlists under `streams/` carry only `tvg-id` — no artwork and
+     * no group-title — so Pluto/Samsung/Tubi channels would all render as fallback
+     * tiles with every one of them filed under "Other". The country playlists carry
+     * `tvg-logo` and `group-title` for ~98% of entries, so reading those once builds
+     * an id -> { logo, group } map that covers the network lists too.
      *
-     * iptv-org also publishes logos.json, but that is 7 MB — far too much to pull on
-     * every visit for what two 400 KB playlists already provide.
+     * Four countries, not two: Pluto and Samsung ship separate German and Canadian
+     * line-ups whose ids only appear in their own country list. iptv-org also
+     * publishes logos.json, but that is 7 MB against roughly 800 KB here — and it
+     * carries no categories at all.
      */
     let liveLogoMap = null;
     let liveLogoPromise = null;
@@ -3158,16 +3261,25 @@ document.addEventListener('DOMContentLoaded', function() {
 
         liveLogoPromise = (async () => {
             const map = new Map();
-            const sources = [`${IPTV_ORG}/countries/us.m3u`, `${IPTV_ORG}/countries/uk.m3u`];
+            const sources = ['us', 'uk', 'ca', 'de'].map(c => `${IPTV_ORG}/countries/${c}.m3u`);
             await Promise.all(sources.map(async url => {
                 try {
                     const text = await fetchWithFallback(url, 1, false);
-                    const re = /tvg-id="([^"]*)"[^\n]*?tvg-logo="([^"]+)"/g;
-                    let m;
-                    while ((m = re.exec(text))) {
-                        const id = m[1].split('@')[0];
-                        if (id && !map.has(id)) map.set(id, m[2]);
-                    }
+                    text.split(/\r?\n/).forEach(line => {
+                        if (!line.startsWith('#EXTINF')) return;
+                        const id = (line.match(/tvg-id="([^"]*)"/) || [])[1];
+                        if (!id) return;
+                        const key = id.split('@')[0];
+                        if (!key) return;
+                        const logo = (line.match(/tvg-logo="([^"]+)"/) || [])[1] || '';
+                        const group = (line.match(/group-title="([^"]+)"/) || [])[1] || '';
+                        const existing = map.get(key);
+                        if (!existing) { map.set(key, { logo, group }); return; }
+                        // First country wins on each field, but never leave a field
+                        // blank when a later list can fill it.
+                        if (!existing.logo && logo) existing.logo = logo;
+                        if (!existing.group && group) existing.group = group;
+                    });
                 } catch (e) { /* a missing map just means fallback tiles */ }
             }));
             liveLogoMap = map;
@@ -3176,14 +3288,16 @@ document.addEventListener('DOMContentLoaded', function() {
         return liveLogoPromise;
     }
 
-    /** Fill in `logo` on channels that have a tvg-id but no artwork. */
+    /** Fill in `logo` and `group` on channels whose playlist gave only a tvg-id. */
     async function applyLiveLogos(channels) {
-        const missing = channels.filter(c => !c.logo && c.tvgId);
-        if (!missing.length) return channels;
+        const needy = channels.filter(c => c.tvgId && (!c.logo || !c.group || c.group === 'Uncategorized'));
+        if (!needy.length) return channels;
         const map = await ensureLiveLogoMap();
-        missing.forEach(c => {
+        needy.forEach(c => {
             const hit = map.get(String(c.tvgId).split('@')[0]);
-            if (hit) c.logo = hit;
+            if (!hit) return;
+            if (!c.logo && hit.logo) c.logo = hit.logo;
+            if ((!c.group || c.group === 'Uncategorized') && hit.group) c.group = hit.group;
         });
         return channels;
     }
@@ -3305,10 +3419,120 @@ document.addEventListener('DOMContentLoaded', function() {
 
     /* ---- Movies ------------------------------------------------------- */
 
+    /**
+     * The bar that gets you off the rails and into the whole catalogue.
+     *
+     * Rails only ever show a sample, so without this the full library is unreachable
+     * unless you happen to click a genre's "Browse all". The button loads the
+     * catalogue on demand rather than up front — it is a couple of thousand titles
+     * across dozens of archive.org items, so it is not worth fetching for a visitor
+     * who only wanted the front page.
+     */
+    /**
+     * Bring a browse header to the top of the view.
+     *
+     * A guide or a full-catalogue grid is the thing you came for, and it starts below
+     * the player, the now-playing bar and the sponsor slot. Scrolling it up means you
+     * are looking at the list straight away — but not while something is playing,
+     * because scrolling the video off screen mid-stream is its own annoyance.
+     */
+    function scrollBrowseIntoView(head) {
+        if (currentlyPlayingUrl) return;
+        const mv = elements.mainView;
+        if (!mv) return;
+
+        // Offset arithmetic rather than scrollIntoView: html/body are overflow:hidden
+        // here and the scroller is #main-view, which scrollIntoView leaves alone.
+        //
+        // And it has to be retried: at the moment the header is appended the list below
+        // it is still empty, so the page is too short to scroll and the browser clamps
+        // the request to 0. Keep asking for about half a second, until the content has
+        // grown enough for the scroll to actually land.
+        let frames = 0;
+        const step = () => {
+            if (!head.isConnected || frames++ > 30) return;
+            const target = head.getBoundingClientRect().top - mv.getBoundingClientRect().top + mv.scrollTop - 8;
+            if (target <= 1) return;
+            mv.scrollTo({ top: target, behavior: 'auto' });
+            if (Math.abs(mv.scrollTop - target) > 4) requestAnimationFrame(step);
+        };
+        requestAnimationFrame(step);
+    }
+
+    /**
+     * Run a repaint without losing the reader's place.
+     *
+     * Emptying a list collapses the page height, so the browser clamps the scroll
+     * position to whatever still fits — which threw you back above the header every
+     * time you touched a filter chip. The position is re-asserted for a few frames
+     * while the replacement content streams back in.
+     */
+    function keepScrollAcrossRepaint(repaint) {
+        const mv = elements.mainView;
+        const keep = mv ? mv.scrollTop : 0;
+        repaint();
+        if (!mv || keep <= 0) return;
+        let frames = 0;
+        const step = () => {
+            if (frames++ > 30 || Math.abs(mv.scrollTop - keep) <= 4) return;
+            mv.scrollTo({ top: keep, behavior: 'auto' });
+            requestAnimationFrame(step);
+        };
+        requestAnimationFrame(step);
+    }
+
+    /**
+     * Open a grid whose contents have to be fetched first.
+     *
+     * The catalogue takes tens of seconds on a cold cache, and a visitor who gets
+     * bored and taps Live TV in the meantime must not have the grid drop on top of
+     * what they moved to — so the section token is captured before the await and
+     * re-checked after it.
+     */
+    async function openGridAsync(title, loader, btn) {
+        const myToken = sectionToken;
+        const restore = btn ? btn.textContent : null;
+        if (btn) { btn.disabled = true; btn.textContent = 'Loading catalogue…'; }
+        let items;
+        try {
+            items = await loader();
+        } catch (e) {
+            if (btn) { btn.disabled = false; btn.textContent = 'Could not load — retry'; }
+            return;
+        }
+        if (btn) { btn.disabled = false; btn.textContent = restore; }
+        if (myToken !== sectionToken) return;
+        openGrid(title, items);
+    }
+
+    function addBrowseAllBar(host, { label, hint, action, onClick }) {
+        const bar = document.createElement('div');
+        bar.className = 'browse-all-bar mt-4 mx-1';
+        bar.innerHTML = `
+            <div class="min-w-0">
+                <p class="text-sm font-bold text-slate-900 dark:text-white truncate">${escapeHtml(label)}</p>
+                <p class="text-[11px] text-[var(--text-muted)] mt-0.5 truncate">${escapeHtml(hint)}</p>
+            </div>
+            <button type="button" class="custom-btn accent-btn px-4 py-2 text-xs font-bold uppercase tracking-wider whitespace-nowrap">
+                ${escapeHtml(action)} →
+            </button>`;
+        const btn = bar.querySelector('button');
+        btn.addEventListener('click', () => onClick(btn));
+        host.appendChild(bar);
+        return bar;
+    }
+
     async function renderMoviesSection() {
         const myToken = sectionToken;
 
         const host = document.getElementById('home-rows');
+
+        addBrowseAllBar(host, {
+            label: 'Every film in one place',
+            hint: 'Filter by genre, sort by rating or year',
+            action: 'Browse all films',
+            onClick: btn => openGridAsync('All films', ensureMovieCatalogue, btn)
+        });
 
         addRail({
             title: 'Public-domain cinema',
@@ -3352,7 +3576,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function paintGenreRails(host, pool, status) {
-        const buckets = bucketByGenre(pool);
+        // Deduped so a shelf never shows the same film twice from two collections.
+        const buckets = bucketByGenre(dedupeTitles(pool));
         const ordered = GENRE_ORDER.filter(g => (buckets.get(g) || []).length >= 6);
         if (!ordered.length) return;
 
@@ -3391,11 +3616,18 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const host = document.getElementById('home-rows');
 
+        addBrowseAllBar(host, {
+            label: 'Every series in one place',
+            hint: 'Filter by genre, sort by rating or year',
+            action: 'Browse all shows',
+            onClick: btn => openGridAsync('All shows', ensureSeriesCatalogue, btn)
+        });
+
         addRail({
             title: 'Complete box sets',
             subtitle: 'Every episode, ready to play',
             loader: async () => shuffled(await ensureSeriesCatalogue(), 20),
-            onMore: async () => openGrid('All shows', await ensureSeriesCatalogue())
+            onMore: () => openGridAsync('All shows', ensureSeriesCatalogue)
         });
 
         const genreHost = document.createElement('div');
@@ -3448,7 +3680,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <span class="text-xl leading-none" aria-hidden="true">${n.icon}</span>
                 <span class="net-name">${escapeHtml(n.name)}</span>
                 <span class="net-sub">${escapeHtml(n.sub)}</span>`;
-            tile.addEventListener('click', () => loadM3USource(`${n.name} · ${n.sub}`, n.url));
+            tile.addEventListener('click', () => renderChannelWall(`${n.name} · ${n.sub}`, n.url));
             strip.appendChild(tile);
         });
 
@@ -3459,9 +3691,141 @@ document.addEventListener('DOMContentLoaded', function() {
                 title: `${icon} ${label}`,
                 channelStyle: true, live: true,
                 loader: () => sampleFromPlaylist(`${IPTV_ORG}/categories/${slug}.m3u`, label, 20),
-                onMore: () => loadM3USource(label, `${IPTV_ORG}/categories/${slug}.m3u`)
+                onMore: () => renderChannelWall(`${label} channels`, `${IPTV_ORG}/categories/${slug}.m3u`)
             });
         });
+    }
+
+    /**
+     * Sky-style channel wall.
+     *
+     * A note on why there are no programme times: no free, CORS-accessible EPG exists
+     * for these channels. iptv-org's EPG is a grabber you run yourself rather than a
+     * hosted feed, Pluto's own API restricts CORS to pluto.tv, and epg.pw has no bulk
+     * endpoint. Inventing schedule times would be worse than omitting them, so the wall
+     * gives what a guide actually gives you minus the clock: numbered rows, station
+     * identity, and a category filter over the whole line-up.
+     */
+    async function renderChannelWall(sourceName, url) {
+        const host = document.getElementById('home-rows');
+        // Bump the token first: rails the section was still loading must not land
+        // on top of the wall when their fetches resolve.
+        const myToken = ++sectionToken;
+        elements.mainView.scrollTo({ top: 0 });
+        document.getElementById('network-shelf').classList.add('hidden');
+        host.innerHTML = '';
+
+        const head = document.createElement('div');
+        head.className = 'px-2 mt-4 mb-3';
+        head.innerHTML = `
+            <div class="flex items-center gap-3 mb-3">
+                <button data-back class="custom-btn px-3 py-2 text-xs font-bold uppercase tracking-wider">← Back</button>
+                <h2 class="header-title text-xl font-bold text-slate-900 dark:text-white truncate flex-1">${escapeHtml(sourceName)}</h2>
+            </div>
+            <div data-chips class="flex gap-2 overflow-x-auto no-scrollbar pb-1"></div>
+            <p data-count class="text-[11px] text-[var(--text-muted)] mt-2">Loading channels…</p>`;
+        head.querySelector('[data-back]').addEventListener('click', () => openSection('live'));
+        host.appendChild(head);
+        scrollBrowseIntoView(head);
+
+        const wall = document.createElement('div');
+        wall.className = 'channel-wall px-2 pb-10';
+        host.appendChild(wall);
+
+        let channels = [];
+        try {
+            const data = await fetchWithFallback(url, 2, false);
+            if (!isValidPlaylist(data)) throw new Error('not a playlist');
+            const parsed = await parseM3U(data, sourceName);
+            channels = parsed.channels;
+            if (!channels.length) throw new Error('empty');
+            await applyLiveLogos(channels);
+        } catch (e) {
+            if (myToken !== sectionToken) return;
+            // Community playlists move and time out; a dead end with no way back out
+            // reads as a broken site, so offer the retry here rather than making
+            // someone navigate away and return.
+            wall.innerHTML = `
+                <div class="col-span-full text-center py-10 px-6">
+                    <div class="text-4xl mb-3" aria-hidden="true">📡</div>
+                    <p class="font-bold text-slate-900 dark:text-white">This line-up would not load</p>
+                    <p class="text-sm text-[var(--text-muted)] mt-2">The source may be busy or have moved.</p>
+                    <button data-retry class="custom-btn accent-btn mt-4 px-4 py-2 text-xs font-bold uppercase tracking-wider">Try again</button>
+                </div>`;
+            head.querySelector('[data-count]').textContent = 'Nothing loaded';
+            wall.querySelector('[data-retry]').addEventListener('click', () => renderChannelWall(sourceName, url));
+            return;
+        }
+        if (myToken !== sectionToken) return;
+
+        allChannelsInPlaylist = channels;
+        let group = 'All';
+
+        const categoryOf = ch => (ch.group && ch.group !== 'Uncategorized') ? ch.group : 'Other';
+
+        const groupsOf = () => {
+            const m = new Map();
+            channels.forEach(c => m.set(categoryOf(c), (m.get(categoryOf(c)) || 0) + 1));
+            return [...m.entries()].sort((a, b) => b[1] - a[1]);
+        };
+
+        function makeRow(ch) {
+            const row = document.createElement('button');
+            row.className = 'channel-row';
+            row.innerHTML = `
+                <span class="ch-num"></span>
+                <span class="ch-logo">
+                    <img alt="" loading="lazy" decoding="async" src="${escapeHtml(ch.logo || FALLBACK_ART)}">
+                </span>
+                <span class="ch-body">
+                    <span class="ch-name">${escapeHtml(ch.title)}</span>
+                    <span class="ch-group">${escapeHtml((ch.group && ch.group !== 'Uncategorized') ? ch.group : 'Live')}</span>
+                </span>
+                <span class="ch-live">LIVE</span>`;
+            row.querySelector('img').addEventListener('error', function () {
+                if (this.dataset.fb) return; this.dataset.fb = '1'; this.src = FALLBACK_ART;
+            });
+            row.addEventListener('click', () => {
+                playStream(ch.url);
+                elements.nowPlayingTitle.textContent = ch.title;
+                elements.nowPlayingGenre.textContent = (ch.group && ch.group !== 'Uncategorized') ? ch.group : 'LIVE';
+                elements.mainView.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+            return row;
+        }
+
+        /** Number the rows once they exist, the way a guide does. */
+        function numberRows() {
+            [...wall.children].forEach((row, i) => {
+                const n = row.querySelector('.ch-num');
+                if (n) n.textContent = String(i + 1).padStart(3, '0');
+            });
+        }
+
+        function paint() {
+            const list = group === 'All' ? channels : channels.filter(c => categoryOf(c) === group);
+            head.querySelector('[data-count]').textContent =
+                `${list.length.toLocaleString()} channels${group === 'All' ? '' : ` in ${group}`}`;
+
+            keepScrollAcrossRepaint(() => {
+                wall.innerHTML = '';
+                renderInChunks(list, wall, makeRow, 60, numberRows);
+            });
+        }
+
+        const chipRow = head.querySelector('[data-chips]');
+        function paintChips() {
+            chipRow.innerHTML = '';
+            [['All', channels.length], ...groupsOf().slice(0, 24)].forEach(([g, n]) => {
+                const chip = document.createElement('button');
+                chip.className = `filter-chip ${g === group ? 'active' : ''}`;
+                chip.innerHTML = `${escapeHtml(g)} <span class="opacity-60">${n}</span>`;
+                chip.addEventListener('click', () => { group = g; paintChips(); paint(); });
+                chipRow.appendChild(chip);
+            });
+        }
+        paintChips();
+        paint();
     }
 
     /* ---- Kids --------------------------------------------------------- */
@@ -3537,30 +3901,127 @@ document.addEventListener('DOMContentLoaded', function() {
 
     /* ---- Browse-all grid ---------------------------------------------- */
 
+    /**
+     * Full-catalogue grid with genre filter chips and a sort control.
+     *
+     * Genre and rating only exist for titles TMDB has already answered for, so the
+     * chip row is built from what is known and grows as enrichment continues. The
+     * filter therefore never hides a title for lacking metadata: unknown genres stay
+     * visible under "All".
+     */
     function openGrid(title, items) {
         const host = document.getElementById('home-rows');
+        // Cancel the section's in-flight rails so they cannot append below the grid.
+        sectionToken++;
         elements.mainView.scrollTo({ top: 0 });
         document.getElementById('network-shelf').classList.add('hidden');
         host.innerHTML = '';
 
+        let genre = 'All';
+        let sortBy = 'title';
+        let enriching = true;
+
         const head = document.createElement('div');
-        head.className = 'flex items-center gap-3 px-2 mt-4 mb-4';
+        head.className = 'px-2 mt-4 mb-3';
         head.innerHTML = `
-            <button class="custom-btn px-3 py-2 text-xs font-bold uppercase tracking-wider">← Back</button>
-            <h2 class="header-title text-xl font-bold text-slate-900 dark:text-white truncate">${escapeHtml(title)}</h2>
-            <span class="count-chip text-[10px] px-2 py-1 rounded">${items.length}</span>`;
-        head.querySelector('button').addEventListener('click', () => openSection(activeSection));
+            <div class="flex items-center gap-3 mb-3">
+                <button data-back class="custom-btn px-3 py-2 text-xs font-bold uppercase tracking-wider">← Back</button>
+                <h2 class="header-title text-xl font-bold text-slate-900 dark:text-white truncate flex-1">${escapeHtml(title)}</h2>
+                <label class="text-[10px] font-bold uppercase tracking-widest text-[var(--text-muted)]" for="grid-sort">Sort</label>
+                <select id="grid-sort" class="custom-input text-xs py-2 px-2">
+                    <option value="title">A – Z</option>
+                    <option value="rating">Highest rated</option>
+                    <option value="year-desc">Newest</option>
+                    <option value="year-asc">Oldest</option>
+                </select>
+            </div>
+            <div data-chips class="flex gap-2 overflow-x-auto no-scrollbar pb-1"></div>
+            <p data-count class="text-[11px] text-[var(--text-muted)] mt-2"></p>`;
+        head.querySelector('[data-back]').addEventListener('click', () => openSection(activeSection));
         host.appendChild(head);
+        scrollBrowseIntoView(head);
 
         const grid = document.createElement('div');
         grid.className = 'grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-7 gap-3 px-2 pb-10';
         host.appendChild(grid);
 
-        renderInChunks(items, grid, (ch) => {
-            const card = makePosterCard(ch);
-            card.style.width = '100%';
-            return card;
-        }, 40);
+        const chipRow = head.querySelector('[data-chips]');
+        const countEl = head.querySelector('[data-count]');
+
+        const sorters = {
+            title: (a, b) => movieSortKey(a.title).localeCompare(movieSortKey(b.title)),
+            rating: (a, b) => ((b._tmdb && b._tmdb.rating) || 0) - ((a._tmdb && a._tmdb.rating) || 0),
+            'year-desc': (a, b) => ((b._tmdb && b._tmdb.year) || 0) - ((a._tmdb && a._tmdb.year) || 0),
+            'year-asc': (a, b) => ((a._tmdb && a._tmdb.year) || 9999) - ((b._tmdb && b._tmdb.year) || 9999)
+        };
+
+        let shownCount = items.length;
+        function paintCount() {
+            countEl.textContent = `${shownCount.toLocaleString()} titles`
+                + (genre === 'All' ? '' : ` in ${genre}`)
+                + (enriching ? ' · still matching artwork and genres…' : '');
+        }
+
+        function paint() {
+            const filtered = genre === 'All'
+                ? items
+                : items.filter(c => c._tmdb && c._tmdb.genres && c._tmdb.genres.includes(genre));
+            const sorted = dedupeTitles(filtered).sort(sorters[sortBy] || sorters.title);
+
+            shownCount = sorted.length;
+            paintCount();
+
+            keepScrollAcrossRepaint(() => {
+                grid.innerHTML = '';
+                renderInChunks(sorted, grid, (ch) => {
+                    const card = makePosterCard(ch);
+                    card.style.width = '100%';
+                    return card;
+                }, 40);
+            });
+        }
+
+        function paintChips() {
+            // Deduped, so a chip's count matches what clicking it actually shows.
+            const unique = dedupeTitles(items);
+            const buckets = bucketByGenre(unique);
+            const available = GENRE_ORDER.filter(g => (buckets.get(g) || []).length >= 3);
+            chipRow.innerHTML = '';
+            ['All', ...available].forEach(g => {
+                const chip = document.createElement('button');
+                const count = g === 'All' ? unique.length : buckets.get(g).length;
+                chip.className = `filter-chip ${g === genre ? 'active' : ''}`;
+                chip.innerHTML = `${g === 'All' ? '' : (GENRE_ICON[g] || '') + ' '}${escapeHtml(g)}
+                    <span class="opacity-60">${count}</span>`;
+                chip.addEventListener('click', () => { genre = g; paintChips(); paint(); });
+                chipRow.appendChild(chip);
+            });
+        }
+
+        head.querySelector('#grid-sort').addEventListener('change', e => { sortBy = e.target.value; paint(); });
+
+        paintChips();
+        paint();
+
+        // Keep enriching in the background so more chips and ratings appear. Twenty
+        // waves of 60 covers a couple of thousand titles, which is the whole catalogue;
+        // every lookup is memoised to localStorage, so this is a first-visit cost only.
+        (async () => {
+            const myToken = sectionToken;
+            for (let wave = 0; wave < 20; wave++) {
+                const more = await enrichNextBatch(items, 60);
+                if (myToken !== sectionToken || !grid.isConnected) return;
+                paintChips();
+                // A genre filter or a metadata-driven sort is showing a view that
+                // newly-matched titles belong in, so it has to be rebuilt. The default
+                // A–Z view of everything is already correct, and rebuilding a couple of
+                // thousand cards on every wave for nothing is not worth the jank.
+                if (genre !== 'All' || sortBy !== 'title') paint();
+                if (!more) break;
+            }
+            enriching = false;
+            paintCount();
+        })();
     }
 
     async function renderHomeRows() {
@@ -3749,6 +4210,34 @@ document.addEventListener('DOMContentLoaded', function() {
         pending.forEach(c => { c._tmdbRequested = true; });
         await Promise.all(pending.map(c => enrichChannel(c).catch(() => null)));
         return true;
+    }
+
+    /**
+     * Collapse the same film appearing in more than one collection.
+     *
+     * The catalogue is stitched together from 28 archive.org items and a playlist, and
+     * uploaders overlap heavily — Alita, Birds of Prey and Batman: The Long Halloween
+     * each sat in two vaults, so the browse-all grid listed them twice. Deduping by URL
+     * cannot catch it because the two copies are genuinely different files.
+     *
+     * A TMDB id is the reliable key and also keeps remakes apart. Before a title has
+     * been matched the fallback is its normalised name plus year, which keeps a 1958
+     * and a 1986 version of the same title separate while still collapsing two copies
+     * of the same one.
+     */
+    function dedupeTitles(list) {
+        const seen = new Set();
+        const out = [];
+        list.forEach(c => {
+            const rec = c._tmdb;
+            const key = (rec && rec.tmdbId)
+                ? `id:${rec.kind || 'movie'}:${rec.tmdbId}`
+                : `nm:${movieSortKey(stripYear(c.title || ''))}|${extractYear(c.title || '') || ''}`;
+            if (seen.has(key)) return;
+            seen.add(key);
+            out.push(c);
+        });
+        return out;
     }
 
     /** Bucket whatever has been enriched so far by TMDB genre. */
