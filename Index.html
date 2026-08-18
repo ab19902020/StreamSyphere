@@ -138,7 +138,7 @@
             --text-muted: #a0a0b0;
             --accent-color: #8A2BE2;
             --accent-glow: rgba(138, 43, 226, 0.6);
-            --accent-text: #8A2BE2;   /* accent for text/icons; darkened in day mode */
+            --accent-text: #c4a4ff;   /* readable accent for text; the neon below is a fill */
             --accent-solid: #8A2BE2;  /* accent behind white text; darkened in day mode */
             --glass-bg: rgba(15, 15, 25, 0.7);
             --border-color: rgba(255, 255, 255, 0.1);
@@ -154,6 +154,13 @@
             --chip-bg: rgba(0, 0, 0, 0.45);
             --chip-text: #e6e6ee;
             --panel-bg: rgba(0, 0, 0, 0.18);
+
+            /* Billboard scrim, sticky-nav veil and collection-tile gradient. Tokens so
+               day mode can invert them rather than fighting a hard-coded black. */
+            --hero-scrim: rgba(5, 5, 12, 0.92);
+            --nav-veil: rgba(10, 10, 20, 0.72);
+            --tile-a: rgba(255, 255, 255, 0.07);
+            --tile-b: rgba(255, 255, 255, 0.02);
         }
 
         /*
@@ -185,6 +192,11 @@
 
             /* Tinted daylight gradient — light, but with enough colour that white panels
                sitting on it read as raised cards. */
+            --hero-scrim: rgba(240, 244, 253, 0.94);
+            --nav-veil: rgba(240, 244, 253, 0.86);
+            --tile-a: rgba(15, 23, 42, 0.07);
+            --tile-b: rgba(15, 23, 42, 0.02);
+
             --grad-1: #c9d6ef;
             --grad-2: #dfe5f2;
             --grad-3: #d7cdf2;
@@ -515,6 +527,27 @@
         .rail::-webkit-scrollbar { display: none; }
         .rail > * { scroll-snap-align: start; flex: 0 0 auto; }
 
+        /* Rail chevrons. Pointer devices only: on a touch screen the rail is already
+           swipeable and an overlay button just covers a poster. */
+        .rail-wrap { position: relative; }
+        .rail-arrow {
+            position: absolute; top: 0; bottom: 14px; width: 46px;
+            display: none; align-items: center; justify-content: center;
+            z-index: 6; cursor: pointer; border: 0;
+            font-size: 22px; font-weight: 700; color: #fff;
+            background: linear-gradient(to right, rgba(0,0,0,0.55), rgba(0,0,0,0));
+            opacity: 0; transition: opacity 0.2s;
+        }
+        .rail-arrow.right { right: 0; background: linear-gradient(to left, rgba(0,0,0,0.55), rgba(0,0,0,0)); }
+        .rail-arrow.left { left: 0; }
+        @media (hover: hover) and (pointer: fine) {
+            .rail-arrow { display: flex; }
+            .rail-wrap:hover .rail-arrow { opacity: 1; }
+            .rail-arrow:focus-visible { opacity: 1; }
+        }
+        html.light .rail-arrow { color: #0b1220; background: linear-gradient(to right, rgba(255,255,255,0.85), rgba(255,255,255,0)); }
+        html.light .rail-arrow.right { background: linear-gradient(to left, rgba(255,255,255,0.85), rgba(255,255,255,0)); }
+
         .rail-head {
             display: flex; align-items: baseline; justify-content: space-between;
             gap: 12px; padding: 0 4px; margin-bottom: 10px;
@@ -588,6 +621,108 @@
         }
         .network-tile .net-name { font-size: 12px; font-weight: 700; color: var(--text-color); line-height: 1.15; }
         .network-tile .net-sub { font-size: 9px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); }
+
+        /* ================= SECTION PANES ================= */
+        .section-pane { display: block; }
+        .section-pane.hidden { display: none; }
+
+        /* ---- Hero billboard ---- */
+        .hero {
+            position: relative;
+            margin: 14px 4px 6px;
+            border-radius: 18px;
+            overflow: hidden;
+            min-height: 220px;
+            border: 1px solid var(--border-color);
+            background: var(--glass-bg);
+            isolation: isolate;
+        }
+        @media (min-width: 768px) { .hero { min-height: 320px; } }
+        .hero-art {
+            position: absolute; inset: 0; width: 100%; height: 100%;
+            object-fit: cover; z-index: -2;
+            opacity: 0; transition: opacity 0.6s ease;
+        }
+        .hero-art.loaded { opacity: 1; }
+        /* Two scrims: one along the bottom for the text, one from the left so the copy
+           holds up against a busy frame. */
+        .hero::after {
+            content: ''; position: absolute; inset: 0; z-index: -1;
+            background:
+                linear-gradient(to top, var(--hero-scrim) 8%, rgba(0,0,0,0) 72%),
+                linear-gradient(to right, var(--hero-scrim) 0%, rgba(0,0,0,0) 62%);
+        }
+        .hero-body { position: relative; padding: 20px 22px; max-width: 640px; }
+        @media (min-width: 768px) { .hero-body { padding: 34px 34px 28px; } }
+        .hero-eyebrow {
+            font-size: 10px; font-weight: 800; letter-spacing: 0.18em; text-transform: uppercase;
+            color: var(--accent-text);
+        }
+        .hero-title {
+            font-size: clamp(1.4rem, 3.4vw, 2.6rem); font-weight: 800; line-height: 1.05;
+            margin: 6px 0 8px; color: var(--text-color);
+            text-shadow: 0 2px 18px rgba(0,0,0,0.35);
+        }
+        .hero-meta { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; font-size: 11px; color: var(--text-muted); }
+        .hero-meta .pill {
+            padding: 2px 8px; border-radius: 999px;
+            border: 1px solid var(--border-color); background: var(--chip-bg); color: var(--chip-text);
+            font-weight: 700;
+        }
+        .hero-overview {
+            margin-top: 10px; font-size: 13px; line-height: 1.55; color: var(--text-color);
+            display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+            opacity: 0.92;
+        }
+        .hero-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
+        .hero-btn {
+            display: inline-flex; align-items: center; gap: 7px;
+            padding: 10px 18px; border-radius: 10px;
+            font-size: 12px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase;
+            cursor: pointer; border: 1px solid transparent; transition: transform 0.15s, box-shadow 0.15s, background 0.15s;
+        }
+        .hero-btn:hover { transform: translateY(-2px); }
+        .hero-btn.primary { background: var(--accent-solid); color: #fff; box-shadow: 0 8px 22px var(--accent-glow); }
+        .hero-btn.ghost { background: var(--chip-bg); color: var(--text-color); border-color: var(--border-color); }
+
+        /* ---- Category nav: the jump bar under the hero ---- */
+        .cat-nav {
+            position: sticky; top: 0; z-index: 20;
+            display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none;
+            padding: 10px 6px; margin: 6px 0 2px;
+            background: var(--nav-veil);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+        }
+        .cat-nav::-webkit-scrollbar { display: none; }
+
+        /* ---- Collection tiles ---- */
+        .collection-grid {
+            display: grid; gap: 10px; padding: 0 4px;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        }
+        .collection-tile {
+            position: relative; overflow: hidden;
+            border-radius: 14px; padding: 14px 14px 12px;
+            min-height: 84px; cursor: pointer; text-align: left;
+            border: 1px solid var(--border-color);
+            background: linear-gradient(135deg, var(--tile-a), var(--tile-b));
+            transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+        }
+        .collection-tile:hover, .collection-tile:focus-visible {
+            transform: translateY(-3px);
+            border-color: var(--accent-color);
+            box-shadow: 0 14px 28px rgba(0,0,0,0.22), 0 0 18px var(--accent-glow);
+        }
+        .collection-tile .ct-icon { font-size: 20px; line-height: 1; }
+        .collection-tile .ct-name {
+            display: block; margin-top: 8px; font-size: 13px; font-weight: 700;
+            color: var(--text-color); line-height: 1.25;
+        }
+        .collection-tile .ct-count {
+            display: block; margin-top: 2px; font-size: 10px; letter-spacing: 0.1em;
+            text-transform: uppercase; color: var(--text-muted); font-weight: 700;
+        }
 
         /* "Browse all" bar: the way into the full catalogue from a section of samples. */
         .browse-all-bar {
@@ -1221,11 +1356,18 @@ document.addEventListener('DOMContentLoaded', function() {
      * background — #00fa9a on white is about 1.4:1. Day mode uses this darker variant
      * wherever the accent is used for text or icons, and keeps the neon for glows.
      */
+    /*
+     * `primary` is the neon used for fills and glows; `darkText` and `lightAccent` are the
+     * readable versions of it for text on each background. The neon itself is not a text
+     * colour: #8A2BE2 on the dark panels measures 2.6:1, well under AA, which is what made
+     * the small uppercase labels (NOW PLAYING, BROWSE ALL, the billboard eyebrow) hard to
+     * read in night mode.
+     */
     const THEMES = {
-        'aurora':    { primary: '#8A2BE2', lightAccent: '#6d28d9', g1: '#0d042f', g2: '#2c135c', g3: '#0a192f', g4: '#3d2f7b', lg1: '#c9d6ef', lg2: '#dfe5f2', lg3: '#d7cdf2', lg4: '#cbdaea' },
-        'cyberpunk': { primary: '#ff00ff', lightAccent: '#a21caf', g1: '#090014', g2: '#2a0033', g3: '#00121a', g4: '#00334d', lg1: '#f2cfe4', lg2: '#f6dcec', lg3: '#e6cdf2', lg4: '#f0d2e8' },
-        'crimson':   { primary: '#e60000', lightAccent: '#b91c1c', g1: '#1a0000', g2: '#4d0000', g3: '#0a0000', g4: '#330000', lg1: '#f0cfcf', lg2: '#f6dada', lg3: '#f5ddc9', lg4: '#efd0d0' },
-        'emerald':   { primary: '#00fa9a', lightAccent: '#047857', g1: '#001a0d', g2: '#004d26', g3: '#000a05', g4: '#00331a', lg1: '#c6e8d3', lg2: '#daf2e3', lg3: '#cdeee0', lg4: '#c9e6d8' }
+        'aurora':    { primary: '#8A2BE2', lightAccent: '#6d28d9', darkText: '#c4a4ff', g1: '#0d042f', g2: '#2c135c', g3: '#0a192f', g4: '#3d2f7b', lg1: '#c9d6ef', lg2: '#dfe5f2', lg3: '#d7cdf2', lg4: '#cbdaea' },
+        'cyberpunk': { primary: '#ff00ff', lightAccent: '#a21caf', darkText: '#ff8bf5', g1: '#090014', g2: '#2a0033', g3: '#00121a', g4: '#00334d', lg1: '#f2cfe4', lg2: '#f6dcec', lg3: '#e6cdf2', lg4: '#f0d2e8' },
+        'crimson':   { primary: '#e60000', lightAccent: '#b91c1c', darkText: '#ff8a8a', g1: '#1a0000', g2: '#4d0000', g3: '#0a0000', g4: '#330000', lg1: '#f0cfcf', lg2: '#f6dada', lg3: '#f5ddc9', lg4: '#efd0d0' },
+        'emerald':   { primary: '#00fa9a', lightAccent: '#047857', darkText: '#5ff0bd', g1: '#001a0d', g2: '#004d26', g3: '#000a05', g4: '#00331a', lg1: '#c6e8d3', lg2: '#daf2e3', lg3: '#cdeee0', lg4: '#c9e6d8' }
     };
 
     function initializeThemeSystem() {
@@ -1279,8 +1421,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
         document.documentElement.style.setProperty('--accent-color', t.primary);
         document.documentElement.style.setProperty('--accent-glow', `${t.primary}99`);
-        // Text and icons use --accent-text so day mode can darken the neon accents.
-        document.documentElement.style.setProperty('--accent-text', isLight ? (t.lightAccent || t.primary) : t.primary);
+        // Text and icons use --accent-text: darkened for day, lightened for night. The raw
+        // neon is only ever a fill.
+        document.documentElement.style.setProperty('--accent-text',
+            isLight ? (t.lightAccent || t.primary) : (t.darkText || t.primary));
         document.documentElement.style.setProperty('--accent-solid', isLight ? (t.lightAccent || t.primary) : t.primary);
 
         if (isLight) {
@@ -1396,11 +1540,29 @@ document.addEventListener('DOMContentLoaded', function() {
         return { name: country.name, url: url, icon: country.flag, code: code };
     }).sort((a, b) => a.name.localeCompare(b.name));
 
+    /*
+     * A concurrency-limited queue that can also throw work away.
+     *
+     * `add(task, isStale)` drops a queued task if `isStale()` says nobody is waiting for
+     * it any more. Without that, walking through six tabs left several hundred TMDB
+     * lookups queued for pages that had already been replaced, and everything a visitor
+     * actually asked for sat behind them.
+     */
     class PromiseQueue {
         constructor(concurrency) { this.concurrency = concurrency; this.running = 0; this.queue = []; }
-        add(task) { return new Promise((resolve, reject) => { this.queue.push({ task, resolve, reject }); this.runNext(); }); }
+        add(task, isStale = null) {
+            return new Promise((resolve, reject) => { this.queue.push({ task, resolve, reject, isStale }); this.runNext(); });
+        }
+        get pending() { return this.queue.length; }
         runNext() {
             if (this.running >= this.concurrency || this.queue.length === 0) return;
+
+            // Skip past anything nobody is waiting for.
+            while (this.queue.length && this.queue[0].isStale && this.queue[0].isStale()) {
+                this.queue.shift().resolve(null);
+            }
+            if (this.queue.length === 0) return;
+
             this.running++;
             const { task, resolve, reject } = this.queue.shift();
             task().then(resolve).catch(reject).finally(() => { this.running--; this.runNext(); });
@@ -3000,7 +3162,7 @@ document.addEventListener('DOMContentLoaded', function() {
      * Look a title up on TMDB and return the full metadata record (or null).
      * `kind` is 'movie' or 'tv'.
      */
-    async function tmdbLookup(rawTitle, kind = 'movie') {
+    async function tmdbLookup(rawTitle, kind = 'movie', isStale = null) {
         if (!TMDB_API_KEY || !rawTitle) return null;
 
         const year = extractYear(rawTitle);
@@ -3060,11 +3222,11 @@ document.addEventListener('DOMContentLoaded', function() {
             tmdbMemCache[cacheKey] = record;
             saveTmdbCache();
             return record;
-        });
+        }, isStale);
     }
 
     /** Attach TMDB metadata to a channel object in place. Returns the record. */
-    async function enrichChannel(channel) {
+    async function enrichChannel(channel, isStale = null) {
         if (channel._tmdb !== undefined) return channel._tmdb;
         const kind = channel.isSeries || channel.isEpisode ? 'tv' : 'movie';
 
@@ -3074,7 +3236,10 @@ document.addEventListener('DOMContentLoaded', function() {
         const subject = (kind === 'tv' && channel.group && !channel._vault)
             ? channel.group
             : channel.title;
-        const rec = await tmdbLookup(subject, kind);
+        const rec = await tmdbLookup(subject, kind, isStale);
+        // A lookup dropped as stale must not be cached as "no match", or the title stays
+        // blank for the rest of the session.
+        if (rec === null && isStale && isStale()) return undefined;
         channel._tmdb = rec || null;
         if (rec) {
             if (rec.poster) channel.logo = rec.poster;
@@ -3379,6 +3544,62 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }, { rootMargin: '1400px' });
 
+    /*
+     * A generated poster for a title TMDB has not matched.
+     *
+     * Vault entries all carry the same archive.org item thumbnail, so a shelf of
+     * unmatched Bollywood titles was seven copies of one frame — the single worst thing
+     * on the page. A deterministic gradient keyed off the title, with the title set on
+     * it, at least looks deliberate and makes each card distinguishable at a glance.
+     * Drawn as an inline SVG data URI so it costs no request.
+     */
+    const POSTER_PALETTES = [
+        ['#1e293b', '#0f172a'], ['#3b1d5e', '#170b2b'], ['#0f3d3e', '#062222'],
+        ['#4a1d2b', '#210a12'], ['#1d3557', '#0b1a2e'], ['#3d2f1b', '#1b1409'],
+        ['#2b2d5e', '#101132'], ['#123b2a', '#061a12']
+    ];
+    function placeholderPoster(title) {
+        const text = String(title || 'Untitled').replace(/\s*[\[(].*$/, '').trim().slice(0, 60) || 'Untitled';
+        let hash = 0;
+        for (let i = 0; i < text.length; i++) hash = (hash * 31 + text.charCodeAt(i)) >>> 0;
+        const [a, b] = POSTER_PALETTES[hash % POSTER_PALETTES.length];
+
+        // Wrap on word boundaries; anything past four lines is dropped rather than
+        // spilling off the artwork.
+        const words = text.split(/\s+/);
+        const lines = [];
+        let line = '';
+        words.forEach(w => {
+            const next = line ? `${line} ${w}` : w;
+            if (next.length > 15 && line) { lines.push(line); line = w; } else { line = next; }
+        });
+        if (line) lines.push(line);
+        const shown = lines.slice(0, 4);
+        const startY = 150 - (shown.length - 1) * 15;
+
+        const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 300">
+            <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="${a}"/><stop offset="1" stop-color="${b}"/>
+            </linearGradient></defs>
+            <rect width="200" height="300" fill="url(#g)"/>
+            <rect x="14" y="14" width="172" height="272" fill="none" stroke="rgba(255,255,255,0.14)"/>
+            ${shown.map((l, i) => `<text x="100" y="${startY + i * 26}" text-anchor="middle"
+                font-family="Poppins, Helvetica, Arial, sans-serif" font-size="17" font-weight="700"
+                fill="rgba(255,255,255,0.92)">${escapeHtml(l)}</text>`).join('')}
+        </svg>`;
+        return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg.replace(/\s{2,}/g, ' '));
+    }
+
+    /** The best artwork known for a title right now. */
+    function posterFor(channel) {
+        const rec = channel._tmdb;
+        if (rec && rec.poster) return rec.poster;
+        // `needsArt` marks a title whose logo is its collection's thumbnail, shared with
+        // every other title in that collection.
+        if (channel.needsArt || !channel.logo) return placeholderPoster(channel.title);
+        return channel.logo;
+    }
+
     function makePosterCard(channel, opts = {}) {
         const card = document.createElement('article');
         card.className = `poster-card animate-cascade${opts.channelStyle ? ' channel-card' : ''}`;
@@ -3386,7 +3607,7 @@ document.addEventListener('DOMContentLoaded', function() {
         card.setAttribute('tabindex', '0');
         card._channel = channel;
 
-        const art = channel.logo || FALLBACK_ART;
+        const art = posterFor(channel);
         const rawSub = channel.group && channel.group !== channel.title ? channel.group : '';
         const sub = rawSub === 'Uncategorized' ? (opts.live ? 'Live channel' : '') : rawSub;
         card.innerHTML = `
@@ -3400,7 +3621,7 @@ document.addEventListener('DOMContentLoaded', function() {
         card.querySelector('.poster-art').addEventListener('error', function () {
             if (this.dataset.fellBack) return;
             this.dataset.fellBack = '1';
-            this.src = FALLBACK_ART;
+            this.src = placeholderPoster(channel.title);
         });
 
         // A live channel has no synopsis to show, so it plays on click; VOD opens the
@@ -3430,8 +3651,33 @@ document.addEventListener('DOMContentLoaded', function() {
      * `loader` is async and returns the channels; the row renders a skeleton first
      * so the page height does not jump when the data lands.
      */
+    /**
+     * Chevrons that page a rail sideways, the way every ten-foot UI does it.
+     *
+     * Kept to pointer devices in CSS: a touch screen already swipes, and an overlay
+     * button there just covers a poster.
+     */
+    function attachRailArrows(section) {
+        const wrap = section.querySelector('.rail-wrap');
+        if (!wrap || wrap.dataset.arrows) return;
+        wrap.dataset.arrows = '1';
+        const rail = wrap.querySelector('.rail');
+        [['left', '\u2039'], ['right', '\u203a']].forEach(([side, glyph]) => {
+            const btn = document.createElement('button');
+            btn.className = `rail-arrow ${side}`;
+            btn.type = 'button';
+            btn.setAttribute('aria-label', side === 'left' ? 'Scroll left' : 'Scroll right');
+            btn.textContent = glyph;
+            btn.addEventListener('click', () => {
+                const step = Math.max(240, rail.clientWidth * 0.8);
+                rail.scrollBy({ left: side === 'left' ? -step : step, behavior: 'smooth' });
+            });
+            wrap.appendChild(btn);
+        });
+    }
+
     function addRail({ title, subtitle, loader, onMore, channelStyle = false, live = false, limit = 20 }) {
-        const host = document.getElementById('home-rows');
+        const host = sectionHost || document.getElementById('home-rows');
         if (!host) return;
         const myToken = sectionToken;
 
@@ -3445,12 +3691,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
                 ${onMore ? '<button class="rail-more" type="button">Browse all</button>' : ''}
             </div>
-            <div class="rail" role="list"></div>`;
+            <div class="rail-wrap"><div class="rail" role="list"></div></div>`;
 
         const railEl = section.querySelector('.rail');
         railEl.innerHTML = Array.from({ length: 7 }, () =>
             `<div class="poster-card${channelStyle ? ' channel-card' : ''}"><div class="skeleton poster-art"></div><div class="poster-meta"><div class="skeleton h-3 rounded"></div></div></div>`).join('');
 
+        attachRailArrows(section);
         if (onMore) section.querySelector('.rail-more').addEventListener('click', onMore);
         if (myToken !== sectionToken) return;
         host.appendChild(section);
@@ -3659,7 +3906,62 @@ document.addEventListener('DOMContentLoaded', function() {
         loadDataForSource(name);
     }
 
-    function openSection(key) {
+    /* =====================================================================
+       SECTION PANES
+       ---------------------------------------------------------------------
+       Each section keeps its own pane and its own scroll position, and tabbing
+       between them shows and hides rather than rebuilding. Before this, every
+       tab click tore the page down and started again: a walk through six tabs
+       fired ~690 TMDB lookups and ~70 archive.org reads, and all of that work
+       kept running after you had moved on. That backlog is what made navigation
+       feel unreliable — the queue was permanently full of work for pages nobody
+       was looking at any more.
+
+       Overlays (the browse-all grid, a channel wall) get their own pane on top,
+       so backing out of one restores the section instantly, scroll included.
+       ===================================================================== */
+    const sectionPanes = new Map();
+    const sectionScroll = new Map();
+    let sectionHost = null;          // where addRail and friends append right now
+
+    function paneFor(key) {
+        let pane = sectionPanes.get(key);
+        if (!pane) {
+            pane = document.createElement('div');
+            pane.className = 'section-pane';
+            pane.dataset.section = key;
+            document.getElementById('home-rows').appendChild(pane);
+            sectionPanes.set(key, pane);
+        }
+        return pane;
+    }
+
+    function showPane(key) {
+        const pane = paneFor(key);
+        sectionPanes.forEach((p, k) => p.classList.toggle('hidden', k !== key));
+        return pane;
+    }
+
+    /** Rebuild a section from scratch next time it is opened. */
+    function invalidateSection(key) {
+        const pane = sectionPanes.get(key);
+        if (pane) { pane.innerHTML = ''; delete pane.dataset.built; }
+    }
+
+    // Function declarations, so this literal can sit above their definitions.
+    const SECTION_RENDERERS = {
+        home: renderHomeRows, movies: renderMoviesSection, tv: renderTvSection,
+        live: renderLiveSection, kids: renderKidsSection, mine: renderMineSection
+    };
+
+    function openSection(key, opts = {}) {
+        const sameTab = activeSection === key && sectionPanes.has(key) && !opts.rebuild;
+
+        // Remember where they were before this pane goes away.
+        if (elements.mainView && sectionPanes.has(activeSection)) {
+            sectionScroll.set(activeSection, elements.mainView.scrollTop);
+        }
+
         activeSection = key;
         sectionToken++;
         if (hasConsent) { try { localStorage.setItem('ss_section', key); } catch (e) {} }
@@ -3667,17 +3969,55 @@ document.addEventListener('DOMContentLoaded', function() {
         syncSidebarToSection(key);
         if (typeof gtag === 'function') gtag('event', 'open_section', { section: key });
 
-        elements.mainView.scrollTo({ top: 0, behavior: 'auto' });
-        const host = document.getElementById('home-rows');
-        host.innerHTML = '';
-
         // The network shelf is a home-screen feature; other sections carry their own.
         document.getElementById('network-shelf').classList.toggle('hidden', key !== 'home');
         elements.continueWatchingContainer.classList.toggle('hidden',
             key !== 'home' && key !== 'mine' ? true : watchHistory.length === 0);
 
-        ({ home: renderHomeRows, movies: renderMoviesSection, tv: renderTvSection,
-           live: renderLiveSection, kids: renderKidsSection, mine: renderMineSection }[key] || renderHomeRows)();
+        // An overlay is never what you meant to come back to.
+        const overlay = sectionPanes.get('__overlay');
+        if (overlay) { overlay.remove(); sectionPanes.delete('__overlay'); }
+
+        if (opts.rebuild) invalidateSection(key);
+        const pane = showPane(key);
+        sectionHost = pane;
+
+        if (!pane.dataset.built) {
+            pane.dataset.built = '1';
+            elements.mainView.scrollTo({ top: 0, behavior: 'auto' });
+            (SECTION_RENDERERS[key] || renderHomeRows)();
+        } else {
+            // Tapping the tab you are already on means "take me back to the top".
+            const top = sameTab ? 0 : (sectionScroll.get(key) || 0);
+            requestAnimationFrame(() => elements.mainView.scrollTo({ top, behavior: 'auto' }));
+        }
+    }
+
+    /** A pane that sits on top of the section: the browse-all grid, a channel wall. */
+    function openOverlayPane() {
+        sectionScroll.set(activeSection, elements.mainView.scrollTop);
+        let pane = sectionPanes.get('__overlay');
+        if (!pane) {
+            pane = document.createElement('div');
+            pane.className = 'section-pane';
+            pane.dataset.section = '__overlay';
+            document.getElementById('home-rows').appendChild(pane);
+            sectionPanes.set('__overlay', pane);
+        }
+        pane.innerHTML = '';
+        sectionPanes.forEach((p, k) => p.classList.toggle('hidden', k !== '__overlay'));
+        document.getElementById('network-shelf').classList.add('hidden');
+        return pane;
+    }
+
+    /** Close an overlay and put the section back exactly as it was. */
+    function closeOverlayPane() {
+        const overlay = sectionPanes.get('__overlay');
+        if (overlay) { overlay.remove(); sectionPanes.delete('__overlay'); }
+        sectionHost = showPane(activeSection);
+        document.getElementById('network-shelf').classList.toggle('hidden', activeSection !== 'home');
+        const top = sectionScroll.get(activeSection) || 0;
+        requestAnimationFrame(() => elements.mainView.scrollTo({ top, behavior: 'auto' }));
     }
 
     /* ---- Movies ------------------------------------------------------- */
@@ -3785,25 +4125,266 @@ document.addEventListener('DOMContentLoaded', function() {
         return bar;
     }
 
-    async function renderMoviesSection() {
-        const myToken = sectionToken;
+    /* =====================================================================
+       CATEGORIES
+       ---------------------------------------------------------------------
+       Genre used to come only from TMDB, which meant the shelves stayed empty
+       until a few hundred lookups had come back — the "categories are broken"
+       complaint. These rules read what is already in hand: the collection a
+       title came from, and the filename itself. Bollywood Classics IV is
+       Bollywood before anyone asks an API, and a file called
+       "Django.Unchained.1966" is a western on sight.
 
-        const host = document.getElementById('home-rows');
+       TMDB genres are still used; they arrive later and merge in, which fills
+       the shelves that no keyword could infer (Drama, Thriller, Romance).
+       ===================================================================== */
+    const INSTANT_CATEGORIES = [
+        { key: 'bollywood', label: 'Bollywood & Indian', icon: '🇮🇳',
+          match: /bollywood|hindi|tamil|telugu|malayalam|kannada|punjabi|indian film|desi/i },
+        { key: 'kungfu', label: 'Kung Fu & Martial Arts', icon: '🥋',
+          match: /kung ?fu|martial|shaolin|samurai|ninja|jackie chan|bruce lee|wu ?tang|karate|dragon fist/i },
+        { key: 'horror', label: 'Horror & Trash', icon: '🩸',
+          match: /horror|terror|zombie|vampire|dracula|frankenstein|slasher|haunt|nightmare|massacre|demon|possess/i },
+        { key: 'western', label: 'Westerns', icon: '🤠',
+          match: /western|faroeste|cowboy|gunslinger|outlaw|rifles|django|gunfight/i },
+        { key: 'noir', label: 'Film Noir & Mystery', icon: '🕵️',
+          match: /noir|mystery|misterio|detective|whodunit|sherlock|murder/i },
+        { key: 'scifi', label: 'Sci-Fi & Space', icon: '🚀',
+          match: /sci-?fi|science fiction|galaxy|space|alien|robot|android|cyborg|planet|mars|astro/i },
+        { key: 'superhero', label: 'Comic Books & Superheroes', icon: '🦸',
+          match: /marvel|dc comics|dark horse|superhero|batman|superman|spider-?man|avengers|x-?men|justice league/i },
+        { key: 'anime', label: 'Anime', icon: '🎌',
+          match: /anime|manga|ova\b|shonen|studio ghibli|doraemon|dragon ball|naruto|pokemon|hentai-free/i },
+        { key: 'cartoons', label: 'Classic Cartoons', icon: '✏️',
+          match: /cartoon|looney|merrie melodies|woody woodpecker|pink panther|tom (and|&) jerry|betty boop|popeye|disney|animated short/i },
+        { key: 'kids', label: 'Family & Kids', icon: '🧸',
+          match: /kids|children|barbie|thomas|postman pat|sooty|blue'?s clues|strawberry shortcake|sesame|nursery|little einsteins|wombles/i },
+        { key: 'comedy', label: 'Comedy Greats', icon: '😂',
+          match: /comedy|chaplin|laurel|hardy|buster keaton|harold lloyd|abbott|costello|parody|spoof|slapstick/i },
+        { key: 'silent', label: 'Silent Era', icon: '🎩',
+          match: /silent|1910|1920|192\d|nosferatu|metropolis|the general/i },
+        { key: 'war', label: 'War & History', icon: '⚔️',
+          match: /\bwar\b|wwii|world war|soldier|army|battle|empire|roman|napoleon|vietnam/i },
+        { key: 'world', label: 'World Cinema', icon: '🌍',
+          match: /filmes|peliculas|película|dublado|latino|portugues|español|italiano|deutsch|français|russian|japanese|korean|arabic|turkish/i }
+    ];
 
-        addBrowseAllBar(host, {
-            label: 'Every film in one place',
-            hint: 'Filter by genre, sort by rating or year',
-            action: 'Browse all films',
-            onClick: btn => openGridAsync('All films', ensureMovieCatalogue, btn)
+    /**
+     * Shelves for a pool of titles, keyword categories first, TMDB genres second.
+     * A shelf needs eight titles to be worth a row of its own.
+     */
+    function buildShelves(pool, minimum = 8) {
+        const unique = dedupeTitles(pool);
+        const shelves = [];
+
+        const buckets = new Map();
+        unique.forEach(c => {
+            const hay = `${c.group || ''} ${c.title || ''} ${(c._vault && c._vault.label) || ''}`;
+            INSTANT_CATEGORIES.forEach(cat => {
+                if (!cat.match.test(hay)) return;
+                if (!buckets.has(cat.key)) buckets.set(cat.key, []);
+                buckets.get(cat.key).push(c);
+            });
+        });
+        INSTANT_CATEGORIES.forEach(cat => {
+            const items = buckets.get(cat.key) || [];
+            if (items.length >= minimum) shelves.push({ ...cat, items });
         });
 
+        const taken = new Set(shelves.map(s => s.label.toLowerCase()));
+        const byGenre = bucketByGenre(unique);
+        GENRE_ORDER.forEach(g => {
+            const items = byGenre.get(g) || [];
+            if (items.length < minimum) return;
+            // Don't shelve Animation twice when "Classic Cartoons" already covers it.
+            if ([...taken].some(t => t.includes(g.toLowerCase()) || g.toLowerCase().includes(t.split(' ')[0]))) return;
+            shelves.push({ key: `g-${g}`, label: g, icon: GENRE_ICON[g] || '🎬', items });
+        });
+
+        return shelves;
+    }
+
+    /* ---- Hero billboard ---- */
+
+    function paintHero(host, pool, opts = {}) {
+        let hero = host.querySelector('.hero');
+        if (!hero) {
+            hero = document.createElement('section');
+            hero.className = 'hero';
+            host.prepend(hero);
+        }
+
+        // Prefer something with real backdrop art and a synopsis; fall back to any title
+        // so the billboard is never an empty box while lookups are still running.
+        const dressed = pool.filter(c => c._tmdb && c._tmdb.backdrop && c._tmdb.overview);
+        const pick = dressed.length
+            ? dressed[Math.floor(Math.random() * Math.min(dressed.length, 40))]
+            : (pool.find(c => c.logo) || pool[0]);
+        if (!pick) return null;
+        if (hero.dataset.pick === pick.url) return pick;
+        hero.dataset.pick = pick.url;
+
+        const rec = pick._tmdb || {};
+        const bits = [];
+        if (rec.year) bits.push(String(rec.year));
+        if (rec.rating) bits.push(`★ ${rec.rating}`);
+        (rec.genres || []).slice(0, 3).forEach(g => bits.push(g));
+
+        hero.innerHTML = `
+            <img class="hero-art" alt="" decoding="async">
+            <div class="hero-body">
+                <p class="hero-eyebrow">${escapeHtml(opts.eyebrow || 'Featured tonight')}</p>
+                <h2 class="hero-title">${escapeHtml(rec.name || pick.title)}</h2>
+                <div class="hero-meta">${bits.map(b => `<span class="pill">${escapeHtml(b)}</span>`).join('')}</div>
+                <p class="hero-overview">${escapeHtml(rec.overview || 'Free to watch, streamed straight from the Internet Archive.')}</p>
+                <div class="hero-actions">
+                    <button class="hero-btn primary" data-play>▶ Play</button>
+                    <button class="hero-btn ghost" data-info>More info</button>
+                </div>
+            </div>`;
+
+        const art = hero.querySelector('.hero-art');
+        const src = rec.backdrop || rec.posterLarge || pick.logo;
+        if (src) {
+            art.addEventListener('load', () => art.classList.add('loaded'), { once: true });
+            art.src = src;
+        }
+        hero.querySelector('[data-play]').addEventListener('click', () => {
+            playStream(pick.url);
+            elements.mainView.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+        hero.querySelector('[data-info]').addEventListener('click', () => openDetail(pick));
+        return pick;
+    }
+
+    /* ---- Category nav + shelves ---- */
+
+    function paintCategoryNav(nav, shelves, onAll) {
+        nav.innerHTML = '';
+        const chip = (label, handler, active) => {
+            const b = document.createElement('button');
+            b.className = `filter-chip${active ? ' active' : ''}`;
+            b.innerHTML = label;
+            b.addEventListener('click', handler);
+            nav.appendChild(b);
+        };
+        chip('All titles', onAll, false);
+        shelves.forEach(s => chip(`${s.icon} ${escapeHtml(s.label)} <span class="opacity-60">${s.items.length}</span>`, () => {
+            const target = document.getElementById(`shelf-${s.key}`);
+            if (!target) return;
+            const mv = elements.mainView;
+            const top = target.getBoundingClientRect().top - mv.getBoundingClientRect().top + mv.scrollTop - 56;
+            mv.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
+        }, false));
+    }
+
+    /**
+     * Paint category rails, reusing the rows already on screen.
+     *
+     * Rebuilding the lot on every enrichment wave threw away scroll position and made
+     * the page twitch, so a shelf that already exists only has its count and its missing
+     * cards updated.
+     */
+    function paintShelves(host, shelves, kind) {
+        shelves.forEach((shelf, index) => {
+            let section = document.getElementById(`shelf-${shelf.key}`);
+            if (!section) {
+                section = document.createElement('section');
+                section.id = `shelf-${shelf.key}`;
+                section.className = 'mt-7 px-1';
+                section.innerHTML = `
+                    <div class="rail-head">
+                        <div class="min-w-0">
+                            <h2 class="rail-title text-lg text-slate-900 dark:text-white header-title truncate">
+                                <span aria-hidden="true">${shelf.icon}</span> ${escapeHtml(shelf.label)}
+                            </h2>
+                            <p class="text-[11px] text-[var(--text-muted)] mt-0.5" data-count></p>
+                        </div>
+                        <button class="rail-more" type="button">Browse all</button>
+                    </div>
+                    <div class="rail-wrap"><div class="rail" role="list"></div></div>`;
+                host.appendChild(section);
+            }
+            section.style.order = index;
+            section.querySelector('[data-count]').textContent =
+                `${shelf.items.length.toLocaleString()} ${kind === 'tv' ? 'shows' : 'films'}`;
+
+            attachRailArrows(section);
+            const rail = section.querySelector('.rail');
+            const more = section.querySelector('.rail-more');
+            more.onclick = () => openGrid(shelf.label, shelf.items);
+
+            if (rail.childElementCount < 20) {
+                rail.innerHTML = '';
+                const cards = shuffled(shelf.items, 20).map((ch, i) => {
+                    const card = makePosterCard(ch);
+                    card.style.animationDelay = `${(i % 10) * 0.04}s`;
+                    rail.appendChild(card);
+                    return card;
+                });
+                cards.slice(0, 8).forEach(fillCardArtwork);
+            }
+        });
+    }
+
+    /* ---- Collection tiles ---- */
+
+    function paintCollectionTiles(host, vaults, onOpen) {
+        const wrap = document.createElement('section');
+        wrap.className = 'mt-8 px-1';
+        wrap.innerHTML = `
+            <div class="rail-head">
+                <div class="min-w-0">
+                    <h2 class="rail-title text-lg text-slate-900 dark:text-white header-title">Collections</h2>
+                    <p class="text-[11px] text-[var(--text-muted)] mt-0.5">${vaults.length} libraries, read live from the Internet Archive</p>
+                </div>
+            </div>
+            <div class="collection-grid"></div>`;
+        const grid = wrap.querySelector('.collection-grid');
+        vaults.forEach(v => {
+            const tile = document.createElement('button');
+            tile.className = 'collection-tile';
+            tile.innerHTML = `
+                <span class="ct-icon" aria-hidden="true">${v.icon || '🎬'}</span>
+                <span class="ct-name">${escapeHtml(v.label)}</span>
+                <span class="ct-count">${v.approx.toLocaleString()} titles</span>`;
+            tile.addEventListener('click', () => onOpen(v));
+            grid.appendChild(tile);
+        });
+        host.appendChild(wrap);
+        return wrap;
+    }
+
+    /* ---- Movies ---- */
+
+    async function renderMoviesSection() {
+        const myToken = sectionToken;
+        const host = sectionHost || document.getElementById('home-rows');
+
+        const heroHost = document.createElement('div');
+        host.appendChild(heroHost);
+
+        const nav = document.createElement('nav');
+        nav.className = 'cat-nav';
+        nav.setAttribute('aria-label', 'Film categories');
+        nav.innerHTML = `<span class="text-[11px] font-bold uppercase tracking-widest text-[var(--text-muted)] self-center pl-1 pr-1">Loading…</span>`;
+        host.appendChild(nav);
+
+        const shelfHost = document.createElement('div');
+        shelfHost.style.display = 'flex';
+        shelfHost.style.flexDirection = 'column';
+        host.appendChild(shelfHost);
+
+        const openAll = () => openGridAsync('All films', ensureMovieCatalogue);
+
+        // Sourced shelves first: these need no metadata at all, so the page has real
+        // content in it while the catalogue is still being read.
         addRail({
             title: 'Public-domain cinema',
             subtitle: 'Classic feature films, free and legal',
             loader: async () => (await archiveSearch({ collection: 'feature_films', label: 'Free Cinema', rows: 20 })).channels,
             onMore: () => loadDataForSource('Free Cinema')
         });
-
         addRail({
             title: 'More free films',
             subtitle: 'The wider archive.org film library',
@@ -3812,100 +4393,60 @@ document.addEventListener('DOMContentLoaded', function() {
             onMore: () => loadDataForSource('Free Cinema')
         });
 
-        // Genre rails appear here as enrichment fills the buckets.
-        const genreHost = document.createElement('div');
-        genreHost.id = 'genre-rails';
-        host.appendChild(genreHost);
-
-        const status = document.createElement('p');
-        status.className = 'px-2 mt-6 text-xs text-[var(--text-muted)]';
-        status.textContent = 'Building your genre shelves…';
-        genreHost.appendChild(status);
-
-        // The collections themselves, for people who browse by source. Added before the
-        // awaits below so the page has content while the catalogue is still loading.
-        ARCHIVE_MOVIE_VAULTS.slice(0, 6).forEach(vault => {
-            addRail({
-                title: vault.label,
-                subtitle: `${vault.approx} films`,
-                loader: async () => shuffled(await loadArchiveVault(vault), 20),
-                onMore: () => loadDataForSource('Movie Vault')
-            });
+        paintCollectionTiles(host, ARCHIVE_MOVIE_VAULTS.slice(0, 18), async vault => {
+            const items = await loadArchiveVault(vault);
+            openGrid(vault.label, items);
         });
-
-        /*
-         * Two passes over two pools, because the full catalogue is 66 archive.org items
-         * now and waiting for all of them left the shelves empty for far too long. The
-         * seed pool — the site's own playlist plus the eight largest vaults — is enough
-         * to fill every major genre, and the full pool repaints over it when it lands.
-         */
-        const shelves = async (pool, waves) => {
-            for (let wave = 0; wave < waves; wave++) {
-                const more = await enrichNextBatch(pool, 60);
-                if (myToken !== sectionToken) return false;
-                paintGenreRails(genreHost, pool, status);
-                if (!more) break;
-            }
-            return true;
-        };
 
         const seed = await ensureSeedCatalogue();
         if (myToken !== sectionToken) return;
-        status.textContent = `Sorting ${seed.length.toLocaleString()} films into genres…`;
-        if (!await shelves(seed, 6)) return;
+
+        const refresh = pool => {
+            const shelves = buildShelves(pool);
+            paintShelves(shelfHost, shelves, 'movie');
+            paintCategoryNav(nav, shelves, openAll);
+            paintHero(heroHost, pool, { eyebrow: 'Featured tonight' });
+        };
+
+        refresh(seed);   // keyword categories land immediately
+
+        for (let wave = 0; wave < 6; wave++) {
+            const more = await enrichNextBatch(seed, 60, () => myToken !== sectionToken);
+            if (myToken !== sectionToken) return;
+            refresh(seed);
+            if (!more) break;
+        }
 
         const movies = await ensureMovieCatalogue();
         if (myToken !== sectionToken) return;
-        await shelves(movies, 10);
-    }
-
-    function paintGenreRails(host, pool, status) {
-        // Deduped so a shelf never shows the same film twice from two collections.
-        const buckets = bucketByGenre(dedupeTitles(pool));
-        const ordered = GENRE_ORDER.filter(g => (buckets.get(g) || []).length >= 6);
-        if (!ordered.length) return;
-
-        status.remove();
-        host.innerHTML = '';
-        ordered.forEach(genre => {
-            const items = buckets.get(genre);
-            const section = document.createElement('section');
-            section.className = 'mt-7 px-1';
-            section.innerHTML = `
-                <div class="rail-head">
-                    <div class="min-w-0">
-                        <h2 class="rail-title text-lg text-slate-900 dark:text-white header-title truncate">
-                            <span aria-hidden="true">${GENRE_ICON[genre] || '🎬'}</span> ${escapeHtml(genre)}
-                        </h2>
-                        <p class="text-[11px] text-[var(--text-muted)] mt-0.5">${items.length} films</p>
-                    </div>
-                    <button class="rail-more" type="button">Browse all</button>
-                </div>
-                <div class="rail" role="list"></div>`;
-            const rail = section.querySelector('.rail');
-            shuffled(items, 20).forEach((ch, i) => {
-                const card = makePosterCard(ch);
-                card.style.animationDelay = `${(i % 10) * 0.04}s`;
-                rail.appendChild(card);
-            });
-            section.querySelector('.rail-more').addEventListener('click', () => openGrid(`${genre} films`, items));
-            host.appendChild(section);
-        });
+        refresh(movies);
+        for (let wave = 0; wave < 10; wave++) {
+            const more = await enrichNextBatch(movies, 60, () => myToken !== sectionToken);
+            if (myToken !== sectionToken) return;
+            refresh(movies);
+            if (!more) break;
+        }
     }
 
     /* ---- TV Shows ----------------------------------------------------- */
 
     async function renderTvSection() {
         const myToken = sectionToken;
+        const host = sectionHost || document.getElementById('home-rows');
 
-        const host = document.getElementById('home-rows');
+        const heroHost = document.createElement('div');
+        host.appendChild(heroHost);
 
-        addBrowseAllBar(host, {
-            label: 'Every series in one place',
-            hint: 'Filter by genre, sort by rating or year',
-            action: 'Browse all shows',
-            onClick: btn => openGridAsync('All shows', ensureSeriesCatalogue, btn)
-        });
+        const nav = document.createElement('nav');
+        nav.className = 'cat-nav';
+        nav.setAttribute('aria-label', 'Show categories');
+        nav.innerHTML = `<span class="text-[11px] font-bold uppercase tracking-widest text-[var(--text-muted)] self-center pl-1 pr-1">Loading…</span>`;
+        host.appendChild(nav);
+
+        const shelfHost = document.createElement('div');
+        shelfHost.style.display = 'flex';
+        shelfHost.style.flexDirection = 'column';
+        host.appendChild(shelfHost);
 
         addRail({
             title: 'Complete box sets',
@@ -3913,24 +4454,6 @@ document.addEventListener('DOMContentLoaded', function() {
             loader: async () => shuffled(await ensureSeriesCatalogue(), 20),
             onMore: () => openGridAsync('All shows', ensureSeriesCatalogue)
         });
-
-        const genreHost = document.createElement('div');
-        genreHost.id = 'tv-genre-rails';
-        host.appendChild(genreHost);
-
-        const status = document.createElement('p');
-        status.className = 'px-2 mt-6 text-xs text-[var(--text-muted)]';
-        status.textContent = 'Building your genre shelves…';
-        genreHost.appendChild(status);
-
-        const shows = await ensureSeriesCatalogue();
-        if (myToken !== sectionToken) return;
-        for (let wave = 0; wave < 4; wave++) {
-            const more = await enrichNextBatch(shows, 40);
-            if (myToken !== sectionToken) return;
-            paintGenreRails(genreHost, shows, status);
-            if (!more) break;
-        }
 
         addRail({
             title: 'Classic TV',
@@ -3945,6 +4468,34 @@ document.addEventListener('DOMContentLoaded', function() {
             loader: async () => (await archiveSearch({ collection: 'anime', label: 'Anime', rows: 20 })).channels,
             onMore: () => loadDataForSource('Free Cinema')
         });
+
+        paintCollectionTiles(host, ARCHIVE_SERIES_VAULTS.slice(0, 18), vault => {
+            openGrid(vault.label, [{
+                title: vault.label, url: `vault:series:${vault.id}`, logo: archiveThumb(vault.id),
+                group: `${vault.approx} episodes`, isSeries: true, needsArt: true, _vault: vault
+            }]);
+            loadDataForSource('TV Box Sets');
+        });
+
+        const shows = await ensureSeriesCatalogue();
+        if (myToken !== sectionToken) return;
+
+        const refresh = () => {
+            // Four, not eight: there are 120 box sets in total, so a category that would
+            // fill a film shelf several times over is a handful of shows here.
+            const shelves = buildShelves(shows, 4);
+            paintShelves(shelfHost, shelves, 'tv');
+            paintCategoryNav(nav, shelves, () => openGridAsync('All shows', ensureSeriesCatalogue));
+            paintHero(heroHost, shows, { eyebrow: 'Box set of the night' });
+        };
+
+        refresh();
+        for (let wave = 0; wave < 8; wave++) {
+            const more = await enrichNextBatch(shows, 40, () => myToken !== sectionToken);
+            if (myToken !== sectionToken) return;
+            refresh();
+            if (!more) break;
+        }
     }
 
     /* ---- Live TV ------------------------------------------------------ */
@@ -4010,7 +4561,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     async function renderLiveSection() {
-        const host = document.getElementById('home-rows');
+        const host = sectionHost || document.getElementById('home-rows');
 
         addBrowseAllBar(host, {
             label: '⚽ Free sports, every network at once',
@@ -4120,13 +4671,10 @@ document.addEventListener('DOMContentLoaded', function() {
      * identity, and a category filter over the whole line-up.
      */
     async function renderChannelWall(sourceName, url, opts = {}) {
-        const host = document.getElementById('home-rows');
         // Bump the token first: rails the section was still loading must not land
         // on top of the wall when their fetches resolve.
         const myToken = ++sectionToken;
-        elements.mainView.scrollTo({ top: 0 });
-        document.getElementById('network-shelf').classList.add('hidden');
-        host.innerHTML = '';
+        const host = openOverlayPane();
 
         const head = document.createElement('div');
         head.className = 'px-2 mt-4 mb-3';
@@ -4137,8 +4685,7 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
             <div data-chips class="flex gap-2 overflow-x-auto no-scrollbar pb-1"></div>
             <p data-count class="text-[11px] text-[var(--text-muted)] mt-2">Loading channels…</p>`;
-        const backTo = activeSection;
-        head.querySelector('[data-back]').addEventListener('click', () => openSection(backTo));
+        head.querySelector('[data-back]').addEventListener('click', closeOverlayPane);
         host.appendChild(head);
         scrollBrowseIntoView(head);
 
@@ -4297,7 +4844,7 @@ document.addEventListener('DOMContentLoaded', function() {
     /* ---- My Stuff ------------------------------------------------------ */
 
     async function renderMineSection() {
-        const host = document.getElementById('home-rows');
+        const host = sectionHost || document.getElementById('home-rows');
 
         if (!favorites.length && !watchHistory.length) {
             host.innerHTML = `
@@ -4340,12 +4887,9 @@ document.addEventListener('DOMContentLoaded', function() {
      * visible under "All".
      */
     function openGrid(title, items) {
-        const host = document.getElementById('home-rows');
         // Cancel the section's in-flight rails so they cannot append below the grid.
         sectionToken++;
-        elements.mainView.scrollTo({ top: 0 });
-        document.getElementById('network-shelf').classList.add('hidden');
-        host.innerHTML = '';
+        const host = openOverlayPane();
 
         let genre = 'All';
         let sortBy = 'title';
@@ -4367,7 +4911,7 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
             <div data-chips class="flex gap-2 overflow-x-auto no-scrollbar pb-1"></div>
             <p data-count class="text-[11px] text-[var(--text-muted)] mt-2"></p>`;
-        head.querySelector('[data-back]').addEventListener('click', () => openSection(activeSection));
+        head.querySelector('[data-back]').addEventListener('click', closeOverlayPane);
         host.appendChild(head);
         scrollBrowseIntoView(head);
 
@@ -4439,7 +4983,7 @@ document.addEventListener('DOMContentLoaded', function() {
         (async () => {
             const myToken = sectionToken;
             for (let wave = 0; wave < 20; wave++) {
-                const more = await enrichNextBatch(items, 60);
+                const more = await enrichNextBatch(items, 60, () => myToken !== sectionToken || !grid.isConnected);
                 if (myToken !== sectionToken || !grid.isConnected) return;
                 paintChips();
                 // A genre filter or a metadata-driven sort is showing a view that
@@ -4455,11 +4999,27 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     async function renderHomeRows() {
-        const host = document.getElementById('home-rows');
+        const host = sectionHost || document.getElementById('home-rows');
         if (!host) return;
         host.innerHTML = '';
+        const myToken = sectionToken;
 
         renderNetworkShelf();
+
+        // The billboard sits above the rails, so its container is reserved now and filled
+        // when the catalogue lands — appending it later would shove the page down under
+        // whoever is already reading it.
+        const heroHost = document.createElement('div');
+        host.appendChild(heroHost);
+        ensureSeedCatalogue().then(seed => {
+            if (myToken !== sectionToken || !heroHost.isConnected) return;
+            paintHero(heroHost, seed, { eyebrow: 'Tonight on Streams Sphere' });
+            // Repaint once artwork exists, so the first impression is not a bare panel.
+            enrichNextBatch(seed, 40, () => myToken !== sectionToken).then(() => {
+                if (myToken !== sectionToken || !heroHost.isConnected) return;
+                paintHero(heroHost, seed, { eyebrow: 'Tonight on Streams Sphere' });
+            });
+        }).catch(() => {});
 
         addRail({
             title: 'Your movie library',
@@ -4664,11 +5224,13 @@ document.addEventListener('DOMContentLoaded', function() {
      * Look up the next `count` un-enriched titles so genre buckets keep filling.
      * Returns true while there is still work left.
      */
-    async function enrichNextBatch(pool, count = 48) {
+    async function enrichNextBatch(pool, count = 48, isStale = null) {
         const pending = pool.filter(c => c._tmdb === undefined && !c._tmdbRequested).slice(0, count);
         if (!pending.length) return false;
         pending.forEach(c => { c._tmdbRequested = true; });
-        await Promise.all(pending.map(c => enrichChannel(c).catch(() => null)));
+        await Promise.all(pending.map(c => enrichChannel(c, isStale).catch(() => null)));
+        // Anything dropped as stale is put back in the pool for whoever needs it next.
+        pending.forEach(c => { if (c._tmdb === undefined) c._tmdbRequested = false; });
         return true;
     }
 
