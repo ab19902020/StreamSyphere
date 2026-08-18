@@ -160,6 +160,23 @@ tag and will only play from a UK connection.
 M3U playlists hosted in sibling GitHub repositories, grouped into shows and sorted by
 season/episode.
 
+## Navigation
+
+Each section owns a pane and a scroll position. Tabbing shows and hides; it does not
+rebuild. The browse-all grid and the channel wall are overlay panes on top, so backing
+out of one restores the section exactly as it was.
+
+This was the fix for "navigation feels flaky". Instrumented before the change, a walk
+through six tabs fired **~690 TMDB lookups and ~70 archive.org reads**, and every one of
+them stayed in the queue after the visitor had moved on — so whatever they asked for next
+sat behind hundreds of requests for pages nobody was looking at. The same walk now makes
+15 playlist reads instead of 48, and 7 searches instead of 35.
+
+`PromiseQueue.add()` takes an `isStale` predicate and drops queued work nobody is waiting
+for. Every enrichment loop passes one keyed on `sectionToken`. Work dropped that way is
+returned to the pool rather than cached as "no match" — cache the miss and the title stays
+blank for the rest of the session.
+
 ## The browse surface
 
 Below the player the app is a browse surface rather than a single list:
@@ -179,6 +196,31 @@ Below the player the app is a browse surface rather than a single list:
   from any genre shelf's *Browse all*. Rails only ever show a sample, so without this
   entry point most of the library is unreachable.
 - **Channel wall** (`renderChannelWall`) — see below.
+
+### Categories
+
+Genre used to come only from TMDB, which meant the Movies shelves stayed empty until a
+few hundred lookups had come back. `INSTANT_CATEGORIES` reads what is already in hand —
+the collection a title came from, and the filename itself — so the shelves are populated
+on first paint:
+
+> Bollywood & Indian · Kung Fu & Martial Arts · Horror & Trash · Westerns · Film Noir &
+> Mystery · Sci-Fi & Space · Comic Books & Superheroes · Anime · Classic Cartoons ·
+> Family & Kids · Comedy Greats · Silent Era · War & History · World Cinema
+
+TMDB genres merge in as they arrive and fill the shelves no keyword can infer — Drama,
+Thriller, Romance. Measured against the live catalogue: 25 categories, 1,007 Bollywood
+titles, 605 comic-book films, 585 horror.
+
+Movies, TV Shows and Home share the same components: a **hero billboard** (backdrop art,
+rating, genre pills, synopsis, Play / More info), a **sticky category bar** that jumps to
+any shelf, **collection tiles** for the largest libraries, then the shelves. TV Shows uses
+a lower threshold — 120 box sets do not fill a shelf the way 11,000 films do.
+
+`placeholderPoster()` draws artwork for a title TMDB has not matched: a deterministic
+gradient keyed off the title with the title set on it, as an inline SVG. Before it, every
+unmatched vault title carried the same archive.org item thumbnail, so a shelf of Bollywood
+films was seven copies of one frame.
 
 ### The browse-all grid
 
@@ -319,6 +361,11 @@ where that applies.
 - **Don't cache media or playlists in the service worker.** They are large and they expire.
 - **Validate that a fetched playlist is actually a playlist.** A moved source returns a
   200 HTML error page, which otherwise renders as a silent, empty list.
+- **The neon accent is a fill, never a text colour.** `#8A2BE2` on the dark panels
+  measures 2.6:1. Each theme carries `darkText` and `lightAccent` alongside `primary`, and
+  `--accent-text` resolves to the readable one for the current mode.
+- **Don't rebuild a section to show it.** Panes and scroll positions are cheap; refetching
+  a catalogue and re-queuing a thousand lookups on every tab click is not.
 - **Configure Tailwind *after* the CDN script tag.** Setting `tailwind = { config: … }`
   beforehand is overwritten on load, silently falling back to `darkMode: 'media'` — every
   `dark:` utility then follows the visitor's OS instead of the site's own toggle, which
