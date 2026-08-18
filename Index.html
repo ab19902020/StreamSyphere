@@ -2579,17 +2579,42 @@ document.addEventListener('DOMContentLoaded', function() {
         if (typeof YT === 'undefined' || typeof YT.Player === 'undefined') window.addEventListener('youtube-api-ready', createPlayer, { once: true });
         else createPlayer();
     }
-    
+
+    /*
+     * What to play once the YouTube player exists.
+     *
+     * The first click on a YouTube item used to do nothing at all: the player was created
+     * empty and the video id thrown away, so it only played if you clicked a second time.
+     * The request is held here and applied in onReady instead.
+     */
+    let pendingYouTube = null;
+
     function createPlayer() {
         if (ytPlayer) return;
         ytPlayer = new YT.Player('youtube-player-div', {
             height: '100%', width: '100%',
             playerVars: { 'playsinline': 1, 'autoplay': 1, 'rel': 0, 'modestbranding': 1 },
             events: {
-                'onReady': () => elements.loadingOverlay.classList.add('hidden'),
+                'onReady': () => {
+                    elements.loadingOverlay.classList.add('hidden');
+                    if (pendingYouTube) { applyYouTube(pendingYouTube); pendingYouTube = null; }
+                },
                 'onStateChange': onPlayerStateChange
             }
         });
+    }
+
+    function applyYouTube(spec) {
+        if (spec.list) ytPlayer.loadPlaylist({ listType: 'playlist', list: spec.list, index: 0 });
+        else ytPlayer.loadVideoById(spec.video);
+    }
+
+    /** Play a single video, or a whole channel via its uploads playlist. */
+    function playYouTube(spec) {
+        activePlayer = 'youtube';
+        elements.youtubePlayerContainer.classList.remove('hidden');
+        if (ytPlayer && typeof ytPlayer.loadVideoById === 'function') applyYouTube(spec);
+        else { pendingYouTube = spec; initializeYouTubePlayer(); }
     }
 
     function onPlayerStateChange(event) {
@@ -4552,6 +4577,44 @@ document.addEventListener('DOMContentLoaded', function() {
     const SPORT_MATCH = /(\b(sport|nfl|nba|mlb|nhl|ufc|fifa|golf|tennis|rugby|cricket|soccer|football|boxing|ringside|wrestl|poker|racing|nascar|motorsport|motorvision|motortrend|olympic|athletic|surf|skateboard|bowling|darts|snooker|billiard|cycling|equestrian|fubo|dazn|swerve|combat|matchroom)|\b(bein|wwe|tna|speed|fight|fuel tv|formula 1|red bull)\b)/i;
     const NEWS_MATCH = /(\b(news|weather|bloomberg|cnbc|reuters|euronews|politics)|\b(cnn|msnbc|al jazeera|france 24|dw|c-span|cspan)\b)/i;
 
+    /*
+     * Official sports channels, played from each broadcaster's own YouTube channel.
+     *
+     * Sky Sports and TNT Sports have no free live feed — what they do have is a licensed,
+     * free, embeddable channel of highlights, analysis, press conferences and news, and
+     * that is what this is. Sky Sports News in particular is close to the linear channel's
+     * daily output.
+     *
+     * Every id below was resolved from the handle and then verified by loading the id back
+     * and checking the channel title. That check matters: scraping the first `channelId`
+     * on a channel page returns a *featured* channel, not the page owner, and the first
+     * pass produced six confident wrong answers — including a Tottenham handle that
+     * resolves to the San Antonio Spurs. One entry was dropped for exactly that reason.
+     *
+     * A channel plays as its uploads playlist (UU + the id without its UC), so it opens on
+     * the newest upload and runs on like a channel rather than stopping after one clip.
+     */
+    const SPORT_CHANNELS = [
+        { name: "Sky Sports", id: 'UCTU_wC79Dgi9rh4e9-baTqA', icon: '📺', art: "https://yt3.googleusercontent.com/pNdTb249ls8s1f41xPqWZ-m0d85mmasR3JypJ_vVDBiwjjZOzebP7jECCuwi11bb5zbVjodK4w=s400-c-k-c0x00ffffff-no-rj" },
+        { name: "Sky Sports News", id: 'UCcw05gGzjLIs5dnxGkQHMvw', icon: '📰', art: "https://yt3.googleusercontent.com/DoESxkAU4oFxt4j2Ge52qp-z8tTshio3hHk_s8JVGGWpHYftkXh0KW8alS9-pfQT-oA7KrNf4A=s400-c-k-c0x00ffffff-no-rj" },
+        { name: "Sky Sports F1", id: 'UC3kxJQ9RfaS5CKeYbbFMi4Q', icon: '🏎️', art: "https://yt3.googleusercontent.com/Xt_Cq5mjf9kPYOfJ9zfX-aAwKbK4rx4rSnKAhG6eF8pu6vo1Jw0ty7k8DbdQEOmt10uuufG6Bw=s400-c-k-c0x00ffffff-no-rj" },
+        { name: "Sky Sports Cricket", id: 'UCkd4takjjF1EGD1TKIK2QiA', icon: '🏏', art: "https://yt3.googleusercontent.com/NXcpeeoQF3y-XNYxw42xqikS7FJVC_fcP8FWHUBoL-PWhd6FCG9Jox60lPjZTTvpTzZxio76Og=s400-c-k-c0x00ffffff-no-rj" },
+        { name: "Sky Sports Golf", id: 'UCa98aY7eenHS_YhehF-vuEQ', icon: '⛳', art: "https://yt3.googleusercontent.com/M6IEcf2PDL9jTofwSW41WCqRkf8y1Th3rj5BdUwVHmKI2jEJWfSP0lOiC97KBvd60fgJOzfb=s400-c-k-c0x00ffffff-no-rj" },
+        { name: "TNT Sports", id: 'UClhp9g6TPiqCTOlcw0ROfNg', icon: '🥊', art: "https://yt3.googleusercontent.com/LsMejcvY6MC4kH5HASIlE5UEEmdszstpFHV8-8x9Hv1dzypYD2gvYKnyDxvUSA5xRnHwGtMRwg=s400-c-k-c0x00ffffff-no-rj" },
+        { name: "Premier League", id: 'UCG5qGWdu8nIRZqJ_GgDwQ-w', icon: '⚽', art: "https://yt3.googleusercontent.com/zhPMOpUIlmMa_xAgrHYGYrkCSWS-3tE0yPPKVUzh1iiYOF1QDqGtg3ZIbWXjkNmN3l3WPqziRHE=s400-c-k-c0x00ffffff-no-rj" },
+        { name: "EFL", id: 'UCkgm4b5n3QsMUgB9FjA8S2w', icon: '🏆', art: "https://yt3.googleusercontent.com/ytc/AIdro_mp_81erI-LoHjRpqhr8qlIHkcdD2t0s2EXFk67jlj0wk8iMF9MGqgjLhoIH9AQ-iU80Q=s400-c-k-c0x00ffffff-no-rj" },
+        { name: "BBC Sport", id: 'UCW6-BQWFA70Dyyc7ZpZ9Xlg', icon: '🇬🇧', art: "https://yt3.googleusercontent.com/7MVBSLQu23KEmav1jgqQkNSE-JsxRTqyfdKX_DVCl0oSAxALtPKwLhERmLOGgILKTjxdvcjD56k=s400-c-k-c0x00ffffff-no-rj" },
+        { name: "UEFA", id: 'UCyGa1YEx9ST66rYrJTGIKOw', icon: '🌍', art: "https://yt3.googleusercontent.com/ytc/AIdro_lzayaNdDoCV3pc6hhSYTsZWdZX4dPFU6IA8JliY0LgEeEo=s400-c-k-c0x00ffffff-no-rj" },
+        { name: "FIFA", id: 'UCpcTrCXblq78GZrTUTLWeBw', icon: '🏅', art: "https://yt3.googleusercontent.com/9UB1blxIJIz-OQmtHTsGEvYnMSYU3i77CRrYyD4EIA34kxseG0z5BYebP_P7KkWniL1W-7ZN=s400-c-k-c0x00ffffff-no-rj" },
+        { name: "DAZN Football", id: 'UCSZ21xyG8w_33KriMM69IxQ', icon: '⚽', art: "https://yt3.googleusercontent.com/YZITR3Ytb1lT_yV-eaAU-Yc6O6kcm3yvTan_uJRB0lHJm6zpzu3HYFhwhmSyse_tPpzyenUVFoc=s400-c-k-c0x00ffffff-no-rj" },
+        { name: "Arsenal", id: 'UCpryVRk_VDudG8SHXgWcG0w', icon: '🔴', art: "https://yt3.googleusercontent.com/by6tuBgH_ac4OG2mKjc-LLP25WmDjPn81i0XG1BpOvEZUmfMxPN2MgFRcmtAyl9nMfPY_LXgIOk=s400-c-k-c0x00ffffff-no-rj" },
+        { name: "Chelsea FC", id: 'UCU2PacFf99vhb3hNiYDmxww', icon: '🔵', art: "https://yt3.googleusercontent.com/0ZQXwM61r-mFLSrtqgPt2yzNJJwG60ycNUxYZG7gvovRtGZcKyej1_bCjscCQczTvidvtEuX=s400-c-k-c0x00ffffff-no-rj" },
+        { name: "Liverpool FC", id: 'UC9LQwHZoucFT94I2h6JOcjw', icon: '🔴', art: "https://yt3.googleusercontent.com/PKM1Q5b-5xSCNN-uhLBADnPMeweaERe-u9tk4D0Pehvw5HMIbul7JY_64JDzadUCigZTQK0iNQ=s400-c-k-c0x00ffffff-no-rj" },
+        { name: "Man City", id: 'UCkzCjdRMrW2vXLx8mvPVLdQ', icon: '🩵', art: "https://yt3.googleusercontent.com/d69oFqtdJbgwN6mZCV5bVITrhhoLS9p0a9Q9PuZ3vTySg2oeEJjyhUZ3G91GfktxdlmNT9Qhhw=s400-c-k-c0x00ffffff-no-rj" },
+        { name: "NBA", id: 'UCWJ2lWNubArHWmf3FIHbfcQ', icon: '🏀', art: "https://yt3.googleusercontent.com/eGmO8yk_eHvLzEywzlPwRV_-7RiDayDLeXWWBVExMLN4qXA7z7fD6ldPXatXZiQOvgW4--jzNA=s400-c-k-c0x00ffffff-no-rj" },
+        { name: "NFL", id: 'UCDVYQ4Zhbm3S2dlz7P1GBDg', icon: '🏈', art: "https://yt3.googleusercontent.com/mTNz2WARw0gLIz_BM5cuB6oRAQCTapuIwiiAAHd-IeWMCfE_zNcRVOXt4N6c4YxJbQ_kibWOFg=s400-c-k-c0x00ffffff-no-rj" }
+    ];
+
     /** Merge every network into one themed guide, grouped by which network carries it. */
     function openThemedWall(kind) {
         const spec = kind === 'news'
@@ -4560,8 +4623,27 @@ document.addEventListener('DOMContentLoaded', function() {
         renderChannelWall(spec.title, NETWORK_SOURCES, { match: spec.match, groupBySource: true });
     }
 
+    /** Cards for the official broadcaster channels, played as uploads playlists. */
+    function sportChannelCards() {
+        return SPORT_CHANNELS.map(c => ({
+            title: c.name,
+            url: `yt:list:UU${c.id.slice(2)}`,
+            logo: c.art,
+            group: 'Official channel',
+            isYouTube: true
+        }));
+    }
+
     async function renderLiveSection() {
         const host = sectionHost || document.getElementById('home-rows');
+
+        addRail({
+            title: '🏟️ Official sports channels',
+            subtitle: 'Sky Sports, TNT Sports, Premier League, BBC Sport, UEFA, FIFA, NBA, NFL — highlights, analysis and news, free from the broadcasters themselves',
+            channelStyle: true, live: true,
+            limit: 20,
+            loader: async () => sportChannelCards()
+        });
 
         addBrowseAllBar(host, {
             label: '⚽ Free sports, every network at once',
@@ -5838,7 +5920,9 @@ document.addEventListener('DOMContentLoaded', function() {
         elements.playerContainer?.classList.remove('idle-compact');
 
         currentlyPlayingUrl = url;
-        const videoId = extractVideoID(url);
+        // `yt:list:<playlist id>` plays a whole channel rather than one video.
+        const ytList = url.startsWith('yt:list:') ? url.slice('yt:list:'.length) : null;
+        const videoId = ytList ? null : extractVideoID(url);
         const isGame = url.includes('.html') || url.includes('playcanv.as') || url.includes('githack.com') || url.includes('hextris.io') || url.includes('itch.io');
         const isWebRTC = url.includes('whep') || url.startsWith('webrtc://') || url.includes('/whep/');
 
@@ -5859,7 +5943,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // rtmp/rtsp URL. Checked here rather than only at the click sites so every route
         // into the player gets the explanation instead of a spinner and a silent failure.
         // A proxy retry is exempt: routing through https is precisely the fix.
-        if (!isGame && !isWebRTC && !videoId && !isProxyRetry) {
+        if (!isGame && !isWebRTC && !videoId && !ytList && !isProxyRetry) {
             const blocker = (currentChannel && currentChannel.blocker) || browserBlocker(url);
             if (blocker) { showPlayerError(url, '', blocker); return; }
         }
@@ -5912,13 +5996,8 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
-        if (videoId) {
-            activePlayer = 'youtube';
-            elements.youtubePlayerContainer.classList.remove('hidden');
-            if (ytPlayer && typeof ytPlayer.loadVideoById === 'function') ytPlayer.loadVideoById(videoId);
-            else initializeYouTubePlayer();
-            return;
-        }
+        if (ytList) { playYouTube({ list: ytList }); return; }
+        if (videoId) { playYouTube({ video: videoId }); return; }
 
         elements.mainPlayer.classList.remove('hidden');
         let safeUrl = getPlayableUrl(url);
