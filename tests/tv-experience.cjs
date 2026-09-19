@@ -1,0 +1,127 @@
+/* Deterministic UI regression checks. Fixtures do not ship in the application. */
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const path = require('node:path');
+const http = require('node:http');
+const { chromium } = require('playwright');
+const root = path.resolve(__dirname, '..');
+const app = fs.readFileSync(path.join(root, 'Index.html'), 'utf8');
+const tailwind = process.env.TAILWIND_CDN_PATH && fs.readFileSync(process.env.TAILWIND_CDN_PATH, 'utf8');
+const channelName = i => i === 140 ? 'Blocked Channel' : `Test Channel ${String(i).padStart(3,'0')}`;
+const channels = '#EXTM3U\n' + Array.from({length:140},(_,i)=>`#EXTINF:-1 tvg-id="test${i+1}" group-title="${i%2 ? 'News' : 'Entertainment'}",${channelName(i+1)}\nhttps://fixture.example/channel${i+1}.${i===139?'mpd':'mp4'}`).join('\n');
+const movies = '#EXTM3U\n#EXTINF:-1,Archive Adventure (1950)\nhttps://archive.org/download/test-film/Archive%20Adventure.mp4\n#EXTINF:-1,Test Comedy (1960)\nhttps://archive.org/download/test-comedy/Test%20Comedy.mp4';
+const shows = '#EXTM3U\n#EXTINF:-1 group-title="Test Show",Test Show S01E01\nhttps://archive.org/download/test-show/Test%20Show%20S01E01.mp4';
+const svg = '<svg xmlns="http://www.w3.org/2000/svg" width="600" height="900"><rect width="600" height="900" fill="#23443f"/><circle cx="300" cy="380" r="190" fill="#30566c"/></svg>';
+let server,browser;
+(async()=>{
+ server = http.createServer((req,res)=>{res.setHeader('Content-Type','text/html');res.end(app);});
+ await new Promise(r=>server.listen(0,'127.0.0.1',r));
+ const launch = {headless:true,args:['--no-sandbox','--disable-dev-shm-usage']};
+ if(process.env.BROWSER_EXECUTABLE_PATH) launch.executablePath=process.env.BROWSER_EXECUTABLE_PATH;
+ browser=await chromium.launch(launch);
+ const context=await browser.newContext({viewport:{width:1440,height:1000},serviceWorkers:'block'});
+ const page=await context.newPage(); page.setDefaultTimeout(12000); const errors=[];
+ page.on('pageerror',e=>{errors.push(e.message);console.error('Browser error:',e.message);});
+ await page.addInitScript(()=>{localStorage.setItem('cookie_consent','accepted');localStorage.setItem('theme_override','dark');});
+ await page.route('**/*',async route=>{
+   const url=new URL(route.request().url());
+   if(url.hostname==='127.0.0.1') return route.continue();
+   const send=(body,contentType='application/json')=>route.fulfill({status:200,contentType,body:typeof body==='string'?body:JSON.stringify(body)});
+   if(url.hostname==='cdn.tailwindcss.com') return tailwind ? send(tailwind,'text/javascript') : route.continue();
+   if(url.pathname.endsWith('.m3u')) return send(url.pathname.endsWith('Movies.m3u')?movies:url.hostname==='raw.githubusercontent.com' && !url.pathname.includes('iptv-org')?shows:channels,'text/plain');
+   if(url.pathname.startsWith('/metadata/')) return send({metadata:{title:'Test collection'},files:[{name:'Archive Adventure (1950).mp4',format:'MPEG4',size:'200000000'},{name:'Second Film (1940).mp4',format:'MPEG4',size:'200000000'}]});
+   if(url.pathname.includes('advancedsearch')) {
+     const q=url.searchParams.get('q') || ''; if(q.includes('offline')) return route.fulfill({status:503,body:'offline'});
+     return send({response:{numFound:1,docs:[{identifier:'test-film',title:'Archive Adventure',year:1950,mediatype:'movies'}]}});
+   }
+   if(url.hostname==='api.themoviedb.org') {
+     const title=url.searchParams.get('query') || 'Archive Adventure';
+     return send({results:[{id:42,title,name:title,release_date:'1950-01-01',first_air_date:'1950-01-01',overview:'A test synopsis used only by the regression suite.',poster_path:'/test.jpg',backdrop_path:'/test.jpg',genre_ids:[12],vote_average:7.5,vote_count:500}]});
+   }
+   if(route.request().resourceType()==='image') return send(svg,'image/svg+xml');
+   if(route.request().resourceType()==='stylesheet') return send('','text/css');
+   if(route.request().resourceType()==='script') return send('','text/javascript');
+   return route.fulfill({status:204,body:''});
+ });
+ const url=`http://127.0.0.1:${server.address().port}/Index.html`;
+ await page.goto(url,{waitUntil:'domcontentloaded'});
+ await page.locator('.ss-shortcuts').waitFor();
+ assert.equal(await page.locator('#player-container').isVisible(),false,'Home starts with browsing, not an empty player');
+ assert.equal(await page.locator('#sidebar').evaluate(el=>el.inert),true,'Closed drawer is not keyboard-focusable');
+ await page.locator('#menu-toggle').click();
+ assert.equal(await page.locator('#sidebar').evaluate(el=>el.inert),false);
+ await page.locator('#close-sidebar-btn').click();
+ await page.locator('#top-playlist-bar [data-section=live]').click();
+ await page.locator('[data-uk]').click();
+ await page.waitForFunction(()=>document.querySelectorAll('.ss-guide-row').length===140);
+ const number90=await page.locator('.channel-row').filter({hasText:'Test Channel 090'}).locator('.ch-num').textContent();
+ const number2=await page.locator('.channel-row').filter({hasText:'Test Channel 002'}).locator('.ch-num').textContent();
+ const input=page.getByRole('searchbox',{name:'Search this channel guide'});
+ await input.fill('Test Channel 090');
+ await page.waitForFunction(()=>document.querySelectorAll('.ss-guide-row').length===1);
+ assert.equal(await page.locator('.ch-num').textContent(),number90,'Numbers survive filtering');
+ await page.locator('.ss-save-channel').click();
+ assert.equal(await page.locator('.ss-save-channel').getAttribute('aria-pressed'),'true');
+ await input.fill(''); await page.locator('[data-favourites]').check();
+ await page.waitForFunction(()=>document.querySelectorAll('.ss-guide-row').length===1);
+ await page.locator('[data-favourites]').uncheck();
+ // Several paints overlap requestAnimationFrame chunks; only the last may remain.
+ await input.fill('Test'); await input.fill('Test Channel 002');
+ await page.waitForTimeout(150);
+ assert.equal(await page.locator('.ss-guide-row').count(),1,'Old render chunks cannot append stale rows');
+ assert.equal(await page.locator('.ch-num').textContent(),number2);
+ await input.fill('Blocked'); await page.locator('.channel-row').click();
+ await page.locator('#loading-text').filter({hasText:'DRM stream'}).waitFor();
+ assert.equal(await page.locator('#player-container').isVisible(),true,'Blocked-source explanation remains visible');
+ await page.locator('#ss-stop').click();
+ assert.equal(await page.locator('#player-container').isVisible(),false);
+ await page.locator('#open-search-btn').click();
+ await page.locator('#global-search-input').fill('Test Channel 090');
+ await page.locator('#ss-search-tabs').getByRole('button',{name:'Live channels',exact:true}).click();
+ await page.locator('#global-search-results .poster-card').first().waitFor();
+ assert.equal(await page.locator('#global-search-results .poster-card').count(),1);
+ await page.locator('#global-search-input').press('Escape');
+ assert.equal(await page.locator('#global-search-modal').isVisible(),false,'Escape works from the input');
+ await page.locator('#open-search-btn').click();
+ await page.locator('#ss-search-tabs').getByRole('button',{name:'Movies',exact:true}).click();
+ await page.locator('#global-search-input').fill('Archive Adventure');
+ await page.locator('#global-search-results .poster-card').first().click();
+ await page.locator('#detail-modal').waitFor();
+ assert.equal(await page.locator('#global-search-modal').isVisible(),false,'Details replace search rather than hiding underneath it');
+ await page.locator('#detail-fav').click();
+ await page.locator('#detail-play').click();
+ await page.waitForFunction(()=>document.querySelector('#main-player').getAttribute('src')?.includes('archive.org/download/'));
+ await page.locator('#ss-stop').click();
+ assert.equal(await page.locator('#main-player').getAttribute('src'),null,'Closing the player releases media');
+ await page.locator('#top-playlist-bar [data-section=mine]').click();
+ await page.locator('.section-pane[data-section=mine] .poster-card').first().waitFor();
+ assert.ok((await page.locator('.section-pane[data-section=mine]').last().textContent()).includes('Archive Adventure'));
+ await page.locator('#open-search-btn').click();
+ await page.locator('#ss-search-tabs').getByRole('button',{name:'TV shows',exact:true}).click();
+ await page.locator('#global-search-input').fill('Fawlty');
+ await page.locator('#global-search-results .poster-card').first().click();
+ assert.equal(await page.locator('#detail-play').textContent(),'Choose an episode');
+ await page.locator('#detail-play').click();
+ assert.equal(await page.locator('#sidebar').evaluate(el=>el.inert),false,'Box sets open episode selection');
+ await page.locator('#close-sidebar-btn').click();
+ // Home's network shelf must survive navigation and a rebuild after interrupted loads.
+ await page.locator('#ss-home').click();
+ await page.locator('#network-shelf').waitFor();
+ assert.equal(await page.locator('#network-shelf').count(),1);
+ await page.locator('#theme-toggle-btn').click();
+ assert.equal(await page.locator('html').getAttribute('class'),'light');
+ await page.locator('#theme-toggle-btn').click();
+ for(const width of [390,320,768,1440]) {
+   await page.setViewportSize({width,height:844});await page.waitForTimeout(100);
+   const geometry=await page.evaluate(()=>({page:document.documentElement.scrollWidth,viewport:innerWidth,main:document.querySelector('#main-view').clientWidth}));
+   assert.ok(geometry.page<=width,`No horizontal page overflow at ${width}px`);
+   assert.ok(geometry.main>width*.8,'Source drawer does not shrink browsing');
+ }
+ await page.setViewportSize({width:390,height:844});
+ await page.locator('#ss-mobile-nav').getByRole('button',{name:'Live TV',exact:true}).click();
+ await page.locator('[data-uk]').click();
+ await page.getByRole('searchbox',{name:'Search this channel guide'}).waitFor();
+ assert.equal(await page.locator('#ss-mobile-nav').getByRole('button',{name:'Live TV',exact:true}).getAttribute('aria-current'),'page');
+ assert.deepEqual(errors,[],'No uncaught browser errors');
+ console.log('PASS: Home, drawer, guide search/filter/favourites, stable numbering, render races, blocked-source UI, search scopes/Escape, detail handoff, playback cleanup, My List, episodes, theme, and 320/390/768/1440px layout.');
+})().catch(e=>{console.error(e);process.exitCode=1;}).finally(async()=>{if(browser)await browser.close();if(server)await new Promise(r=>server.close(r));});

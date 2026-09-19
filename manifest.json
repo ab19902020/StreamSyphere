@@ -1,14 +1,17 @@
 {
-  "name": "Streams Sphere",
-  "short_name": "Streams",
+  "name": "StreamSphere TV",
+  "short_name": "StreamSphere",
   "description": "Free public-domain films, classic TV and live IPTV channels in one browser player.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
   "orientation": "any",
-  "background_color": "#05050a",
-  "theme_color": "#8A2BE2",
-  "categories": ["entertainment", "video"],
+  "background_color": "#090d17",
+  "theme_color": "#090d17",
+  "categories": [
+    "entertainment",
+    "video"
+  ],
   "icons": [
     {
       "src": "https://images.weserv.nl/?url=iili.io/Fg2td42.png&w=192&h=192&fit=contain&output=png",

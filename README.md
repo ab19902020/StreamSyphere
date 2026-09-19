@@ -5,6 +5,10 @@ instant-play arcade games, running entirely in the browser with no backend.
 
 **Live:** https://streamssphere.tv/
 
+## TV experience refresh
+
+The latest interface puts discovery first: a cinematic Home screen, a searchable channel guide, visual search across movies/shows/live TV, and a mobile navigation bar. The player opens on selection; the source browser is now a drawer. See [the design concepts, changes and validation](docs/tv-experience.md).
+
 ## Files
 
 | File | Purpose |
