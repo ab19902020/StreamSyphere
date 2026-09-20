@@ -4,7 +4,7 @@ The supplied “Option 5 — Discovery Hub” image is the visual reference for 
 
 ## Desktop and mobile
 
-- Desktop has a single compact header with the StreamSphere swirl mark, primary destinations, search, Cast and Settings. A permanent discovery sidebar leads to Home, Discover, Movies, TV Shows, Live TV, Collections and My List.
+- Desktop has a single compact header with the StreamSphere swirl mark, primary destinations, search, Cast and Settings. A permanent discovery sidebar leads to Home, Discover, Top rated, Newest films, Genres, Collections and My List, with TV Shows and country browsing below.
 - The featured carousel uses real catalogue artwork, title metadata, Watch now, My List, details, previous/next controls and labelled selection dots. It does not advance automatically.
 - Six portrait posters fit across the desktop content area, with restrained titles, metadata and shelf controls. Wide monitors show eight.
 - Mobile has category chips, a portrait feature card, compact swipeable poster rows and persistent Home / Discover / My List / Live TV / Settings navigation.
@@ -53,3 +53,17 @@ The screenshots show the actual page and existing catalogue artwork. Empty watch
 ![Mobile Home](home-mobile.png)
 
 ![Live TV](live-tv-desktop.png)
+
+## Country browsing and continuous series playback
+
+Live TV opens with country discovery. Search all countries, filter by continent, or switch to categories, networks, languages and saved channels. Each country guide has a country selector, category filters, search, stable channel numbering and favourites. Returning from a guide restores the country search.
+
+The player keeps an independent series context for Archive box sets and M3U series. Every available episode remains accessible below the player, with season selection, episode search, a current-episode marker and Previous/Next controls. Episodes sort numerically; Next crosses season boundaries and playback advances on completion. Browsing another catalogue no longer changes the playing series. Duplicate Archive video encodes collapse to one episode. Saved episode history reloads its series context when necessary. Availability follows the existing sources; the interface does not claim absent episodes are playable.
+
+The reference revision uses a single-scene feature, compact artwork tiles with embedded titles, and tighter desktop/mobile spacing.
+
+![Mobile country browser](live-tv-mobile.png)
+![Series episodes on desktop](series-episodes-desktop.png)
+![Series episodes on mobile](series-episodes-mobile.png)
+
+Regression coverage includes country switching and category filtering within a country, duplicate Archive encodes, numeric episode ordering, season boundaries, auto-next, and maintaining the playing series after browsing a live lineup. External feeds are mocked for deterministic interaction checks; screenshots use the existing live catalogue.
