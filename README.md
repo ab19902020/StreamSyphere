@@ -5,11 +5,16 @@ instant-play arcade games, running entirely in the browser with no backend.
 
 **Live:** https://streamssphere.tv/
 
+## Discovery Hub
+
+The interface follows the supplied Discovery Hub reference: near-black and violet styling, a cinematic featured carousel, desktop discovery sidebar, compact poster shelves, and mobile category chips and bottom navigation. Real catalogue artwork loads immediately, and Continue Watching shows saved progress. The player opens on selection; source browsing remains a drawer. See [the implemented design, screenshots and validation](docs/tv-experience.md).
+
 ## Files
 
 | File | Purpose |
 | --- | --- |
 | `Index.html` | The whole application — markup, styles and logic in one file. |
+| `assets/` | Bundled catalogue artwork and locally served fonts, with provenance and licences. |
 | `manifest.json` | PWA manifest (installable app, icons, theme). |
 | `sw.js` | Service worker. Network-first for the app shell, never caches media or playlists. |
 | `robots.txt`, `sitemap.xml` | Search engine directives. |
@@ -17,7 +22,7 @@ instant-play arcade games, running entirely in the browser with no backend.
 
 ## Where the content comes from
 
-Nothing is hosted here. Every title is fetched at runtime from a third-party source.
+Video streams come from third-party sources. Home includes a small first-paint catalogue snapshot that is reconciled with the live playlist; the full catalogue continues to load at runtime.
 
 archive.org sends `Access-Control-Allow-Origin: *` and supports HTTP range requests, so
 its files stream natively in `<video>` with no proxy involved. All archive.org calls go

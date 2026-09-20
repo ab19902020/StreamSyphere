@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <!-- ==================== SEO ==================== -->
-    <title>Streams Sphere | Free Movies, Live TV & Public-Domain Cinema</title>
+    <title>StreamSphere TV | Free Movies, Live TV & Public-Domain Cinema</title>
     <meta name="description" content="Watch thousands of free public-domain films, classic TV and live IPTV channels in your browser. No sign-up, no app — Pluto TV, Samsung TV Plus, Tubi, Xumo and the Internet Archive in one player.">
     <meta name="keywords" content="free movies, public domain films, free live tv, iptv player, pluto tv, samsung tv plus, tubi, xumo, internet archive movies, watch free tv online">
     <meta name="author" content="Streams Sphere">
@@ -103,13 +103,12 @@
     <script src="https://cdn.jsdelivr.net/npm/hls.js@1.6.18/dist/hls.min.js"></script>
 
     <!-- Warm up the connections the first render actually depends on. -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" href="assets/fonts/dm-sans-latin.woff" as="font" type="font/woff" crossorigin>
+    <link rel="preload" href="assets/fonts/manrope-latin.woff" as="font" type="font/woff" crossorigin>
     <link rel="preconnect" href="https://images.weserv.nl">
     <link rel="dns-prefetch" href="https://archive.org">
     <link rel="dns-prefetch" href="https://iptv-org.github.io">
     <link rel="dns-prefetch" href="https://raw.githubusercontent.com">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
 
     <!-- Cast and the YouTube iframe API are only needed after the first interaction. -->
     <script defer src="https://www.youtube.com/iframe_api"></script>
@@ -121,7 +120,7 @@
       gtag('js', new Date());
       gtag('config', 'G-ELEK5MC4D5');
     </script>
-    <meta name="theme-color" content="#8A2BE2">
+    <meta name="theme-color" content="#060910">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -205,7 +204,7 @@
 
         html, body { overflow: hidden; height: 100%; transition: background-color 0.5s ease; }
         body {
-            font-family: 'Poppins', sans-serif;
+            font-family: 'DM Sans', sans-serif;
             background: linear-gradient(135deg, var(--grad-1), var(--grad-2), var(--grad-3), var(--grad-4));
             color: var(--text-color);
             background-size: 400% 400%;
@@ -246,7 +245,7 @@
         }
         #player-container:fullscreen { height: 100% !important; max-height: none !important; aspect-ratio: auto !important; }
         .header-title {
-            font-family: 'Orbitron', sans-serif;
+            font-family: 'Manrope', sans-serif;
             font-weight: 700;
             text-shadow: 0 0 15px var(--accent-glow);
             letter-spacing: 1px;
@@ -427,7 +426,7 @@
         .color-preview { width: 30px; height: 30px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; transition: transform 0.2s; }
         .color-preview:hover { transform: scale(1.1); border-color: var(--text-color); }
         #game-player { width: 100%; height: 100%; min-height: 75vh; }
-        #quality-selector, #latency-badge { font-family: 'Poppins', sans-serif; }
+        #quality-selector, #latency-badge { font-family: 'DM Sans', sans-serif; }
 
         /* ---- Loading skeletons: show the shape of the content before it lands ---- */
         .skeleton {
@@ -859,6 +858,85 @@
             body { animation: none; }
             .animate-cascade { opacity: 1; }
         }
+
+
+        @font-face { font-family:'DM Sans'; font-style:normal; font-weight:400 800; font-display:swap; src:url('assets/fonts/dm-sans-latin.woff') format('woff'); }
+        @font-face { font-family:'Manrope'; font-style:normal; font-weight:400 800; font-display:swap; src:url('assets/fonts/manrope-latin.woff') format('woff'); }
+        /* Discovery Hub — reference-led desktop and mobile television shell. */
+        :root { --bg-color:#060910; --glass-bg:#0e131f; --text-color:#f5f5fc; --text-muted:#979bac; --border-color:#ffffff0e; --chip-bg:#151a28; --nav-veil:#060910f5; }
+        html.light { --bg-color:#edf0f8; --glass-bg:#fff; --text-color:#17162b; --text-muted:#55596e; --border-color:#25194a20; --chip-bg:#e2e3ef; --nav-veil:#edf0f8f5; }
+        body { font-family:'DM Sans',sans-serif; background:var(--bg-color); animation:none; }
+        .header-title,.rail-title { text-shadow:none; font-family:'Manrope',sans-serif; letter-spacing:-.025em!important; }
+        button,input,select { font:inherit; } button,a,input,select,[tabindex] { -webkit-tap-highlight-color:transparent; }
+        :focus-visible { outline:2px solid var(--accent-text)!important; outline-offset:4px; }
+        header { height:76px; padding:0 28px!important; background:var(--bg-color); border-bottom:1px solid var(--border-color); gap:30px; }
+        .ss-brand { display:flex; align-items:center; gap:9px; border:0; background:none; color:var(--text-color); white-space:nowrap; }
+        .ss-mark { display:block; width:35px; height:39px; flex-shrink:0; filter:drop-shadow(0 0 12px #6b43ff25); }.ss-mark svg { width:100%; height:100%; }
+        .ss-wordmark { font-family:'Manrope',sans-serif; font-size:21px; font-weight:800; letter-spacing:-.9px; }.ss-wordmark small { display:none; }
+        .ss-header-tools { flex:1; justify-content:flex-end; min-width:0; gap:12px; }.ss-header-tools>* { margin:0!important; }
+        header .custom-btn { background:transparent; border:0; border-radius:8px; box-shadow:none; height:36px; padding:9px; color:var(--text-muted); }
+        #open-search-btn { flex:1; max-width:390px; min-width:100px; justify-content:flex-start; background:var(--chip-bg); border:1px solid #ffffff09; border-radius:24px; color:var(--text-muted); padding:9px 14px; gap:8px; }
+        #open-search-btn span { font-size:11px; font-weight:400; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; } #open-search-btn svg { flex-shrink:0; color:var(--text-muted); }
+        #open-search-btn kbd { margin-left:auto; border:1px solid #8f7fc04a; border-radius:50%; width:17px; height:17px; display:grid; place-items:center; color:#a895dc; font:10px inherit; }
+        #settings-btn svg { width:18px; height:18px; flex-shrink:0; } #settings-btn { flex-shrink:0; border:1px solid #a387ff69; border-radius:50%; width:36px; background:linear-gradient(145deg,#b3a0ff24,#433380); color:#ded4ff; }
+        #games-pin-btn,#theme-toggle-btn,#menu-toggle { display:none!important; } #close-sidebar-btn { display:flex!important; }
+        #pip-btn,#fullscreen-btn { display:none; } body.is-playing #pip-btn,body.is-playing #fullscreen-btn { display:flex; }
+        #top-playlist-bar { width:auto; height:76px; padding:0!important; gap:23px; background:transparent; border:0; box-shadow:none; overflow:visible; }
+        #top-playlist-bar>* { margin:0!important; }.section-tab { height:76px; position:relative; padding:0; border:0; border-radius:0; background:none; box-shadow:none; color:var(--text-muted); font-size:11px; font-weight:600; white-space:nowrap; }
+        .section-tab svg { display:none; }.section-tab.active { background:none; color:var(--text-color); box-shadow:none; }.section-tab.active::after { content:''; position:absolute; bottom:20px; left:0; right:0; height:2px; border-radius:2px; background:var(--accent-solid); box-shadow:0 0 9px var(--accent-glow); }
+        #top-playlist-bar [data-section=kids] { display:none; }
+        #discovery-sidebar { display:flex; flex-direction:column; width:190px; flex:0 0 190px; padding:26px 13px 22px; border-right:1px solid var(--border-color); background:var(--bg-color); overflow-y:auto; scrollbar-width:none; }
+        .ss-side-links { display:flex; flex-direction:column; gap:6px; }.ss-side-links button { display:flex; align-items:center; text-align:left; position:relative; gap:13px; width:100%; min-height:44px; padding:11px 14px; border-radius:7px; color:var(--text-muted); font-size:11px; font-weight:500; }
+        .ss-side-links svg { width:18px; height:18px; flex-shrink:0; }.ss-side-links button:hover { color:var(--text-color); background:var(--chip-bg); }.ss-side-links button[aria-current=page] { color:#e6ddff; background:linear-gradient(90deg,#55439354,#30285125); }.ss-side-links button[aria-current=page]::before { content:''; position:absolute; left:-13px; top:7px; bottom:7px; width:3px; background:#ac86ff; box-shadow:0 0 15px #a575ff; }.ss-side-links button[aria-current=page] svg { color:#b99aff; filter:drop-shadow(0 0 6px #9667ff88); }
+        .ss-side-label { margin:23px 14px 12px; padding-top:20px; border-top:1px solid var(--border-color); font-size:10px; color:var(--text-color); font-weight:600; }
+        .ss-side-promo { margin:28px 6px 0; padding:20px 13px 14px; border-radius:11px; background:radial-gradient(ellipse at top left,#6541d845,transparent 75%),#111122; border:1px solid #a987ff18; }
+        .ss-side-promo svg { width:33px; height:33px; color:#bba2ff; margin-bottom:14px; }.ss-side-promo strong { color:#eee8ff; font-size:12px; line-height:1.5; display:block; }.ss-side-promo p { font-size:10px; color:#a7a0bd; line-height:1.6; margin:8px 0 14px; }.ss-side-promo button { padding:10px 8px; width:100%; border-radius:5px; background:linear-gradient(110deg,#7950ff,#5032ed); color:white; font-size:10px; }
+        #sidebar { position:absolute; width:340px; max-width:90vw; top:0; bottom:0; z-index:60; transform:translateX(-105%)!important; box-shadow:20px 0 80px #0007; transition:transform .2s; }
+        #sidebar:not(.-translate-x-full) { transform:translateX(0)!important; } #mobile-overlay { z-index:55; } #mobile-overlay:not(.hidden) { display:block!important; }
+        #main-view { min-width:0; padding:0 28px 50px!important; display:flex; gap:0; background:var(--bg-color); } #main-view>* { flex-shrink:0; }
+        #player-container.idle-compact,#player-container.idle-compact+#now-playing-info { display:none; } #player-container { max-width:1100px; align-self:center; margin-top:20px; box-shadow:none; } #now-playing-info { margin:14px 0 28px; background:var(--glass-bg); box-shadow:none; }
+        #home-rows { margin:0; order:2; } #network-shelf { order:3; margin:30px 0; } #continue-watching-container { order:1; margin:24px 0 0; } #arcade-banner { display:none; } #featured-container { order:4; }
+        .ss-sponsored { order:6; margin:35px 0 0!important; padding:0!important; background:none!important; border:1px solid var(--border-color); border-radius:9px; box-shadow:none!important; opacity:.8; }.ss-sponsored>div { padding:16px!important; }.ss-sponsored>div>div:first-child { width:42px; height:42px; }.ss-sponsored h3 { font-size:14px; }.ss-sponsored p { font-size:11px; }
+        .hero { position:relative; isolation:isolate; display:flex; align-items:center; min-height:438px; border:0; border-radius:0; background:#080d19; overflow:hidden; margin:0 -12px 0; }
+        .hero-art { width:100%; height:100%; object-fit:cover; object-position:70% 35%; opacity:1; }
+        .hero::after { z-index:-1; background:linear-gradient(90deg,#060910f5 0%,#060910bd 29%,#06091008 75%),linear-gradient(0deg,#060910 0%,transparent 40%,#06091018 100%); }
+        .hero-art { z-index:-2; }.hero-body { max-width:640px; padding:42px 32px 76px!important; color:white; }
+        .hero-eyebrow { display:flex; align-items:center; gap:8px; color:#bb9fff; font-size:9px; letter-spacing:.2em; font-weight:700; text-transform:uppercase; }.hero-eyebrow::before { content:''; width:4px; height:13px; border-radius:2px; background:#9364ff; box-shadow:0 0 12px #9161ff; }
+        .hero-title { font-family:'Manrope',sans-serif; color:#fff; font-size:clamp(34px,3.6vw,52px); line-height:1.14; letter-spacing:.13em!important; text-transform:uppercase; margin:18px 0 20px; font-weight:500; text-wrap:balance; overflow-wrap:anywhere; text-shadow:0 2px 20px #0009; }
+        .hero-meta { color:#d2d4df; font-size:10px; gap:0; }.hero-meta .pill { border:0; padding:0; border-radius:0; background:transparent; color:inherit; font-weight:400; }.hero-meta .pill+.pill::before { content:'·'; margin:0 9px; color:#7f8495; }
+        .hero-overview { color:#c9cbd5; max-width:440px; font-size:12px; line-height:1.7; margin-top:15px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+        .hero-actions { margin-top:21px; gap:12px; align-items:center; }.hero-btn { height:44px; display:inline-flex; align-items:center; justify-content:center; gap:10px; border-radius:5px; padding:12px 22px; text-transform:none; letter-spacing:0; font-size:12px; font-weight:600; }.hero-btn svg { width:16px; height:16px; }.hero-btn.primary { background:linear-gradient(110deg,#7951ff,#5033f3); color:#fff; box-shadow:0 4px 25px #5839ff26; }.hero-btn.ghost { color:#efedf7; background:#252b3aaf; border-color:#b4b8d11a; }.hero-btn[data-info] { padding:10px; width:39px; height:39px; border-radius:50%; min-width:0; }
+        .hero-pagination { position:absolute; bottom:24px; left:50%; transform:translateX(-50%); display:flex; gap:2px; }.hero-dot { display:grid; place-items:center; width:19px; height:26px; }.hero-dot::after { content:''; width:5px; height:5px; border-radius:50%; background:#ffffff4a; }.hero-dot[aria-pressed=true]::after { background:white; box-shadow:0 0 6px #fff7; }.hero-controls { position:absolute; right:25px; bottom:24px; display:flex; gap:9px; }.hero-controls button { width:32px; height:32px; display:grid; place-items:center; border:1px solid #c4c8e447; border-radius:50%; background:#080d1780; color:#d8dcea; font-size:25px; line-height:1; }
+        .discovery-rail { margin-top:23px; padding:0; }.rail-head { margin-bottom:12px; gap:10px; }.rail-title { font-size:17px!important; font-weight:600; }.rail-subtitle { display:none; }.rail-more { text-transform:none; letter-spacing:0; color:var(--text-muted); font-size:10px; margin-right:79px; }.rail-more::after { content:' ›'; font-size:14px; margin-left:3px; }
+        .rail { gap:14px; padding:3px 0 7px; scroll-padding:2px; }.poster-card { width:calc((100% - 70px)/6); flex-shrink:0; border-radius:6px; background:none; border:0; box-shadow:none; transition:transform .2s; }.poster-card:hover,.poster-card:focus-visible { transform:translateY(-3px); box-shadow:none; }.poster-art { border-radius:6px; border:1px solid #ffffff12; object-fit:cover; }.poster-meta { padding:9px 2px 2px; }.poster-name { font-size:11px; font-weight:500; }.poster-sub { font-size:9px; margin-top:3px; color:var(--text-muted); }.poster-badge { display:none; }.poster-live { background:#653bfa; color:white; border-radius:4px; box-shadow:none; top:9px; left:9px; font-size:8px; }
+        .rail-arrow { opacity:1; top:-41px; bottom:auto; width:27px; height:27px; border-radius:50%; border:1px solid #ffffff28; background:var(--chip-bg)!important; color:var(--text-muted); font-size:24px; transform:none; }.rail-arrow:disabled { opacity:.3; cursor:default; }.rail-arrow.right { right:0; }.rail-arrow.left { left:auto; right:36px; }
+        .channel-card { width:calc((100% - 56px)/5); }.channel-art-label { position:absolute; top:0; left:0; right:0; height:108px; display:flex; align-items:center; justify-content:center; padding:22px; border:1px solid var(--border-color); border-radius:6px; background:var(--glass-bg); color:var(--text-color); font:600 17px Manrope,sans-serif; text-align:center; }.channel-card .poster-art { position:relative; opacity:0; }.channel-card.art-ready .poster-art { opacity:1; }.channel-card .poster-art { background:var(--glass-bg); padding:25px; height:108px; border-color:var(--border-color); }
+        .network-tile { min-width:145px; min-height:84px; background:var(--glass-bg); box-shadow:none; border:1px solid var(--border-color); border-radius:7px; align-items:flex-start; padding:17px; }.network-tile>span:first-child { display:none; }.network-tile .net-name { font:600 16px 'Manrope',sans-serif; letter-spacing:-.4px; }.network-tile .net-sub { margin-top:7px; font-size:9px; }
+        #continue-watching-container h3 { font-size:17px; font-weight:600; margin-bottom:12px; } #continue-watching-container h3 svg { display:none; } #history-grid { display:flex; overflow-x:auto; gap:14px; scrollbar-width:none; padding-bottom:4px; }
+        .continue-card { flex:0 0 calc((100% - 42px)/4); aspect-ratio:16/9; min-width:0; border:1px solid var(--border-color); border-radius:6px; position:relative; overflow:hidden; background:#151922; text-align:left; color:white; }.continue-card img { width:100%; height:100%; object-fit:cover; }.continue-caption { position:absolute; bottom:0; left:0; right:0; padding:35px 11px 11px; background:linear-gradient(transparent,#080a12f5); }.continue-caption strong { display:block; font-size:11px; max-width:85%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-weight:500; }.continue-caption small { font-size:9px; color:#b1adbf; }.continue-play { position:absolute; right:9px; bottom:18px; width:25px; height:25px; background:#ffffff2b; border-radius:50%; display:grid; place-items:center; font-size:11px; }.continue-progress { position:absolute; bottom:0; left:6px; right:6px; height:3px; background:#ffffff29; }.continue-progress span { display:block; height:100%; background:#a77cff; border-radius:3px; }
+        .filter-chip { padding:8px 13px; font-size:11px; border-radius:6px; font-weight:500; }.filter-chip.active { box-shadow:none; }.browse-all-bar { padding:17px; box-shadow:none; border-radius:9px; }.cat-nav { padding:15px 0; }
+        .ss-guide-top { display:flex; justify-content:space-between; gap:20px; align-items:center; margin:28px 0 24px; }.ss-guide-top h1 { font:700 34px 'Manrope',sans-serif; letter-spacing:-1.2px; }.ss-guide-top p { color:var(--text-muted); font-size:12px; margin-top:7px; }.ss-guide-launch { display:grid; grid-template-columns:1.6fr 1fr 1fr; gap:14px; margin-bottom:28px; }.ss-guide-launch button { text-align:left; padding:25px; border-radius:10px; background:var(--glass-bg); border:1px solid var(--border-color); }.ss-guide-launch button:first-child { background:linear-gradient(120deg,#30224f,#151a38); color:#f5eeff; }.ss-guide-launch button:hover { border-color:var(--accent-text); }.ss-guide-launch strong { display:block; font-size:20px; margin:16px 0 6px; }.ss-guide-launch small { color:var(--text-muted); font-size:12px; }.ss-kicker { color:var(--accent-text); font-size:9px; letter-spacing:1.8px; font-weight:700; text-transform:uppercase; }
+        .ss-tools { display:flex; flex-wrap:wrap; gap:12px; align-items:center; margin:15px 0; }.ss-tools input { flex:1; min-width:180px; padding:12px 15px; border-radius:8px; }.ss-tools select { padding:12px; max-width:200px; }.ss-tools label { display:flex; align-items:center; gap:8px; font-size:12px; color:var(--text-muted); }.ss-tools label input { flex:0 0 16px; width:16px; height:16px; padding:0; min-width:0; accent-color:var(--accent-solid); }
+        .channel-wall { grid-template-columns:1fr!important; gap:0; border:1px solid var(--border-color); border-radius:10px; padding:0!important; overflow:hidden; margin:0 8px 25px; }.ss-guide-row { display:flex; border-bottom:1px solid var(--border-color); background:var(--glass-bg); }.ss-guide-row:last-child { border-bottom:0; }.channel-row { border:0; border-radius:0; background:transparent; padding:17px 20px; gap:22px; min-height:78px; }.channel-row:hover { transform:none; box-shadow:none; background:var(--row-hover); }.ch-logo { width:80px; flex-basis:80px; height:40px; background:none; }.ch-name { font-size:14px; }.ch-group { margin-top:4px; font-size:10px; }.ch-live { opacity:1; background:#9576ff14; color:var(--accent-text); padding:7px 12px; font-size:9px; }.ss-save-channel { min-width:60px; color:var(--text-muted); font-size:22px; }.ss-save-channel[aria-pressed=true] { color:var(--accent-text); }.ss-guide-note { padding:12px 0 18px; color:var(--text-muted); font-size:12px; }.ss-empty { grid-column:1/-1; padding:45px 20px; text-align:center; color:var(--text-muted); }
+        #global-search-modal-content { max-width:1050px; height:88vh; border-radius:14px; background:var(--bg-color); }.ss-search-tabs { display:flex; gap:8px; padding:16px 22px; border-bottom:1px solid var(--border-color); overflow-x:auto; }.ss-search-hint { max-width:540px; margin:55px auto; text-align:center; }.ss-search-hint h2 { color:var(--text-color); font:700 30px 'Manrope',sans-serif; margin-bottom:13px; }.ss-search-hint p { color:var(--text-muted); font-size:14px; line-height:1.7; }.ss-search-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(145px,1fr)); gap:20px; margin-top:20px; }.ss-search-grid .poster-card { width:100%; }.ss-search-label { font-size:12px; color:var(--text-muted); margin-top:10px; }
+        .ss-mobile-nav { display:none; }.ss-stop { font-size:12px; padding:9px 12px; white-space:nowrap; }.ss-playback-tools { display:none; } #settings-modal,#add-playlist-modal { z-index:180; } #toast-container { bottom:85px; }
+        html.light .ss-side-links button[aria-current=page] { color:#4c288e; } html.light .header-title { text-shadow:none; } html.light .hero { border-radius:0 0 9px 9px; }
+        @media(min-width:1650px) { #main-view { padding-left:40px!important; padding-right:40px!important; }.hero { min-height:490px; }.poster-card { width:calc((100% - 98px)/8); }.channel-card { width:calc((100% - 70px)/6); } }
+        @media(max-width:1190px) { header { gap:20px; padding:0 20px!important; }.ss-wordmark { font-size:18px; }#top-playlist-bar { gap:18px; }#open-search-btn span { max-width:155px; }#open-search-btn kbd { display:none; }#discovery-sidebar { width:166px; flex-basis:166px; }#main-view { padding-left:22px!important; padding-right:22px!important; }.poster-card { width:calc((100% - 56px)/5); }.channel-card { width:calc((100% - 42px)/4); } }
+        @media(max-width:960px) { #discovery-sidebar { display:none; }header { flex-wrap:wrap; height:auto; min-height:116px; row-gap:0; padding:12px 24px 0!important; }header>div:first-child { flex:1; }.ss-header-tools { flex:0 0 auto; }#top-playlist-bar { order:3; width:100%; height:47px; gap:25px; }.section-tab { height:47px; }.section-tab.active::after { bottom:6px; }#open-search-btn { min-width:0; background:none; border:0; }#open-search-btn span { display:none; }#menu-toggle { display:flex!important; }#main-view { padding-bottom:90px!important; }.hero { min-height:400px; }.hero-body { max-width:580px; } }
+        @media(max-width:600px) {
+          header { min-height:108px; padding:11px 17px 0!important; gap:0; }.ss-brand { gap:6px; }.ss-mark { width:27px; height:31px; }.ss-wordmark { font-size:19px; letter-spacing:-.7px; }header>div:first-child { gap:0; }#menu-toggle { display:none!important; }.ss-header-tools { gap:9px; }header #cast-btn,header #cast-btn+div { display:none; }#settings-btn { height:31px; width:31px; padding:7px; }#open-search-btn { width:32px; height:34px; padding:7px; }#open-search-btn svg { width:20px; height:20px; }body.is-playing #pip-btn,body.is-playing #fullscreen-btn { display:none; }
+          #top-playlist-bar { gap:8px; height:49px; overflow-x:auto; scrollbar-width:none; align-items:center; }#top-playlist-bar [data-section=mine] { display:none; }.section-tab { flex:1; height:27px; padding:4px 13px; border:1px solid transparent; border-radius:7px; background:#ffffff06; font-size:11px; font-weight:500; }.section-tab.active { background:linear-gradient(180deg,#40315f8c,#181129); border-color:#8863e1; box-shadow:inset 0 0 8px #9872e733,0 0 8px #7a4dfe15; color:#f1e8ff; }.section-tab.active::after { display:none; }.section-tab[data-section=home] span { font-size:0; }.section-tab[data-section=home] span::after { content:'For You'; font-size:11px; }
+          #main-view { padding:7px 17px 90px!important; }.hero { min-height:373px; height:373px; margin:0; border-radius:10px; align-items:flex-end; background:#0d111b; }.hero-body { width:100%; max-width:none; padding:0 17px 39px!important; }.hero-art { object-position:62% center; opacity:1!important; }.hero::after { background:linear-gradient(0deg,#090c13 0%,#090c13e8 22%,#090c1355 55%,#090c1300 80%); }.hero-title { font-size:25px; letter-spacing:.15em!important; line-height:1.16; margin:7px 0 8px; font-weight:500; }.hero-eyebrow { font-size:7px; letter-spacing:.16em; gap:6px; color:#eee7ff; }.hero-eyebrow::before { height:9px; width:3px; }.hero-meta { font-size:8px; }.hero-meta .pill+.pill::before { margin:0 6px; }.hero-meta .pill:nth-child(n+4) { display:none; }.hero-overview { font-size:10px; line-height:1.5; margin-top:8px; -webkit-line-clamp:2; max-width:none; }.hero-actions { gap:9px; margin-top:12px; flex-wrap:nowrap; }.hero-btn { padding:9px 8px; height:35px; flex:1; font-size:10px; gap:8px; }.hero-btn.primary { background:#f5f5f8; color:#08090e; box-shadow:none; }.hero-btn.ghost { background:#ffffff0f; border:1px solid #ffffff06; }.hero-btn[data-info] { display:none; }.hero-pagination { bottom:7px; }.hero-dot { width:16px; height:24px; }.hero-dot::after { width:5px; height:5px; }.hero-controls { display:none; }
+          .discovery-rail { margin-top:20px; }.rail-head { margin-bottom:8px; }.rail-title { font-size:14px!important; }.rail-more { margin:0; font-size:9px; }.rail { gap:9px; padding-bottom:3px; margin-right:-17px; padding-right:17px; }.poster-card { width:calc((100% - 42px)/3.45); min-width:88px; border-radius:5px; }.poster-art { border-radius:5px; }.poster-meta { padding:6px 1px 0; }.poster-name { font-size:9px; }.poster-sub { font-size:8px; margin-top:2px; }.rail-arrow { display:none!important; }.channel-card { width:145px; }.channel-card .poster-art { height:85px; padding:21px; }.channel-art-label { height:85px; font-size:14px; }
+          #continue-watching-container { margin-top:20px; }#continue-watching-container h3 { font-size:14px; margin-bottom:9px; }#history-grid { gap:9px; margin-right:-17px; padding-right:17px; }.continue-card { flex-basis:calc((100% - 14px)/2); }.continue-caption { padding:25px 8px 6px; }.continue-caption strong { font-size:10px; }.continue-caption small { font-size:8px; }.continue-play { width:22px; height:22px; right:7px; bottom:12px; }.network-tile { min-width:128px; }
+          .ss-mobile-nav { position:fixed; bottom:0; left:0; right:0; z-index:45; display:flex; justify-content:space-around; padding:10px 4px calc(10px + env(safe-area-inset-bottom)); background:var(--nav-veil); border-top:1px solid var(--border-color); backdrop-filter:blur(18px); }.ss-mobile-nav button { display:flex; flex-direction:column; align-items:center; gap:5px; color:var(--text-muted); min-width:54px; font-size:8px; min-height:36px; }.ss-mobile-nav svg { width:20px; height:20px; }.ss-mobile-nav button[aria-current=page] { color:#c9b0ff; }.ss-mobile-nav button[aria-current=page] svg { fill:#a988ff22; filter:drop-shadow(0 0 7px #9c72ff77); }
+          .ss-guide-top { margin-top:15px; align-items:flex-start; }.ss-guide-top h1 { font-size:29px; }.ss-guide-top p { font-size:12px; }.ss-guide-launch { grid-template-columns:1fr 1fr; gap:10px; }.ss-guide-launch button:first-child { grid-column:1/-1; }.ss-guide-launch button { padding:19px; }.ss-guide-launch strong { font-size:17px; }.ss-tools { gap:8px; }.ss-tools input { width:100%; }.ss-tools select { max-width:100%; }.channel-row { padding:15px 8px; gap:10px; }.ch-num { flex-basis:24px; font-size:10px; }.ch-logo { flex-basis:46px; height:32px; }.ch-name { font-size:12px; }.ch-live { padding:5px; font-size:8px; }.ss-save-channel { min-width:37px; }.ch-warn { max-width:75px; white-space:normal; font-size:7px; }
+          #global-search-modal { padding:10px; }#global-search-modal-content { height:calc(100dvh - 20px); }#global-search-input { font-size:14px; }.ss-search-tabs { padding:12px; gap:6px; }.ss-search-tabs button { padding:8px 10px; }.ss-search-grid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; }.ss-search-hint { margin:30px 10px; }.ss-search-hint h2 { font-size:24px; }.ss-search-hint p { font-size:12px; }
+          #cookie-consent-banner { bottom:70px; }.ss-sponsored>div>div:first-child { display:none; }#now-playing-info { padding:10px; gap:8px; flex-wrap:wrap; }#now-playing-title { font-size:13px; }#now-playing-info>div:first-child { display:none; }.ss-playback-tools { display:flex; width:100%; gap:7px; }.ss-playback-tools button { flex:1; padding:9px 5px; font-size:10px; }
+        }
+        @media(max-width:360px) { .ss-wordmark { font-size:16px; }.ss-mark { width:25px; }.ss-header-tools { gap:3px; }#top-playlist-bar { gap:5px; }.section-tab { padding:4px 10px; }.hero { height:361px; min-height:361px; }.hero-title { font-size:21px; }.hero-body { padding-left:14px!important; padding-right:14px!important; } }
+        @media(prefers-reduced-motion:reduce) { *,*::before,*::after { scroll-behavior:auto!important; animation:none!important; transition:none!important; } }
     </style>
 </head>
 <body class="bg-slate-50 dark:bg-slate-900 transition-colors duration-500">
@@ -866,25 +944,21 @@
 <div class="relative h-full w-full flex flex-col">
     
     <header class="w-full border-b flex items-center justify-between p-3 lg:px-6 z-40 flex-shrink-0">
-        <div class="flex items-center space-x-3">
+        <div class="ss-header-brand flex items-center">
             <button id="menu-toggle" aria-label="Open channel menu" class="md:hidden p-2 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors bg-black/5 dark:bg-white/5 rounded-lg border border-black/10 dark:border-white/10">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
             </button>
-            <div class="flex items-center space-x-3 cursor-pointer" onclick="location.reload()">
-                <!-- Served through weserv at display size: the original PNG is ~1.1 MB and
-                     renders at 40 px, which cost every visitor a megabyte for nothing. -->
-                <img id="logo" src="https://images.weserv.nl/?url=iili.io/Fg2td42.png&w=96&output=webp&q=90" alt="Streams Sphere" width="40" height="40" class="h-10 w-auto filter drop-shadow-[0_0_8px_var(--accent-color)]" style="transition: filter 1s ease;">
-                <span class="text-xl font-bold text-slate-900 dark:text-white header-title hidden sm:block tracking-wide">Streams Sphere</span>
-            </div>
+            <button class="ss-brand" id="ss-home" aria-label="StreamSphere TV home"><span class="ss-mark" aria-hidden="true"><svg viewBox="0 0 40 44" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="ss-a" x1="7" y1="4" x2="31" y2="31" gradientUnits="userSpaceOnUse"><stop stop-color="#d393ff"/><stop offset=".45" stop-color="#8b55fa"/><stop offset="1" stop-color="#354cff"/></linearGradient><linearGradient id="ss-b" x1="8" y1="41" x2="30" y2="12" gradientUnits="userSpaceOnUse"><stop stop-color="#7940ff"/><stop offset=".55" stop-color="#6579ff"/><stop offset="1" stop-color="#a37aff"/></linearGradient></defs><path d="M35 14C34 5 27 1 20 2 9 2 2 11 3 20c1 8 10 12 18 8-8 0-12-5-10-10 3-7 14-9 24-4Z" fill="url(#ss-a)"/><path d="M5 30c1 9 8 13 15 12 11 0 18-9 17-18-1-8-10-12-18-8 8 0 12 5 10 10-3 7-14 9-24 4Z" fill="url(#ss-b)"/></svg></span><span class="ss-wordmark">StreamSphere<small>TV</small></span></button>
         </div>
-        <div class="flex items-center space-x-2 md:space-x-3">
+    <nav id="top-playlist-bar" aria-label="Browse entertainment" class="flex items-center no-scrollbar flex-shrink-0"></nav>
+        <div class="ss-header-tools flex items-center">
             <button id="open-search-btn" aria-label="Search all media" class="p-2 px-3 text-sm custom-btn flex items-center space-x-2 border-[var(--accent-color)]" title="Global Search (press /)">
                 <svg class="w-4 h-4 text-slate-800 dark:text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-                <span class="hidden md:inline font-bold">Search</span>
+                <span>Search for movies, shows, channels…</span><kbd aria-hidden="true">/</kbd>
             </button>
             <button id="games-pin-btn" aria-label="Open the arcade hub" class="p-2 px-3 text-sm custom-btn flex items-center space-x-2 bg-purple-100 dark:bg-purple-600/20 border-purple-300 dark:border-purple-500/50 hover:bg-purple-200 dark:hover:bg-purple-500" title="Open Arcade Hub">
                 <span class="text-lg leading-none drop-shadow-md">🕹️</span>
-                <span class="hidden lg:inline font-bold">Games</span>
+                <span class="ss-games-label">Games</span>
             </button>
             <div class="relative flex items-center">
                 <button id="cast-btn" aria-label="Cast to a TV or AirPlay device" class="p-2 px-3 text-sm custom-btn flex items-center space-x-2 relative" title="Cast / AirPlay">
@@ -907,15 +981,16 @@
             </button>
 
             <button id="settings-btn" aria-label="Settings and themes" class="p-2 px-3 text-sm custom-btn flex items-center space-x-2" title="Settings & Themes">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M5 21v-2a7 7 0 0 1 14 0v2"/></svg>
             </button>
         </div>
     </header>
+    <nav class="ss-mobile-nav" id="ss-mobile-nav" aria-label="Mobile navigation"></nav>
 
-    <nav id="top-playlist-bar" aria-label="Content sources" class="w-full border-b flex items-center px-4 py-2 space-x-2 overflow-x-auto no-scrollbar z-30 flex-shrink-0 shadow-lg">
-    </nav>
 
-    <div class="flex flex-1 overflow-hidden min-h-0">
+
+    <div class="relative flex flex-1 overflow-hidden min-h-0">
+        <aside id="discovery-sidebar" aria-label="Discovery navigation"></aside>
         <aside id="sidebar" aria-label="Channels and categories" class="absolute md:relative top-0 left-0 h-full w-72 md:w-80 border-r flex flex-col z-30 transform -translate-x-full md:translate-x-0 flex-shrink-0 min-h-0">
             <div class="p-3 border-b border-[var(--border-color)] bg-white/40 dark:bg-black/40 flex space-x-2 items-center">
                 <div class="relative flex-1">
@@ -989,6 +1064,7 @@
                     <span class="text-[10px] font-bold uppercase tracking-widest mb-1 truncate" id="now-playing-genre" style="color: var(--accent-text)">NOW PLAYING</span>
                     <span id="now-playing-title" class="font-bold text-slate-900 dark:text-white text-lg truncate tracking-wide">Select a channel or game to begin</span>
                 </div>
+                <button id="ss-stop" class="custom-btn ss-stop" aria-label="Stop playback and return to browsing">Close player ×</button>
             </div>
 
 
@@ -1009,7 +1085,7 @@
             <!-- PERMANENT AFFILIATE BANNER -->
             <a href="https://www.amazon.co.uk/TV-4K-Streaming-Compatible-Supports-black/dp/B0G1M61429?dib=eyJ2IjoiMSJ9.yB8PagfzpmX0ovqBjkeESdRtspYACcGiZ9BmTtQqDrPBPuRvtH_pRZCks8fdLLaX9YYJFQuZCAIBpLBuRIX5b46SDowEIqQn2l-vtgcmITZv8we8WiOJBqsjF1vFviqaMdYE9pGhxpJTZs-mi0L2FkzAcScu3C3s9bn6cN28ZJbTpI4Ll92DVeZNeOxNOrtvXnd8umK5w3tIH8Wbc6TX6UWV4_JbQIWTUpPYLFX8YVE.ldwcXWLaf_LtTdLZ_1YQO_h_XFrSqBP3i6Ta-Dqjxt8&dib_tag=se&keywords=xiaomi%2Bstick%2B4k&qid=1784299711&sr=8-5&th=1&linkCode=ll2&tag=adamjjames-21&linkId=8548e91f22bf4155a89478004b71e75d&ref_=as_li_ss_tl" 
                target="_blank" rel="noopener noreferrer" 
-               class="mt-6 mx-1 md:mx-0 p-1 rounded-2xl block group transition-all duration-300 transform hover:-translate-y-1 hover:shadow-[0_10px_30px_rgba(255,153,0,0.15)] flex-shrink-0 relative overflow-hidden"
+               class="ss-sponsored mt-6 mx-1 md:mx-0 p-1 rounded-2xl block group transition-all duration-300 transform hover:-translate-y-1 hover:shadow-[0_10px_30px_rgba(255,153,0,0.15)] flex-shrink-0 relative overflow-hidden"
                style="background: linear-gradient(135deg, rgba(255,153,0,0.4), transparent, rgba(138,43,226,0.3));">
                 
                 <div class="bg-white/90 dark:bg-slate-950/90 backdrop-blur-md rounded-xl p-4 md:p-5 flex flex-col md:flex-row items-center gap-5 relative z-10 border border-black/5 dark:border-white/5 group-hover:border-[#ff9900]/30 transition-colors">
@@ -1097,13 +1173,14 @@
     </div>
 </div>
 
-<div id="global-search-modal" class="hidden fixed inset-0 bg-black/50 dark:bg-black/90 backdrop-blur-xl flex flex-col z-[100] p-4 sm:p-10">
+<div id="global-search-modal" role="dialog" aria-modal="true" aria-label="Search films, shows and channels" class="hidden fixed inset-0 bg-black/50 dark:bg-black/90 backdrop-blur-xl flex flex-col z-[100] p-4 sm:p-10">
     <div id="global-search-modal-content" class="w-full max-w-4xl mx-auto rounded-xl flex flex-col shadow-2xl h-[85vh] border border-[var(--border-color)]">
         <div class="p-4 border-b border-[var(--border-color)] flex items-center space-x-3">
             <svg class="w-6 h-6 text-slate-800 dark:text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
             <input type="search" id="global-search-input" aria-label="Search all media" placeholder="Search films, channels and shows…" class="w-full bg-transparent text-xl text-slate-800 dark:text-white outline-none placeholder-slate-400 dark:placeholder-slate-500 font-bold">
             <button id="close-global-search" aria-label="Close search" class="p-2 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"><svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
         </div>
+        <div id="ss-search-tabs" class="ss-search-tabs" aria-label="Search content type"></div>
         <div id="global-search-results" class="flex-1 overflow-y-auto custom-scrollbar p-4 flex flex-col">
             <div class="h-full flex items-center justify-center text-slate-500 text-lg">Type to instantly search all active media...</div>
         </div>
@@ -1117,7 +1194,7 @@
         <div class="space-y-3">
             <h3 class="text-xs font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400">Accent Theme</h3>
             <div class="flex justify-between items-center bg-black/5 dark:bg-black/40 p-3 rounded-lg border border-black/10 dark:border-white/5">
-                <div class="color-preview" style="background-color: #8A2BE2" data-theme="aurora" title="Purple Aurora"></div>
+                <div class="color-preview" style="background-color: #7048ff" data-theme="aurora" title="Discovery Violet"></div>
                 <div class="color-preview" style="background-color: #ff00ff" data-theme="cyberpunk" title="Cyberpunk Pink"></div>
                 <div class="color-preview" style="background-color: #e60000" data-theme="crimson" title="Crimson Red"></div>
                 <div class="color-preview" style="background-color: #00fa9a" data-theme="emerald" title="Emerald Matrix"></div>
@@ -1131,6 +1208,8 @@
             </div>
         </div>
 
+        <p class="text-[10px] text-[var(--text-muted)] leading-relaxed">Artwork and metadata from <a href="https://www.themoviedb.org/" target="_blank" rel="noopener noreferrer" class="underline">TMDB</a>. This product uses the TMDB API but is not endorsed or certified by TMDB.</p>
+        <button id="ss-settings-appearance" class="custom-btn w-full p-3 text-sm">Switch light / dark appearance</button>
         <div class="pt-5 border-t border-[var(--border-color)] flex space-x-3">
             <button id="close-settings-btn" class="flex-1 custom-btn p-3 rounded-lg text-slate-900 dark:text-white font-bold text-sm">Close</button>
         </div>
@@ -1169,12 +1248,12 @@
     <div class="flex flex-col gap-4">
         <h4 class="font-bold text-slate-900 dark:text-white flex items-center space-x-3 text-sm tracking-widest uppercase">
             <svg class="w-5 h-5" style="color: var(--accent-text)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
-            <span>Storage Consent</span>
+            <span>Make it yours</span>
         </h4>
-        <p class="text-xs text-slate-700 dark:text-slate-300 leading-relaxed">Local storage allocation is mandatory to persist favorites and settings across sessions.</p>
+        <p class="text-xs text-slate-700 dark:text-slate-300 leading-relaxed">Save your favourites, viewing progress and preferences on this device? You can still watch without saving.</p>
         <div class="flex gap-3 justify-end mt-2">
-            <button id="decline-cookies" class="custom-btn bg-transparent border-slate-400 dark:border-slate-600 p-2 px-4 text-xs rounded-lg font-bold uppercase tracking-wider">Deny</button>
-            <button id="accept-cookies" class="p-2 px-5 text-xs rounded-lg text-white font-bold uppercase tracking-wider border-none shadow-lg" style="background-color: var(--accent-solid)">Authorize</button>
+            <button id="decline-cookies" class="custom-btn bg-transparent border-slate-400 dark:border-slate-600 p-2 px-4 text-xs rounded-lg font-bold uppercase tracking-wider">Not now</button>
+            <button id="accept-cookies" class="p-2 px-5 text-xs rounded-lg text-white font-bold uppercase tracking-wider border-none shadow-lg" style="background-color: var(--accent-solid)">Save preferences</button>
         </div>
     </div>
 </div>
@@ -1323,7 +1402,8 @@ document.addEventListener('DOMContentLoaded', function() {
     let lastKnownTime = 0; 
     let activeChannelObj = null; 
     let watchHistory = [];       
-    let tmdbMemCache = JSON.parse(localStorage.getItem('iptv_tmdb_cache')) || {};
+    let tmdbMemCache = {};
+    try { tmdbMemCache = JSON.parse(localStorage.getItem('iptv_tmdb_cache')) || {}; } catch(e) {}
     // Series library, keyed by show name -> array of episodes.
     let vodSeriesMaster = {};
     // Every archive.org title pulled in this session, so global search can reach them.
@@ -1364,7 +1444,7 @@ document.addEventListener('DOMContentLoaded', function() {
      * read in night mode.
      */
     const THEMES = {
-        'aurora':    { primary: '#8A2BE2', lightAccent: '#6d28d9', darkText: '#c4a4ff', g1: '#0d042f', g2: '#2c135c', g3: '#0a192f', g4: '#3d2f7b', lg1: '#c9d6ef', lg2: '#dfe5f2', lg3: '#d7cdf2', lg4: '#cbdaea' },
+        'aurora':    { primary: '#7048ff', lightAccent: '#6031c9', darkText: '#bea2ff', g1: '#0d042f', g2: '#2c135c', g3: '#0a192f', g4: '#3d2f7b', lg1: '#c9d6ef', lg2: '#dfe5f2', lg3: '#d7cdf2', lg4: '#cbdaea' },
         'cyberpunk': { primary: '#ff00ff', lightAccent: '#a21caf', darkText: '#ff8bf5', g1: '#090014', g2: '#2a0033', g3: '#00121a', g4: '#00334d', lg1: '#f2cfe4', lg2: '#f6dcec', lg3: '#e6cdf2', lg4: '#f0d2e8' },
         'crimson':   { primary: '#e60000', lightAccent: '#b91c1c', darkText: '#ff8a8a', g1: '#1a0000', g2: '#4d0000', g3: '#0a0000', g4: '#330000', lg1: '#f0cfcf', lg2: '#f6dada', lg3: '#f5ddc9', lg4: '#efd0d0' },
         'emerald':   { primary: '#00fa9a', lightAccent: '#047857', darkText: '#5ff0bd', g1: '#001a0d', g2: '#004d26', g3: '#000a05', g4: '#00331a', lg1: '#c6e8d3', lg2: '#daf2e3', lg3: '#cdeee0', lg4: '#c9e6d8' }
@@ -1378,13 +1458,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (override === 'light') { html.classList.remove('dark'); html.classList.add('light'); }
             else { html.classList.remove('light'); html.classList.add('dark'); }
         } else {
-            const hour = new Date().getHours();
-            // Light mode between 06:00 and 19:59
-            if (hour >= 6 && hour < 20) {
-                html.classList.remove('dark'); html.classList.add('light');
-            } else {
-                html.classList.remove('light'); html.classList.add('dark');
-            }
+            html.classList.remove('light'); html.classList.add('dark');
         }
         updateThemeToggleIcon();
         applyTheme(userTheme);
@@ -1600,29 +1674,20 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function renderHistoryUI() {
         if (watchHistory.length === 0) { elements.continueWatchingContainer.classList.add('hidden'); return; }
-        elements.continueWatchingContainer.classList.remove('hidden');
+        elements.continueWatchingContainer.classList.toggle('hidden', !['home','mine'].includes(document.body.dataset.section || 'home'));
         elements.historyGrid.innerHTML = '';
-        
-        watchHistory.forEach((item, idx) => {
-            const progressPct = item.duration ? Math.min(100, Math.max(0, (item.savedTime / item.duration) * 100)) : 0;
-            const el = document.createElement('div');
-            el.className = 'dvd-case movie-case relative animate-cascade border border-black/10 dark:border-white/5';
-            el.style.animationDelay = `${idx * 0.05}s`;
-            el.innerHTML = `
-                <img src="${escapeHtml(item.logo || FALLBACK_ART)}" alt="" loading="lazy" class="dvd-case-img" data-fallback-art>
-                <div class="dvd-case-title pb-6 text-white">${escapeHtml(item.title)}</div>
-                <div class="absolute bottom-0 left-0 right-0 h-1.5 bg-black/60 z-20" role="progressbar" aria-valuenow="${Math.round(progressPct)}" aria-valuemin="0" aria-valuemax="100">
-                    <div class="h-full shadow-[0_0_8px_var(--accent-glow)] transition-all" style="width: ${progressPct}%; background-color: var(--accent-color);"></div>
-                </div>
-                <div class="play-overlay"><svg class="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg></div>
-            `;
-            el.querySelector('[data-fallback-art]').addEventListener('error', function () { this.src = FALLBACK_ART; });
-            el.addEventListener('click', () => {
-                playStream(item.url, false, 0, item.savedTime);
-                elements.nowPlayingTitle.textContent = item.title;
-                elements.nowPlayingGenre.textContent = item.group || 'MEDIA';
-                elements.mainView.scrollTo({ top: 0, behavior: 'smooth' });
-            });
+        watchHistory.forEach(item => {
+            const progressPct = item.duration ? Math.min(100,Math.max(0,item.savedTime/item.duration*100)) : 0;
+            const remaining = item.duration > item.savedTime ? `${Math.ceil((item.duration-item.savedTime)/60)} min left` : 'Continue watching';
+            const el = document.createElement('button'); el.className = 'continue-card';
+            el.setAttribute('aria-label',`Resume ${item.title}`);
+            el.innerHTML = `<img src="${escapeHtml(item._tmdb?.backdrop || item.logo || FALLBACK_ART)}" alt="" loading="lazy"><span class="continue-caption"><strong>${escapeHtml(item.title)}</strong><small>${remaining}</small></span><span class="continue-play" aria-hidden="true">▶</span><span class="continue-progress" role="progressbar" aria-label="Playback progress" aria-valuenow="${Math.round(progressPct)}" aria-valuemin="0" aria-valuemax="100"><span style="width:${progressPct}%"></span></span>`;
+            el.querySelector('img').addEventListener('error',function () { if (!this.dataset.fallback) { this.dataset.fallback = '1'; this.src = FALLBACK_ART; } });
+            el.onclick = () => {
+                playStream(item.url,false,0,item.savedTime); activeChannelObj = item;
+                elements.nowPlayingTitle.textContent = item.title; elements.nowPlayingGenre.textContent = item.group || 'MEDIA';
+                elements.mainView.scrollTo({top:0,behavior:'smooth'});
+            };
             elements.historyGrid.appendChild(el);
         });
     }
@@ -2371,6 +2436,9 @@ document.addEventListener('DOMContentLoaded', function() {
             showToast(`Saved “${channel.title}” to favourites`, "success");
         }
         try { localStorage.setItem('iptv_favorites', JSON.stringify(favorites)); } catch(e){}
+        document.querySelectorAll('.hero').forEach(hero => hero._updateSave?.());
+        invalidateSection('mine');
+        if (activeSection === 'mine') requestAnimationFrame(() => openSection('mine',{rebuild:true}));
     }
 
     function updateFeaturedGrid(channels, sectionTitle = 'Featured') {
@@ -2529,8 +2597,11 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function renderInChunks(items, container, renderFn, chunkSize = 50, onComplete = null) {
+        const generation = (container._renderGeneration || 0) + 1;
+        container._renderGeneration = generation;
         let index = 0;
         function renderNextChunk() {
+            if (container._renderGeneration !== generation || !container.isConnected) return;
             const end = Math.min(index + chunkSize, items.length);
             const fragment = document.createDocumentFragment();
             for (; index < end; index++) {
@@ -2649,6 +2720,10 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function showPlayerError(url, errMsg, blocker = null) {
+        elements.playerContainer.classList.remove('idle-compact');
+        document.body.classList.add('is-playing');
+        setSourceDrawer(false);
+        elements.mainView.scrollTo({top:0,behavior:'smooth'});
         destroyPlayers();
         elements.loadingOverlay.classList.remove('hidden');
         elements.loadingSpinner.style.display = 'none';
@@ -3420,6 +3495,292 @@ document.addEventListener('DOMContentLoaded', function() {
         'vhs-recording-romy-micheles-high-school-reunion', 'young-guns-1988-young-guns-ii-1990',
         'young-sherlock-holmes-1985'
     ]);
+    // First-paint editorial selection from the existing My Movies playlist (2026-09-19).
+    // Live playlist results replace this snapshot as soon as they arrive. No new stream sources.
+    const DISCOVERY_PICKS = [
+    {
+        "title": "Interstellar",
+        "url": "https://archive.org/download/movie-bucket-i/Interstellar.mp4",
+        "logo": "assets/discovery/interstellar-poster.jpg",
+        "group": "My Movies",
+        "isVod": true,
+        "_tmdb": {
+            "kind": "movie",
+            "name": "Interstellar",
+            "year": 2014,
+            "overview": "The adventures of a group of explorers who make use of a newly discovered wormhole to surpass the limitations on human space travel and conquer the vast distances involved in an interstellar voyage.",
+            "poster": "assets/discovery/interstellar-poster.jpg",
+            "posterLarge": "https://image.tmdb.org/t/p/w780/yQvGrMoipbRoddT0ZR8tPoR7NfX.jpg",
+            "backdrop": "assets/discovery/interstellar-backdrop.jpg",
+            "rating": 8.5,
+            "genres": [
+                "Adventure",
+                "Drama",
+                "Science Fiction"
+            ],
+            "tmdbId": 157336
+        }
+    },
+    {
+        "title": "Alita: Battle Angel",
+        "url": "https://archive.org/download/hexziasmovies/Alita%20Battle%20Angel.mp4",
+        "logo": "assets/discovery/alita-battle-angel-poster.jpg",
+        "group": "My Movies",
+        "isVod": true,
+        "_tmdb": {
+            "kind": "movie",
+            "name": "Alita: Battle Angel",
+            "year": 2019,
+            "overview": "When Alita awakens with no memory of who she is in a future world she does not recognize, she is taken in by Ido, a compassionate doctor who realizes that somewhere in this abandoned cyborg shell is the heart and soul of a young woman with an extraordinary past.",
+            "poster": "assets/discovery/alita-battle-angel-poster.jpg",
+            "posterLarge": "https://image.tmdb.org/t/p/w780/xRWht48C2V8XNfzvPehyClOvDni.jpg",
+            "backdrop": "assets/discovery/alita-battle-angel-backdrop.jpg",
+            "rating": 7.3,
+            "genres": [
+                "Action",
+                "Science Fiction",
+                "Adventure"
+            ],
+            "tmdbId": 399579
+        }
+    },
+    {
+        "title": "Oblivion",
+        "url": "https://archive.org/download/north-hollywood-2021/Oblivion%202013.mp4",
+        "logo": "assets/discovery/oblivion-poster.jpg",
+        "group": "My Movies",
+        "isVod": true,
+        "_tmdb": {
+            "kind": "movie",
+            "name": "Oblivion",
+            "year": 2013,
+            "overview": "Jack Harper is one of the last few drone repairmen stationed on Earth. Part of a massive operation to extract vital resources after decades of war with a terrifying threat known as the Scavs, Jack’s mission is nearly complete. His existence is brought crashing down when he rescues a beautiful  stranger from a downed spacecraft. Her arrival triggers a chain of events that  forces him to question everything he knows and puts the fate of humanity in his hands.",
+            "poster": "assets/discovery/oblivion-poster.jpg",
+            "posterLarge": "https://image.tmdb.org/t/p/w780/bYLM3GpNUZnoFElPXp1zlhDPdtv.jpg",
+            "backdrop": "assets/discovery/oblivion-backdrop.jpg",
+            "rating": 6.7,
+            "genres": [
+                "Action",
+                "Science Fiction",
+                "Adventure",
+                "Mystery"
+            ],
+            "tmdbId": 75612
+        }
+    },
+    {
+        "title": "Love and Monsters",
+        "url": "https://archive.org/download/hexziasmovies/Love%20And%20Monsters.mp4",
+        "logo": "assets/discovery/love-and-monsters-poster.jpg",
+        "group": "My Movies",
+        "isVod": true,
+        "_tmdb": {
+            "kind": "movie",
+            "name": "Love and Monsters",
+            "year": 2020,
+            "overview": "Seven years since the Monsterpocalypse began, Joel Dawson has been living underground in order to survive. But after reconnecting over radio with his high school girlfriend Aimee, Joel decides to venture out to reunite with her, despite all the dangerous monsters that stand in his way.",
+            "poster": "assets/discovery/love-and-monsters-poster.jpg",
+            "posterLarge": "https://image.tmdb.org/t/p/w780/718NnyxyQuBQcGWt9sdelA1Zc3h.jpg",
+            "backdrop": "https://image.tmdb.org/t/p/w1280/lA5fOBqTOQBQ1s9lEYYPmNXoYLi.jpg",
+            "rating": 7.3,
+            "genres": [
+                "Adventure",
+                "Comedy",
+                "Fantasy"
+            ],
+            "tmdbId": 590223
+        }
+    },
+    {
+        "title": "Prospect",
+        "url": "https://archive.org/download/peli8_202402/Prospect%202018.mp4",
+        "logo": "assets/discovery/prospect-poster.jpg",
+        "group": "My Movies",
+        "isVod": true,
+        "_tmdb": {
+            "kind": "movie",
+            "name": "Prospect",
+            "year": 2018,
+            "overview": "A teenage girl and her father travel to a remote alien moon, aiming to strike it rich. They've secured a contract to harvest a large deposit of the elusive gems hidden in the depths of the moon's toxic forest. But there are others roving the wilderness and the job quickly devolves into a fight to survive.",
+            "poster": "assets/discovery/prospect-poster.jpg",
+            "posterLarge": "https://image.tmdb.org/t/p/w780/1HpAwszXLsD8GeypDzK0me7fPFA.jpg",
+            "backdrop": "https://image.tmdb.org/t/p/w1280/3r6e2CfNHvtQ1nlXmfwPV7JM3iN.jpg",
+            "rating": 6.2,
+            "genres": [
+                "Science Fiction"
+            ],
+            "tmdbId": 506072
+        }
+    },
+    {
+        "title": "Passengers",
+        "url": "https://archive.org/download/north-hollywood-2021/Passengers%202016.mp4",
+        "logo": "assets/discovery/passengers-poster.jpg",
+        "group": "My Movies",
+        "isVod": true,
+        "_tmdb": {
+            "kind": "movie",
+            "name": "Passengers",
+            "year": 2016,
+            "overview": "A spacecraft traveling to a distant colony planet and transporting thousands of people has a malfunction in its sleep chambers. As a result, two passengers are awakened 90 years early.",
+            "poster": "assets/discovery/passengers-poster.jpg",
+            "posterLarge": "https://image.tmdb.org/t/p/w780/jK9S6HANSf2no64v1x1HxfcpmcA.jpg",
+            "backdrop": "https://image.tmdb.org/t/p/w1280/gHz4ZQytRs8YGrqFMwB3Vrr8pig.jpg",
+            "rating": 7.0,
+            "genres": [
+                "Drama",
+                "Romance",
+                "Science Fiction"
+            ],
+            "tmdbId": 274870
+        }
+    },
+    {
+        "title": "Annihilation",
+        "url": "https://archive.org/download/movie-bucket-i/Annihilation.mp4",
+        "logo": "assets/discovery/annihilation-poster.jpg",
+        "group": "My Movies",
+        "isVod": true,
+        "_tmdb": {
+            "kind": "movie",
+            "name": "Annihilation",
+            "year": 2018,
+            "overview": "A biologist signs up for a dangerous, secret expedition into a mysterious zone where the laws of nature don't apply.",
+            "poster": "assets/discovery/annihilation-poster.jpg",
+            "posterLarge": "https://image.tmdb.org/t/p/w780/4YRplSk6BhH6PRuE9gfyw9byUJ6.jpg",
+            "backdrop": "https://image.tmdb.org/t/p/w1280/9trZvBr44UGedUOiGo3jgSUw13e.jpg",
+            "rating": 6.4,
+            "genres": [
+                "Science Fiction",
+                "Horror"
+            ],
+            "tmdbId": 300668
+        }
+    },
+    {
+        "title": "Moonlight",
+        "url": "https://archive.org/download/north-hollywood-2021/Moonlight%202016.mp4",
+        "logo": "assets/discovery/moonlight-poster.jpg",
+        "group": "My Movies",
+        "isVod": true,
+        "_tmdb": {
+            "kind": "movie",
+            "name": "Moonlight",
+            "year": 2016,
+            "overview": "The tender, heartbreaking story of a young man’s struggle to find himself, told across three defining chapters in his life as he experiences the ecstasy, pain, and beauty of falling in love, while grappling with his own sexuality.",
+            "poster": "assets/discovery/moonlight-poster.jpg",
+            "posterLarge": "https://image.tmdb.org/t/p/w780/qLnfEmPrDjJfPyyddLJPkXmshkp.jpg",
+            "backdrop": "https://image.tmdb.org/t/p/w1280/jm1oD3eB08LImSwL1LrzF9AJQ5b.jpg",
+            "rating": 7.4,
+            "genres": [
+                "Drama"
+            ],
+            "tmdbId": 376867
+        }
+    },
+    {
+        "title": "Eternal Sunshine of the Spotless Mind",
+        "url": "https://archive.org/download/duets-2000/Eternal%20Sunshine%20of%20The%20Spotless%20Mind%20(2004).mp4",
+        "logo": "assets/discovery/eternal-sunshine-of-the-spotless-mind-poster.jpg",
+        "group": "My Movies",
+        "isVod": true,
+        "_tmdb": {
+            "kind": "movie",
+            "name": "Eternal Sunshine of the Spotless Mind",
+            "year": 2004,
+            "overview": "Joel Barish, heartbroken that his girlfriend underwent a procedure to erase him from her memory, decides to do the same. However, as he watches his memories of her fade away, he realises that he still loves her, and may be too late to correct his mistake.",
+            "poster": "assets/discovery/eternal-sunshine-of-the-spotless-mind-poster.jpg",
+            "posterLarge": "https://image.tmdb.org/t/p/w780/5MwkWH9tYHv3mV9OdYTMR5qreIz.jpg",
+            "backdrop": "https://image.tmdb.org/t/p/w1280/W1ffLQGHoxfAOq0ZYdPtJlvAdb.jpg",
+            "rating": 8.1,
+            "genres": [
+                "Science Fiction",
+                "Drama",
+                "Romance"
+            ],
+            "tmdbId": 38
+        }
+    },
+    {
+        "title": "Nerve",
+        "url": "https://archive.org/download/north-hollywood-2021/Nerve%202016.mp4",
+        "logo": "assets/discovery/nerve-poster.jpg",
+        "group": "My Movies",
+        "isVod": true,
+        "_tmdb": {
+            "kind": "movie",
+            "name": "Nerve",
+            "year": 2016,
+            "overview": "Industrious high school senior Vee Delmonico has had it with living life on the sidelines. When pressured by friends to join the popular online game Nerve, Vee decides to sign up for just one dare in what seems like harmless fun. But as she finds herself caught up in the thrill of the adrenaline-fueled competition partnered with a mysterious stranger, the game begins to take a sinister turn with increasingly dangerous acts, leading her into a high stakes finale that will determine her entire future.",
+            "poster": "assets/discovery/nerve-poster.jpg",
+            "posterLarge": "https://image.tmdb.org/t/p/w780/qmSpHC0CSNyNll9WhlwWYuwoQ28.jpg",
+            "backdrop": "https://image.tmdb.org/t/p/w1280/fg04CQyJzuDJ82jm2meY37n9XyE.jpg",
+            "rating": 7.0,
+            "genres": [
+                "Mystery",
+                "Adventure",
+                "Crime"
+            ],
+            "tmdbId": 328387
+        }
+    },
+    {
+        "title": "Little Miss Sunshine",
+        "url": "https://archive.org/download/duets-2000/Little%20Miss%20Sunshine%20(2006).mp4",
+        "logo": "assets/discovery/little-miss-sunshine-poster.jpg",
+        "group": "My Movies",
+        "isVod": true,
+        "_tmdb": {
+            "kind": "movie",
+            "name": "Little Miss Sunshine",
+            "year": 2006,
+            "overview": "A family loaded with quirky, colorful characters piles into an old van and road trips to California for little Olive to compete in a beauty pageant.",
+            "poster": "assets/discovery/little-miss-sunshine-poster.jpg",
+            "posterLarge": "https://image.tmdb.org/t/p/w780/niNdhTpPHSgw22tK0PLjQMV640v.jpg",
+            "backdrop": "https://image.tmdb.org/t/p/w1280/twdtjJm31AExNx73DXaD4KRNU9c.jpg",
+            "rating": 7.7,
+            "genres": [
+                "Comedy",
+                "Drama"
+            ],
+            "tmdbId": 773
+        }
+    },
+    {
+        "title": "The Count of Monte Cristo",
+        "url": "https://archive.org/download/duets-2000/The%20Count%20of%20Monte%20Cristo%20(2002).mp4",
+        "logo": "assets/discovery/the-count-of-monte-cristo-poster.jpg",
+        "group": "My Movies",
+        "isVod": true,
+        "_tmdb": {
+            "kind": "movie",
+            "name": "The Count of Monte Cristo",
+            "year": 2002,
+            "overview": "Young sailor Edmond Dantès is wrongfully imprisoned, escapes, finds treasure, and reinvents himself as the wealthy Count of Monte Cristo to exact revenge on those who betrayed him.",
+            "poster": "assets/discovery/the-count-of-monte-cristo-poster.jpg",
+            "posterLarge": "https://image.tmdb.org/t/p/w780/ifMgDAUXVQLY4DeOu3VTTi55jSP.jpg",
+            "backdrop": "https://image.tmdb.org/t/p/w1280/AmN8ozRE0AbMGgZhqBu4fUjZkRt.jpg",
+            "rating": 7.7,
+            "genres": [
+                "Adventure",
+                "Drama",
+                "History",
+                "Action"
+            ],
+            "tmdbId": 11362
+        }
+    }
+];
+    let discoverySelection = DISCOVERY_PICKS;
+    const discoveryArt = new Map(DISCOVERY_PICKS.map(ch => [ch.url,ch._tmdb]));
+    function featuredDiscovery() { return [discoverySelection[1],discoverySelection[0],discoverySelection[2]].filter(Boolean); }
+    function reconcileDiscovery(channels) {
+        const byUrl = new Map(channels.map(ch => [ch.url,ch]));
+        discoverySelection = DISCOVERY_PICKS.map(ch => byUrl.get(ch.url)).filter(Boolean);
+        if (!discoverySelection.length) discoverySelection = channels.slice(0,12);
+        return discoverySelection;
+    }
+
     let myMoviesGroups = null;
 
     function movieSortKey(title) {
@@ -3441,7 +3802,8 @@ document.addEventListener('DOMContentLoaded', function() {
         const groups = {};
         live.forEach(ch => {
             ch.isVod = true;
-            ch.needsArt = true;
+            if (discoveryArt.has(ch.url)) { ch._tmdb = discoveryArt.get(ch.url); ch.logo = ch._tmdb.poster; }
+            ch.needsArt = !ch._tmdb;
             ch.title = titleFromFilename(ch.title);
             const first = movieSortKey(ch.title).charAt(0);
             const bucket = /[A-Z]/.test(first) ? first : '#';
@@ -3450,6 +3812,7 @@ document.addEventListener('DOMContentLoaded', function() {
         Object.values(groups).forEach(list =>
             list.sort((a, b) => movieSortKey(a.title).localeCompare(movieSortKey(b.title))));
 
+        reconcileDiscovery(live);
         myMoviesGroups = { groups, all: live, dropped: parsed.channels.length - live.length };
         return myMoviesGroups;
     }
@@ -3514,11 +3877,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <span class="net-sub">${escapeHtml(n.sub)}</span>`;
             tile.addEventListener('click', () => {
                 if (n.wall) { openThemedWall(n.wall); return; }
-                loadM3USource(`${n.name} · ${n.sub}`, n.url);
-                if (window.innerWidth < 768) {
-                    elements.sidebar.classList.remove('-translate-x-full');
-                    elements.mobileOverlay.classList.remove('hidden');
-                }
+                renderChannelWall(`${n.name} · ${n.sub}`, n.url);
             });
             strip.appendChild(tile);
         });
@@ -3626,6 +3985,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function makePosterCard(channel, opts = {}) {
+        if (!channel.isGame && searchType(channel) === 'live') opts = { ...opts, channelStyle:true, live:true };
         const card = document.createElement('article');
         card.className = `poster-card animate-cascade${opts.channelStyle ? ' channel-card' : ''}`;
         card.setAttribute('role', 'button');
@@ -3633,16 +3993,20 @@ document.addEventListener('DOMContentLoaded', function() {
         card._channel = channel;
 
         const art = posterFor(channel);
-        const rawSub = channel.group && channel.group !== channel.title ? channel.group : '';
+        const rawSub = channel._tmdb ? [channel.isSeries ? 'Series' : 'Movie',channel._tmdb.year].filter(Boolean).join(' · ') : (channel.group && channel.group !== channel.title ? channel.group : '');
         const sub = rawSub === 'Uncategorized' ? (opts.live ? 'Live channel' : '') : rawSub;
         card.innerHTML = `
-            ${opts.live ? '<span class="poster-live">LIVE</span>' : ''}
+            ${opts.channelStyle ? `<span class="channel-art-label" aria-hidden="true">${escapeHtml(channel.title)}</span>` : ''}
+            ${opts.live ? `<span class="poster-live">${channel.isYouTube ? 'HIGHLIGHTS' : 'LIVE'}</span>` : ''}
             <img class="poster-art" alt="" loading="lazy" decoding="async" src="${escapeHtml(art)}">
             <div class="poster-meta">
                 <div class="poster-name">${escapeHtml(channel.title || 'Untitled')}</div>
                 <div class="poster-sub">${escapeHtml(sub)}</div>
             </div>`;
 
+        const cardArt = card.querySelector('.poster-art');
+        cardArt.addEventListener('load', () => card.classList.add('art-ready'));
+        if (cardArt.complete && cardArt.naturalWidth) card.classList.add('art-ready');
         card.querySelector('.poster-art').addEventListener('error', function () {
             if (this.dataset.fellBack) return;
             this.dataset.fellBack = '1';
@@ -3652,8 +4016,11 @@ document.addEventListener('DOMContentLoaded', function() {
         // A live channel has no synopsis to show, so it plays on click; VOD opens the
         // detail sheet first so the visitor knows what they are picking.
         const open = () => {
+            if (channel.isGame) { openTitle(channel); return; }
             if (opts.live) {
+                closeGlobalSearch(false);
                 playStream(channel.url);
+                activeChannelObj = channel;
                 elements.nowPlayingTitle.textContent = channel.title;
                 elements.nowPlayingGenre.textContent = channel.group === 'Uncategorized' ? 'LIVE' : (channel.group || 'LIVE');
                 elements.mainView.scrollTo({ top: 0, behavior: 'smooth' });
@@ -3667,7 +4034,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         // Live channels have real station logos already; only VOD needs artwork.
-        if (!opts.channelStyle) cardObserver.observe(card);
+        if (!opts.channelStyle && !channel.isGame) cardObserver.observe(card);
         return card;
     }
 
@@ -3687,6 +4054,11 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!wrap || wrap.dataset.arrows) return;
         wrap.dataset.arrows = '1';
         const rail = wrap.querySelector('.rail');
+        const refresh = () => {
+            const remaining = rail.scrollWidth - rail.clientWidth - rail.scrollLeft;
+            wrap.querySelector('.rail-arrow.left').disabled = rail.scrollLeft <= 1;
+            wrap.querySelector('.rail-arrow.right').disabled = remaining <= 1;
+        };
         [['left', '\u2039'], ['right', '\u203a']].forEach(([side, glyph]) => {
             const btn = document.createElement('button');
             btn.className = `rail-arrow ${side}`;
@@ -3699,6 +4071,10 @@ document.addEventListener('DOMContentLoaded', function() {
             });
             wrap.appendChild(btn);
         });
+        rail.addEventListener('scroll',refresh,{passive:true});
+        new ResizeObserver(refresh).observe(rail);
+        new MutationObserver(refresh).observe(rail,{childList:true});
+        refresh();
     }
 
     function addRail({ title, subtitle, loader, onMore, channelStyle = false, live = false, limit = 20 }) {
@@ -3707,16 +4083,16 @@ document.addEventListener('DOMContentLoaded', function() {
         const myToken = sectionToken;
 
         const section = document.createElement('section');
-        section.className = 'mt-7 px-1';
+        section.className = 'discovery-rail';
         section.innerHTML = `
             <div class="rail-head">
                 <div class="min-w-0">
                     <h2 class="rail-title text-lg text-slate-900 dark:text-white header-title truncate">${escapeHtml(title)}</h2>
-                    ${subtitle ? `<p class="text-[11px] text-[var(--text-muted)] mt-0.5 truncate">${escapeHtml(subtitle)}</p>` : ''}
+                    ${subtitle ? `<p class="rail-subtitle text-[11px] text-[var(--text-muted)] mt-0.5 truncate">${escapeHtml(subtitle)}</p>` : ''}
                 </div>
-                ${onMore ? '<button class="rail-more" type="button">Browse all</button>' : ''}
+                ${onMore ? '<button class="rail-more" type="button">See all</button>' : ''}
             </div>
-            <div class="rail-wrap"><div class="rail" role="list"></div></div>`;
+            <div class="rail-wrap"><div class="rail" role="group" aria-label="${escapeHtml(title)}"></div></div>`;
 
         const railEl = section.querySelector('.rail');
         railEl.innerHTML = Array.from({ length: 7 }, () =>
@@ -3728,13 +4104,12 @@ document.addEventListener('DOMContentLoaded', function() {
         host.appendChild(section);
 
         loader().then(channels => {
-            if (myToken !== sectionToken) { section.remove(); return; }
+            if (myToken !== sectionToken) { section.remove(); delete host.dataset.built; return; }
             if (!channels || !channels.length) { section.remove(); return; }
             railEl.innerHTML = '';
             const cards = channels.slice(0, limit).map((ch, i) => {
                 const card = makePosterCard(ch, { channelStyle, live });
                 card.style.animationDelay = `${(i % 10) * 0.04}s`;
-                card.setAttribute('role', 'listitem');
                 railEl.appendChild(card);
                 return card;
             });
@@ -3743,7 +4118,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // viewport, so relying on the observer alone leaves every rail looking
             // half-finished until it is scrolled sideways. Eagerly enrich roughly one
             // screen's worth; the observer picks up the rest on scroll.
-            if (!channelStyle) cards.slice(0, 10).forEach(fillCardArtwork);
+            if (!channelStyle) cards.filter(c => !c._channel.isGame && searchType(c._channel) !== 'live').slice(0, 10).forEach(fillCardArtwork);
         }).catch(() => section.remove());
     }
 
@@ -3824,6 +4199,7 @@ document.addEventListener('DOMContentLoaded', function() {
     async function sampleFromPlaylist(url, name, n = 20) {
         const data = await fetchWithFallback(url, 1, false);
         const parsed = await parseM3U(data, name);
+        parsed.channels.forEach(c => guideSearchPool.set(c.url,c));
         const picked = shuffled(parsed.channels, n);
         await applyLiveLogos(picked);
         return picked;
@@ -3834,7 +4210,9 @@ document.addEventListener('DOMContentLoaded', function() {
     let detailChannel = null;
 
     async function openDetail(channel) {
+        if (!elements.globalSearchModal.classList.contains('hidden')) closeGlobalSearch(false);
         detailChannel = channel;
+        document.getElementById('detail-fav').textContent = favorites.some(f => f.url === channel.url) ? '✓ In My List' : '+ My List';
         const modal = document.getElementById('detail-modal');
         const titleEl = document.getElementById('detail-title');
         const metaEl = document.getElementById('detail-meta');
@@ -3850,6 +4228,7 @@ document.addEventListener('DOMContentLoaded', function() {
         backdropEl.removeAttribute('src');
         backdropEl.style.display = 'none';
         modal.classList.remove('hidden');
+        document.getElementById('detail-play').textContent = channel._vault || channel._episodes ? 'Choose an episode' : '▶ Watch now';
         document.getElementById('detail-play').focus();
 
         const rec = await enrichChannel(channel).catch(() => null);
@@ -3887,7 +4266,7 @@ document.addEventListener('DOMContentLoaded', function() {
         { key: 'tv',     label: 'TV Shows', icon: '📺' },
         { key: 'live',   label: 'Live TV',  icon: '📡' },
         { key: 'kids',   label: 'Kids',     icon: '🧸' },
-        { key: 'mine',   label: 'My Stuff', icon: '⭐' }
+        { key: 'mine',   label: 'My List', icon: '⭐' }
     ];
     let activeSection = 'home';
     let sectionToken = 0;
@@ -3900,10 +4279,12 @@ document.addEventListener('DOMContentLoaded', function() {
             btn.className = `section-tab ${sec.key === activeSection ? 'active' : ''}`;
             btn.dataset.section = sec.key;
             btn.setAttribute('aria-pressed', sec.key === activeSection ? 'true' : 'false');
-            btn.innerHTML = `<span aria-hidden="true">${sec.icon}</span><span>${sec.label}</span>`;
+            btn.innerHTML = `${tvIcon(sec.key)}<span>${sec.label}</span>`;
             btn.addEventListener('click', () => openSection(sec.key));
             bar.appendChild(btn);
         });
+        renderMobileNav();
+        renderDiscoveryNav();
     }
 
     /*
@@ -3970,7 +4351,12 @@ document.addEventListener('DOMContentLoaded', function() {
     /** Rebuild a section from scratch next time it is opened. */
     function invalidateSection(key) {
         const pane = sectionPanes.get(key);
-        if (pane) { pane.innerHTML = ''; delete pane.dataset.built; }
+        if (pane) {
+            const shelf = document.getElementById('network-shelf');
+            if (shelf && pane.contains(shelf)) elements.mainView.appendChild(shelf);
+            if (pane.contains(elements.continueWatchingContainer)) elements.mainView.appendChild(elements.continueWatchingContainer);
+            pane.innerHTML = ''; delete pane.dataset.built;
+        }
     }
 
     // Function declarations, so this literal can sit above their definitions.
@@ -3988,6 +4374,8 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         activeSection = key;
+        document.body.dataset.section = key;
+        setSourceDrawer(false);
         sectionToken++;
         if (hasConsent) { try { localStorage.setItem('ss_section', key); } catch (e) {} }
         renderSectionTabs();
@@ -4016,6 +4404,15 @@ document.addEventListener('DOMContentLoaded', function() {
             const top = sameTab ? 0 : (sectionScroll.get(key) || 0);
             requestAnimationFrame(() => elements.mainView.scrollTo({ top, behavior: 'auto' }));
         }
+        placeWatchHistory();
+    }
+
+    // The same history row follows Home or My List; never clone its IDs or lose it on a rebuild.
+    function placeWatchHistory() {
+        const anchor = sectionPanes.get('home')?.querySelector('[data-history-slot]');
+        if (activeSection === 'home' && anchor) anchor.appendChild(elements.continueWatchingContainer);
+        else elements.mainView.insertBefore(elements.continueWatchingContainer, document.getElementById('home-rows'));
+        elements.continueWatchingContainer.classList.toggle('hidden', !watchHistory.length || !['home','mine'].includes(activeSection));
     }
 
     /** A pane that sits on top of the section: the browse-all grid, a channel wall. */
@@ -4232,54 +4629,55 @@ document.addEventListener('DOMContentLoaded', function() {
     /* ---- Hero billboard ---- */
 
     function paintHero(host, pool, opts = {}) {
+        if (!pool?.length) return null;
         let hero = host.querySelector('.hero');
-        if (!hero) {
-            hero = document.createElement('section');
-            hero.className = 'hero';
-            host.prepend(hero);
-        }
-
-        // Prefer something with real backdrop art and a synopsis; fall back to any title
-        // so the billboard is never an empty box while lookups are still running.
-        const dressed = pool.filter(c => c._tmdb && c._tmdb.backdrop && c._tmdb.overview);
-        const pick = dressed.length
-            ? dressed[Math.floor(Math.random() * Math.min(dressed.length, 40))]
-            : (pool.find(c => c.logo) || pool[0]);
-        if (!pick) return null;
-        if (hero.dataset.pick === pick.url) return pick;
-        hero.dataset.pick = pick.url;
-
-        const rec = pick._tmdb || {};
-        const bits = [];
-        if (rec.year) bits.push(String(rec.year));
-        if (rec.rating) bits.push(`★ ${rec.rating}`);
-        (rec.genres || []).slice(0, 3).forEach(g => bits.push(g));
-
-        hero.innerHTML = `
-            <img class="hero-art" alt="" decoding="async">
-            <div class="hero-body">
-                <p class="hero-eyebrow">${escapeHtml(opts.eyebrow || 'Featured tonight')}</p>
-                <h2 class="hero-title">${escapeHtml(rec.name || pick.title)}</h2>
-                <div class="hero-meta">${bits.map(b => `<span class="pill">${escapeHtml(b)}</span>`).join('')}</div>
-                <p class="hero-overview">${escapeHtml(rec.overview || 'Free to watch, streamed straight from the Internet Archive.')}</p>
-                <div class="hero-actions">
-                    <button class="hero-btn primary" data-play>▶ Play</button>
-                    <button class="hero-btn ghost" data-info>More info</button>
+        if (!hero) { hero = document.createElement('section'); hero.className = 'hero'; host.prepend(hero); }
+        hero.setAttribute('aria-label','Featured titles');
+        hero.setAttribute('aria-roledescription','carousel');
+        const dressed = pool.filter(c => c._tmdb?.backdrop && c._tmdb?.overview);
+        const picks = (dressed.length ? dressed : pool).slice(0,5);
+        const signature = JSON.stringify(picks.map(c => [c.url,c._tmdb?.backdrop,c._tmdb?.poster,c._tmdb?.name]));
+        if (hero.dataset.signature === signature) return picks.find(c => c.url === hero.dataset.pick) || picks[0];
+        hero.dataset.signature = signature;
+        const retained = picks.findIndex(c => c.url === hero.dataset.pick);
+        let index = retained < 0 ? 0 : retained;
+        const draw = (focusKey) => {
+            const pick = picks[index], rec = pick._tmdb || {};
+            hero.dataset.pick = pick.url;
+            const bits = [(rec.genres || [])[0],rec.year,pick.isSeries ? 'Series' : 'Movie'].filter(Boolean);
+            hero.innerHTML = `
+                <img class="hero-art loaded" alt="" fetchpriority="high" decoding="async" src="${escapeHtml(rec.backdrop || rec.posterLarge || pick.logo || posterFor(pick))}">
+                <div class="hero-body">
+                    <p class="hero-eyebrow">${escapeHtml(opts.eyebrow || 'Featured in your collection')}</p>
+                    <h2 class="hero-title">${escapeHtml(rec.name || pick.title).replace(/:\s*/, '<br>')}</h2>
+                    <div class="hero-meta">${bits.map(b => `<span class="pill">${escapeHtml(String(b))}</span>`).join('')}</div>
+                    <p class="hero-overview">${escapeHtml(rec.overview || 'Discover this title in your collection.')}</p>
+                    <div class="hero-actions">
+                        <button class="hero-btn primary" data-play><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m7 4 14 8-14 8Z"/></svg><span>${pick.isSeries ? 'Episodes' : 'Watch now'}</span></button>
+                        <button class="hero-btn ghost" data-save></button>
+                        <button class="hero-btn ghost" data-info aria-label="More about ${escapeHtml(rec.name || pick.title)}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v6m0-11v2"/></svg></button>
+                    </div>
                 </div>
-            </div>`;
-
-        const art = hero.querySelector('.hero-art');
-        const src = rec.backdrop || rec.posterLarge || pick.logo;
-        if (src) {
-            art.addEventListener('load', () => art.classList.add('loaded'), { once: true });
-            art.src = src;
-        }
-        hero.querySelector('[data-play]').addEventListener('click', () => {
-            playStream(pick.url);
-            elements.mainView.scrollTo({ top: 0, behavior: 'smooth' });
-        });
-        hero.querySelector('[data-info]').addEventListener('click', () => openDetail(pick));
-        return pick;
+                ${picks.length > 1 ? `<div class="hero-pagination" aria-label="Choose a featured title">${picks.map((p,i) => `<button class="hero-dot" data-dot="${i}" aria-label="Feature ${escapeHtml(p._tmdb?.name || p.title)}" aria-pressed="${i === index}"></button>`).join('')}</div><div class="hero-controls"><button data-prev aria-label="Previous featured title">‹</button><button data-next aria-label="Next featured title">›</button></div>` : ''}`;
+            hero.querySelector('[data-play]').onclick = () => openTitle(pick);
+            hero.querySelector('[data-info]').onclick = () => openDetail(pick);
+            const save = hero.querySelector('[data-save]'); save._channel = pick;
+            const updateSave = () => {
+                const saved = favorites.some(f => f.url === pick.url);
+                save.setAttribute('aria-pressed',String(saved));
+                save.setAttribute('aria-label',saved ? 'Remove from My List' : 'Add to My List');
+                save.innerHTML = `<span aria-hidden="true" style="font-size:19px;font-weight:300">${saved ? '✓' : '+'}</span><span>My List</span>`;
+            };
+            updateSave(); save.onclick = () => { toggleFavorite(save); updateSave(); };
+            hero._updateSave = updateSave;
+            const change = (next,key) => { index = (next + picks.length) % picks.length; draw(key); };
+            hero.querySelector('[data-prev]')?.addEventListener('click', () => change(index-1,'[data-prev]'));
+            hero.querySelector('[data-next]')?.addEventListener('click', () => change(index+1,'[data-next]'));
+            hero.querySelectorAll('[data-dot]').forEach(dot => dot.onclick = () => change(Number(dot.dataset.dot),`[data-dot="${dot.dataset.dot}"]`));
+            if (focusKey) hero.querySelector(focusKey)?.focus({preventScroll:true});
+        };
+        draw();
+        return picks[index];
     }
 
     /* ---- Category nav + shelves ---- */
@@ -4388,6 +4786,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const heroHost = document.createElement('div');
         host.appendChild(heroHost);
+        paintHero(heroHost, featuredDiscovery(), {eyebrow:'Movie night starts here'});
 
         const nav = document.createElement('nav');
         nav.className = 'cat-nav';
@@ -4408,14 +4807,14 @@ document.addEventListener('DOMContentLoaded', function() {
             title: 'Public-domain cinema',
             subtitle: 'Classic feature films, free and legal',
             loader: async () => (await archiveSearch({ collection: 'feature_films', label: 'Free Cinema', rows: 20 })).channels,
-            onMore: () => loadDataForSource('Free Cinema')
+            onMore: () => showBrowseSource('Free Cinema')
         });
         addRail({
             title: 'More free films',
             subtitle: 'The wider archive.org film library',
             loader: async () => (await archiveSearch({ collection: 'moviesandfilms', label: 'Movies & Films',
                 rows: 20, sort: 'week desc', exclude: 'batch' })).channels,
-            onMore: () => loadDataForSource('Free Cinema')
+            onMore: () => showBrowseSource('Free Cinema')
         });
 
         paintCollectionTiles(host, ARCHIVE_MOVIE_VAULTS.slice(0, 18), async vault => {
@@ -4484,14 +4883,14 @@ document.addEventListener('DOMContentLoaded', function() {
             title: 'Classic TV',
             subtitle: 'Public-domain television',
             loader: async () => (await archiveSearch({ collection: 'classic_tv', label: 'Classic TV', rows: 20 })).channels,
-            onMore: () => loadDataForSource('Free Cinema')
+            onMore: () => showBrowseSource('Free Cinema')
         });
 
         addRail({
             title: 'Anime',
             subtitle: 'From the archive.org anime collection',
             loader: async () => (await archiveSearch({ collection: 'anime', label: 'Anime', rows: 20 })).channels,
-            onMore: () => loadDataForSource('Free Cinema')
+            onMore: () => showBrowseSource('Free Cinema')
         });
 
         paintCollectionTiles(host, ARCHIVE_SERIES_VAULTS.slice(0, 18), vault => {
@@ -4636,9 +5035,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
     async function renderLiveSection() {
         const host = sectionHost || document.getElementById('home-rows');
+        const launch = document.createElement('section');
+        launch.innerHTML = `<div class="ss-guide-top"><div><span class="ss-kicker">THE WORLD, LIVE</span><h1>What’s on?</h1><p>Your channels. A simpler way to tune in.</p></div><button class="custom-btn px-4 py-3 text-xs" data-sources>All TV sources ↗</button></div><div class="ss-guide-launch"><button data-uk><span class="ss-kicker">CHANNEL GUIDE</span><strong>Live TV, at a glance ↗</strong><small>Browse the United Kingdom channel line-up</small></button><button data-sport><span class="ss-kicker">SPORT</span><strong>Closer to the action ↗</strong><small>Explore free sports channels</small></button><button data-news><span class="ss-kicker">NEWS</span><strong>Stay in the know ↗</strong><small>News from around the world</small></button></div>`;
+        launch.querySelector('[data-uk]').onclick = () => renderChannelWall('United Kingdom', `${IPTV_ORG}/countries/uk.m3u`);
+        launch.querySelector('[data-sport]').onclick = () => openThemedWall('sports');
+        launch.querySelector('[data-news]').onclick = () => openThemedWall('news');
+        launch.querySelector('[data-sources]').onclick = () => { displayLiveTvHub(); setSourceDrawer(true); };
+        host.appendChild(launch);
 
         addRail({
-            title: '🏟️ Official sports channels',
+            title: 'From the touchline',
             subtitle: 'Sky Sports, TNT Sports, Premier League, BBC Sport, UEFA, FIFA, NBA, NFL — highlights, analysis and news, free from the broadcasters themselves',
             channelStyle: true, live: true,
             limit: 20,
@@ -4649,14 +5055,14 @@ document.addEventListener('DOMContentLoaded', function() {
             label: '⚽ Free sports, every network at once',
             hint: 'NFL, MLB, NBA, NHL, UFC, beIN, FOX Sports, Tennis, RugbyPass, FIFA+ · legal and free',
             action: 'Open sports guide',
-            onClick: btn => { btn.disabled = true; openThemedWall('sports'); }
+            onClick: () => openThemedWall('sports')
         });
 
         addBrowseAllBar(host, {
             label: '📰 24/7 news, every network at once',
             hint: 'Sky News, BBC, CBS, NBC, CNN Headlines, Bloomberg, Euronews, Al Jazeera and more',
             action: 'Open news guide',
-            onClick: btn => { btn.disabled = true; openThemedWall('news'); }
+            onClick: () => openThemedWall('news')
         });
 
         const shelf = document.createElement('section');
@@ -4668,7 +5074,7 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
             <div class="flex gap-3 overflow-x-auto no-scrollbar pb-2" id="live-network-strip"></div>`;
         host.appendChild(shelf);
-        shelf.querySelector('.rail-more').addEventListener('click', displayLiveTvHub);
+        shelf.querySelector('.rail-more').addEventListener('click', () => { displayLiveTvHub(); setSourceDrawer(true); });
 
         const strip = shelf.querySelector('#live-network-strip');
         HOME_NETWORKS.forEach(n => {
@@ -4775,6 +5181,14 @@ document.addEventListener('DOMContentLoaded', function() {
         wall.className = 'channel-wall px-2 pb-10';
         host.appendChild(wall);
 
+        const tools = document.createElement('div');
+        tools.className = 'ss-tools';
+        tools.innerHTML = `<input class="custom-input" type="search" aria-label="Search this channel guide" placeholder="Find a channel…"><select class="custom-input" aria-label="Sort channels"><option value="source">Channel order</option><option value="az">Name: A–Z</option></select><label><input type="checkbox" data-favourites> Favourites only</label>`;
+        head.insertBefore(tools, head.querySelector('[data-chips]'));
+        const note = document.createElement('p'); note.className = 'ss-guide-note';
+        note.textContent = 'Choose a channel to watch. Programme schedules are not supplied by these sources.';
+        head.appendChild(note);
+        let query = ''; let onlyFavourites = false; let order = 'source';
         let channels = [];
         try {
             channels = await collectChannels(url, sourceName, opts);
@@ -4794,12 +5208,14 @@ document.addEventListener('DOMContentLoaded', function() {
                     <button data-retry class="custom-btn accent-btn mt-4 px-4 py-2 text-xs font-bold uppercase tracking-wider">Try again</button>
                 </div>`;
             head.querySelector('[data-count]').textContent = 'Nothing loaded';
-            wall.querySelector('[data-retry]').addEventListener('click', () => renderChannelWall(sourceName, url));
+            wall.querySelector('[data-retry]').addEventListener('click', () => renderChannelWall(sourceName, url, opts));
             return;
         }
         if (myToken !== sectionToken) return;
 
         allChannelsInPlaylist = channels;
+        channels.forEach(ch => guideSearchPool.set(ch.url, ch));
+        const channelNumbers = new Map(channels.map((ch,i) => [ch.url,String(i+1).padStart(3,'0')]));
         let group = 'All';
 
         const categoryOf = ch => (ch.group && ch.group !== 'Uncategorized') ? ch.group : 'Other';
@@ -4827,7 +5243,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const row = document.createElement('button');
             row.className = `channel-row${blocker ? ' ch-blocked' : ''}`;
             row.innerHTML = `
-                <span class="ch-num"></span>
+                <span class="ch-num">${channelNumbers.get(ch.url)}</span>
                 <span class="ch-logo">
                     <img alt="" loading="lazy" decoding="async" src="${escapeHtml(ch.logo || FALLBACK_ART)}">
                 </span>
@@ -4847,28 +5263,29 @@ document.addEventListener('DOMContentLoaded', function() {
                 elements.nowPlayingGenre.textContent = (ch.group && ch.group !== 'Uncategorized') ? ch.group : 'LIVE';
                 elements.mainView.scrollTo({ top: 0, behavior: 'smooth' });
             });
-            return row;
-        }
-
-        /** Number the rows once they exist, the way a guide does. */
-        function numberRows() {
-            [...wall.children].forEach((row, i) => {
-                const n = row.querySelector('.ch-num');
-                if (n) n.textContent = String(i + 1).padStart(3, '0');
-            });
+            const wrap = document.createElement('div'); wrap.className = 'ss-guide-row';
+            const save = document.createElement('button'); save.className = 'ss-save-channel'; save._channel = ch;
+            const sync = () => { const saved = favorites.some(f => f.url === ch.url); save.textContent = saved ? '★' : '☆'; save.setAttribute('aria-pressed', String(saved)); save.setAttribute('aria-label', `${saved ? 'Remove' : 'Save'} ${ch.title} ${saved ? 'from' : 'to'} favourites`); };
+            sync(); save.onclick = () => { toggleFavorite(save); sync(); if (onlyFavourites) paint(); };
+            wrap.append(row, save); return wrap;
         }
 
         function paint() {
-            const list = group === 'All' ? channels : channels.filter(c => categoryOf(c) === group);
+            let list = channels.filter(c => (group === 'All' || categoryOf(c) === group) && (!query || `${c.title} ${categoryOf(c)}`.toLowerCase().includes(query)) && (!onlyFavourites || favorites.some(f => f.url === c.url)));
+            if (order === 'az') list = [...list].sort((a,b) => a.title.localeCompare(b.title));
             head.querySelector('[data-count]').textContent =
                 `${list.length.toLocaleString()} channels${group === 'All' ? '' : ` in ${group}`}`;
 
             keepScrollAcrossRepaint(() => {
                 wall.innerHTML = '';
-                renderInChunks(list, wall, makeRow, 60, numberRows);
+                renderInChunks(list, wall, makeRow, 60);
+                if (!list.length) wall.innerHTML = '<p class="ss-empty">No channels match. Try another search or turn off your filters.</p>';
             });
         }
 
+        tools.querySelector('input[type=search]').oninput = e => { query = e.target.value.trim().toLowerCase(); paint(); };
+        tools.querySelector('select').onchange = e => { order = e.target.value; paint(); };
+        tools.querySelector('[data-favourites]').onchange = e => { onlyFavourites = e.target.checked; paint(); };
         const chipRow = head.querySelector('[data-chips]');
         function paintChips() {
             chipRow.innerHTML = '';
@@ -4894,7 +5311,7 @@ document.addEventListener('DOMContentLoaded', function() {
             title: 'Kids TV, live',
             channelStyle: true, live: true,
             loader: () => sampleFromPlaylist(`${IPTV_ORG}/categories/kids.m3u`, 'Kids', 20),
-            onMore: () => loadM3USource('Kids', `${IPTV_ORG}/categories/kids.m3u`)
+            onMore: () => renderChannelWall('Kids', `${IPTV_ORG}/categories/kids.m3u`)
         });
 
         const kidsSets = ARCHIVE_SERIES_VAULTS.filter(v =>
@@ -4907,14 +5324,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 title: v.label, url: `vault:series:${v.id}`, logo: archiveThumb(v.id),
                 group: `${v.approx} episodes`, isSeries: true, needsArt: true, _vault: v
             })),
-            onMore: () => loadDataForSource('TV Box Sets')
+            onMore: () => showBrowseSource('TV Box Sets')
         });
 
         addRail({
             title: 'Cartoons',
             subtitle: 'Animation from the public-domain archive',
             loader: async () => (await archiveSearch({ collection: 'animationandcartoons', label: 'Cartoons', rows: 20 })).channels,
-            onMore: () => loadDataForSource('Free Cinema')
+            onMore: () => showBrowseSource('Free Cinema')
         });
 
         addRail({
@@ -4934,7 +5351,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <div class="text-5xl mb-3" aria-hidden="true">⭐</div>
                     <p class="font-bold text-slate-900 dark:text-white text-lg">Nothing saved yet</p>
                     <p class="text-sm text-[var(--text-muted)] mt-2 max-w-md mx-auto">
-                        Star anything from a list, or open a film and hit Favourite, and it will show up here.
+                        Save a film, show or live channel to My List and find it here whenever you’re ready.
                     </p>
                 </div>`;
             return;
@@ -4975,6 +5392,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         let genre = 'All';
         let sortBy = 'title';
+        let titleQuery = '';
         let enriching = true;
 
         const head = document.createElement('div');
@@ -4997,6 +5415,10 @@ document.addEventListener('DOMContentLoaded', function() {
         host.appendChild(head);
         scrollBrowseIntoView(head);
 
+        const titleSearch = document.createElement('input');
+        titleSearch.type = 'search'; titleSearch.className = 'custom-input w-full p-3 my-3'; titleSearch.placeholder = 'Search this collection…'; titleSearch.setAttribute('aria-label', 'Search this collection');
+        head.insertBefore(titleSearch, head.querySelector('[data-chips]'));
+        titleSearch.oninput = () => { titleQuery = titleSearch.value.trim().toLowerCase(); paint(); };
         const grid = document.createElement('div');
         grid.className = 'grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-7 gap-3 px-2 pb-10';
         host.appendChild(grid);
@@ -5022,7 +5444,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const filtered = genre === 'All'
                 ? items
                 : items.filter(c => c._tmdb && c._tmdb.genres && c._tmdb.genres.includes(genre));
-            const sorted = dedupeTitles(filtered).sort(sorters[sortBy] || sorters.title);
+            const sorted = dedupeTitles(filtered).filter(c => !titleQuery || `${c.title} ${c._tmdb?.name || ''}`.toLowerCase().includes(titleQuery)).sort(sorters[sortBy] || sorters.title);
 
             shownCount = sorted.length;
             paintCount();
@@ -5083,94 +5505,40 @@ document.addEventListener('DOMContentLoaded', function() {
     async function renderHomeRows() {
         const host = sectionHost || document.getElementById('home-rows');
         if (!host) return;
+        const networkShelf = document.getElementById('network-shelf');
+        if (host.contains(networkShelf)) elements.mainView.appendChild(networkShelf);
+        if (host.contains(elements.continueWatchingContainer)) elements.mainView.appendChild(elements.continueWatchingContainer);
         host.innerHTML = '';
         const myToken = sectionToken;
-
-        renderNetworkShelf();
-
-        // The billboard sits above the rails, so its container is reserved now and filled
-        // when the catalogue lands — appending it later would shove the page down under
-        // whoever is already reading it.
-        const heroHost = document.createElement('div');
-        host.appendChild(heroHost);
-        ensureSeedCatalogue().then(seed => {
+        const heroHost = document.createElement('div'); host.appendChild(heroHost);
+        paintHero(heroHost, featuredDiscovery());
+        addRail({ title:'Discover your next favourite', loader:async () => discoverySelection.slice(0,6), onMore:() => openSection('movies') });
+        const historySlot = document.createElement('div'); historySlot.dataset.historySlot = ''; host.appendChild(historySlot);
+        addRail({ title:'More to fall in love with', loader:async () => discoverySelection.slice(6,12), onMore:() => openSection('movies') });
+        const selectionRails = [...host.querySelectorAll('.discovery-rail')];
+        loadMyMovies().then(({all}) => {
             if (myToken !== sectionToken || !heroHost.isConnected) return;
-            paintHero(heroHost, seed, { eyebrow: 'Tonight on Streams Sphere' });
-            // Repaint once artwork exists, so the first impression is not a bare panel.
-            enrichNextBatch(seed, 40, () => myToken !== sectionToken).then(() => {
-                if (myToken !== sectionToken || !heroHost.isConnected) return;
-                paintHero(heroHost, seed, { eyebrow: 'Tonight on Streams Sphere' });
+            if (!discoverySelection.length) { heroHost.remove(); return; }
+            paintHero(heroHost, featuredDiscovery());
+            // Reconcile the first-paint snapshot with the current feed, including withdrawn titles.
+            selectionRails.forEach((section,i) => {
+                const channels = discoverySelection.slice(i*6,i*6+6), rail = section.querySelector('.rail');
+                const current = [...rail.querySelectorAll('.poster-card')].map(card => card._channel?.url);
+                if (current.join('\n') !== channels.map(ch => ch.url).join('\n')) {
+                    rail.replaceChildren(...channels.map(ch => makePosterCard(ch)));
+                }
+                if (!channels.length) section.remove();
             });
-        }).catch(() => {});
-
-        addRail({
-            title: 'Your movie library',
-            subtitle: 'From your own playlist',
-            loader: async () => shuffled((await loadMyMovies()).all, 20),
-            onMore: () => loadDataForSource('My Movies')
-        });
-
-        addRail({
-            title: 'Live right now',
-            subtitle: 'Free ad-supported channels from Pluto TV',
-            channelStyle: true, live: true,
-            loader: () => sampleFromPlaylist(`${IPTV_STREAMS}/us_pluto.m3u`, 'Pluto TV', 20),
-            onMore: () => loadDataForSource('Live TV')
-        });
-
-        ARCHIVE_MOVIE_VAULTS.slice(0, 3).forEach(vault => {
-            addRail({
-                title: vault.label,
-                subtitle: `${vault.approx} films`,
-                loader: async () => shuffled(await loadArchiveVault(vault), 20),
-                onMore: () => loadDataForSource('Movie Vault')
-            });
-        });
-
-        addRail({
-            title: 'Box sets',
-            subtitle: 'Complete series, every episode',
-            loader: async () => {
-                const picks = shuffled(ARCHIVE_SERIES_VAULTS, 12);
-                return picks.map(v => ({
-                    title: v.label,
-                    url: `vault:series:${v.id}`,
-                    logo: archiveThumb(v.id),
-                    group: `${v.approx} episodes`,
-                    isSeries: true,
-                    _vault: v
-                }));
-            },
-            onMore: () => loadDataForSource('TV Box Sets')
-        });
-
-        addRail({
-            title: 'Free cinema',
-            subtitle: 'Public-domain feature films',
-            loader: async () => (await archiveSearch({ collection: 'feature_films', label: 'Free Cinema', rows: 20 })).channels,
-            onMore: () => loadDataForSource('Free Cinema')
-        });
-
-        addRail({
-            title: 'Live sport',
-            channelStyle: true, live: true,
-            loader: () => sampleFromPlaylist(`${IPTV_ORG}/categories/sports.m3u`, 'Sports', 20),
-            onMore: () => loadDataForSource('Sports')
-        });
-
-        addRail({
-            title: 'Live news',
-            channelStyle: true, live: true,
-            loader: () => sampleFromPlaylist(`${IPTV_ORG}/categories/news.m3u`, 'News', 20),
-            onMore: () => loadDataForSource('News')
-        });
-
-        addRail({
-            title: 'Kids',
-            channelStyle: true, live: true,
-            loader: () => sampleFromPlaylist(`${IPTV_ORG}/categories/kids.m3u`, 'Kids', 20),
-            onMore: () => loadDataForSource('Kids')
-        });
+        }).catch(() => { /* The last known catalogue remains browsable while the source is offline. */ });
+        renderNetworkShelf(); host.appendChild(networkShelf);
+        addRail({ title:'Live right now', subtitle:'Free ad-supported channels from Pluto TV', channelStyle:true, live:true,
+            loader:() => sampleFromPlaylist(`${IPTV_STREAMS}/us_pluto.m3u`,'Pluto TV',20), onMore:() => openSection('live') });
+        addRail({ title:'Find your next box set', loader:async () => shuffled(ARCHIVE_SERIES_VAULTS,12).map(v => ({title:v.label,url:`vault:series:${v.id}`,logo:archiveThumb(v.id),group:`${v.approx} episodes`,isSeries:true,_vault:v})), onMore:() => openSection('tv') });
+        ARCHIVE_MOVIE_VAULTS.slice(0,3).forEach(vault => addRail({ title:vault.label,
+            loader:async () => shuffled(await loadArchiveVault(vault),20), onMore:() => showBrowseSource('Movie Vault') }));
+        addRail({ title:'Classic cinema', loader:async () => (await archiveSearch({collection:'feature_films',label:'Free Cinema',rows:20})).channels, onMore:() => showBrowseSource('Free Cinema') });
+        addRail({ title:'Live sport', channelStyle:true, live:true, loader:() => sampleFromPlaylist(`${IPTV_ORG}/categories/sports.m3u`,'Sports',20), onMore:() => showBrowseSource('Sports') });
+        addRail({ title:'Live news', channelStyle:true, live:true, loader:() => sampleFromPlaylist(`${IPTV_ORG}/categories/news.m3u`,'News',20), onMore:() => showBrowseSource('News') });
     }
 
     /* =====================================================================
@@ -5485,6 +5853,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     async function displayVaultTitles(vault, kind) {
+        setSourceDrawer(true);
         showSidebarSkeleton(`Opening ${vault.label}…`);
         try {
             const channels = await loadArchiveVault(vault);
@@ -5918,6 +6287,8 @@ document.addEventListener('DOMContentLoaded', function() {
         elements.playerIdle?.classList.add('hidden');
         // Playback expands the player back to full 16:9.
         elements.playerContainer?.classList.remove('idle-compact');
+        document.body.classList.add('is-playing');
+        setSourceDrawer(false);
 
         currentlyPlayingUrl = url;
         // `yt:list:<playlist id>` plays a whole channel rather than one video.
@@ -6153,105 +6524,208 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    // Shared navigation and discovery state. Kept in this closure with the player.
+    const guideSearchPool = new Map();
+    let searchScope = 'all', searchVersion = 0, globalSearchTimer, searchReturnFocus;
+    let searchArchiveItems = [], searchArchiveTerm = '', searchArchiveError = false;
+    let discoveryPromise;
+
+    function tvIcon(key) {
+        const paths = {
+            home:'<path d="m3 10 9-7 9 7v10H3Z"/><path d="M9 20v-7h6v7"/>',
+            live:'<rect x="3" y="5" width="18" height="13" rx="2"/><path d="M8 22h8M12 18v4m-3-13 3-3 3 3"/>',
+            movies:'<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 3v18M17 3v18M3 8h4M3 16h4M17 8h4M17 16h4"/>',
+            tv:'<rect x="3" y="6" width="18" height="15" rx="2"/><path d="m8 2 4 4 4-4m-6 10 6-4-6-4Z"/>',
+            mine:'<path d="M6 3h12v18l-6-4-6 4Z"/>',
+            kids:'<circle cx="12" cy="12" r="9"/><path d="M8 14s1 3 4 3 4-3 4-3M8 9h.01M16 9h.01"/>',
+            settings:'<circle cx="12" cy="8" r="4"/><path d="M4 21v-2a8 8 0 0 1 16 0v2Z"/>',
+            collections:'<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>',
+            arcade:'<path d="M6 7h12c3 0 5 12 2 13-2 1-4-4-5-4H9c-1 0-3 5-5 4C1 19 3 7 6 7Z"/><path d="M6 11h4m-2-2v4m7-2h.01m3 2h.01"/>',
+            search:'<circle cx="10.5" cy="10.5" r="7.5"/><path d="m16 16 5 5"/>'
+        };
+        return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${paths[key] || paths.live}</svg>`;
+    }
+    function renderMobileNav() {
+        const bar = document.getElementById('ss-mobile-nav'); bar.innerHTML = '';
+        [['home','Home'],['search','Discover'],['mine','My List'],['live','Live TV'],['settings','Settings']].forEach(([key,label]) => {
+            const btn = document.createElement('button'); btn.innerHTML = `${tvIcon(key)}<span>${label}</span>`;
+            if (key === activeSection) btn.setAttribute('aria-current','page');
+            btn.onclick = () => key === 'search' ? openGlobalSearch() : key === 'settings' ? elements.settingsBtn.click() : openSection(key);
+            bar.appendChild(btn);
+        });
+    }
+    function renderDiscoveryNav() {
+        const sidebar = document.getElementById('discovery-sidebar');
+        sidebar.innerHTML = '<nav class="ss-side-links" aria-label="Discover"></nav><p class="ss-side-label">Your space</p><nav class="ss-side-links" aria-label="Your entertainment"></nav><div class="ss-side-promo"></div>';
+        const menus = sidebar.querySelectorAll('nav');
+        const add = (menu,key,label,action,active = key === activeSection) => {
+            const button = document.createElement('button'); button.innerHTML = `${tvIcon(key)}<span>${label}</span>`;
+            if (active) button.setAttribute('aria-current','page'); button.onclick = action; menu.appendChild(button);
+        };
+        [['home','Home'],['search','Discover'],['movies','Movies'],['tv','TV Shows'],['live','Live TV'],['collections','Collections'],['mine','My List']].forEach(([key,label]) => add(menus[0],key,label,() => key === 'search' ? openGlobalSearch() : key === 'collections' ? showBrowseSource('Movie Vault') : openSection(key)));
+        add(menus[1],'kids','Kids & family',() => openSection('kids'));
+        add(menus[1],'arcade','Arcade',() => document.getElementById('games-pin-btn').click());
+        add(menus[1],'settings','Settings',() => elements.settingsBtn.click(),false);
+        const promo = sidebar.querySelector('.ss-side-promo');
+        promo.innerHTML = `${tvIcon('movies')}<strong>So much more<br>to discover.</strong><p>Your films, favourite shows<br>and live channels. Together.</p><button>Explore the collection</button>`;
+        promo.querySelector('button').onclick = () => openSection('movies');
+    }
+    function setSourceDrawer(open) {
+        elements.sidebar.classList.toggle('-translate-x-full',!open);
+        elements.sidebar.inert = !open;
+        if (open) requestAnimationFrame(() => elements.searchInput?.focus());
+        elements.mobileOverlay.classList.toggle('hidden',!open);
+        elements.menuToggle.setAttribute('aria-expanded',String(open));
+        elements.menuToggle.setAttribute('aria-controls','sidebar');
+    }
+    function showBrowseSource(name) { loadDataForSource(name); setSourceDrawer(true); }
+    function openTitle(channel) {
+        if (channel._vault) { displayVaultTitles(channel._vault,'series'); return; }
+        if (channel._episodes) {
+            setSourceDrawer(true); allChannelsInPlaylist = channel._episodes;
+            populatePlaylistUI(channel._episodes,true,() => showBrowseSource('TV Box Sets'),channel.title); return;
+        }
+        playStream(channel.url);
+        activeChannelObj = channel;
+        elements.nowPlayingTitle.textContent = channel.title;
+        elements.nowPlayingGenre.textContent = channel.group || 'MEDIA';
+        elements.mainView.scrollTo({top:0,behavior:'smooth'});
+    }
+    function searchType(ch) {
+        if (ch.isSeries || ch.isEpisode || ch._vault || ch._episodes) return 'tv';
+        if (ch.isVod || ch.url?.startsWith('archive:')) return 'movies';
+        return 'live';
+    }
+    function discoveryPool() {
+        const sets = ARCHIVE_SERIES_VAULTS.map(v => ({title:v.label,url:`vault:series:${v.id}`,logo:archiveThumb(v.id),group:`${v.approx} episodes`,isSeries:true,needsArt:true,_vault:v}));
+        return dedupeByUrl([favorites,watchHistory,archiveLoadedChannels,allChannelsInPlaylist,
+            catalogue.movies || catalogue.seed || discoverySelection,catalogue.series || sets,[...guideSearchPool.values()],vodSeriesEpisodes()]);
+    }
+    function primeDiscovery() {
+        if (!discoveryPromise) discoveryPromise = Promise.allSettled([
+            ensureSeriesCatalogue(), ensureSeedCatalogue(),
+            ...[`${IPTV_ORG}/countries/uk.m3u`,`${IPTV_STREAMS}/us_pluto.m3u`].map(async url => {
+                const text = await fetchWithFallback(url,1,false);
+                const parsed = await parseM3U(text,'Live TV');
+                parsed.channels.forEach(c => guideSearchPool.set(c.url,c));
+            })
+        ]);
+        return discoveryPromise;
+    }
+    function renderSearchTabs() {
+        const bar = document.getElementById('ss-search-tabs'); bar.innerHTML = '';
+        [['all','Everything'],['movies','Movies'],['tv','TV shows'],['live','Live channels']].forEach(([key,label]) => {
+            const btn = document.createElement('button'); btn.className = `filter-chip${searchScope === key ? ' active' : ''}`;
+            btn.textContent = label; btn.setAttribute('aria-pressed',String(searchScope === key));
+            btn.onclick = () => { searchScope = key; renderSearchTabs(); runGlobalSearch(); }; bar.appendChild(btn);
+        });
+    }
+    function paintSearch() {
+        const term = elements.globalSearchInput.value.trim().toLowerCase();
+        const host = elements.globalSearchResults; host.innerHTML = '';
+        if (term.length < 2) {
+            host.innerHTML = '<div class="ss-search-hint"><span class="ss-kicker">LESS SCROLLING. MORE WATCHING.</span><h2>What are you in the mood for?</h2><p>Find a film, a favourite show or a live channel.<br>Start with a title, channel name or genre.</p></div>';
+            return;
+        }
+        const matches = ch => (searchScope === 'all' || searchType(ch) === searchScope)
+            && `${ch.title || ''} ${ch.group || ''} ${(ch._tmdb?.genres || []).join(' ')}`.toLowerCase().includes(term);
+        const pool = discoveryPool().filter(matches);
+        const local = [...dedupeTitles(pool.filter(ch => searchType(ch) === 'movies')), ...dedupeTitles(pool.filter(ch => searchType(ch) === 'tv')), ...pool.filter(ch => searchType(ch) === 'live')];
+        const exact = ch => (ch.title || '').toLowerCase().startsWith(term) ? 0 : 1;
+        local.sort((a,b) => exact(a)-exact(b) || (a.title || '').localeCompare(b.title || ''));
+        const append = (label,items) => {
+            if (!items.length) return;
+            const heading = document.createElement('h2'); heading.className = 'ss-search-label'; heading.textContent = label; host.appendChild(heading);
+            const grid = document.createElement('div'); grid.className = 'ss-search-grid'; host.appendChild(grid);
+            items.slice(0,60).forEach(ch => grid.appendChild(makePosterCard(ch,{channelStyle:searchType(ch)==='live',live:searchType(ch)==='live'})));
+        };
+        append(`${local.length.toLocaleString()} matching titles and channels${local.length > 60 ? ' · showing the first 60' : ''}`,local);
+        const remote = searchArchiveTerm === term && (searchScope === 'all' || searchScope === 'movies')
+            ? searchArchiveItems.filter(ch => !local.some(c => c.url === ch.url)) : [];
+        append('More from the Internet Archive',remote);
+        if (!local.length && !remote.length) {
+            const empty = document.createElement('p'); empty.className = 'ss-empty'; empty.textContent = searchArchiveTerm === term
+                ? 'No matches found. Try a shorter title or choose Everything.' : 'Searching your collection…'; host.appendChild(empty);
+        }
+        if (searchArchiveError && (searchScope === 'all' || searchScope === 'movies')) {
+            const message = document.createElement('p'); message.className = 'ss-guide-note'; message.textContent = 'The Internet Archive is unavailable right now. Results from your loaded library are still shown.'; host.appendChild(message);
+        }
+    }
+    function runGlobalSearch() {
+        clearTimeout(globalSearchTimer); const version = ++searchVersion;
+        const raw = elements.globalSearchInput.value.trim(); const term = raw.toLowerCase();
+        paintSearch(); if (term.length < 2) return;
+        const current = () => version === searchVersion && !elements.globalSearchModal.classList.contains('hidden');
+        primeDiscovery().then(() => { if (current()) paintSearch(); });
+        if (searchScope === 'all' || searchScope === 'movies') {
+            globalSearchTimer = setTimeout(async () => {
+                ensureMovieCatalogue().then(() => { if (current()) paintSearch(); }).catch(() => {});
+                try {
+                    const {channels} = await archiveSearch({collection:null,label:'Internet Archive',term:raw,rows:30});
+                    if (!current()) return; searchArchiveItems = channels; searchArchiveError = false;
+                } catch(e) { if (!current()) return; searchArchiveItems = []; searchArchiveError = true; }
+                searchArchiveTerm = term; paintSearch();
+            },350);
+        } else {
+            primeDiscovery().then(() => { if (current()) { searchArchiveTerm = term; paintSearch(); } });
+        }
+    }
+    function closeGlobalSearch(restore = true) {
+        ++searchVersion; clearTimeout(globalSearchTimer);
+        elements.globalSearchModal.classList.add('hidden');
+        if (restore && searchReturnFocus?.isConnected) searchReturnFocus.focus();
+    }
     function openGlobalSearch() {
+        searchReturnFocus = document.activeElement;
         elements.globalSearchModal.classList.remove('hidden');
-        elements.globalSearchInput.focus();
-        elements.globalSearchResults.innerHTML = '<div class="h-full flex items-center justify-center text-slate-500 dark:text-slate-400 text-lg">Type to instantly search all active media...</div>';
+        elements.globalSearchInput.focus(); renderSearchTabs(); runGlobalSearch();
+    }
+    function initializeTvExperience() {
+        document.getElementById('ss-home').onclick = () => openSection('home');
+        document.getElementById('ss-settings-appearance').onclick = toggleLightDarkMode;
+        const shortcuts = document.createElement('div'); shortcuts.className = 'flex flex-wrap gap-2 mt-4';
+        [['Browse sources',() => showBrowseSource('Movie Vault')],['Kids & family',() => openSection('kids')],['Arcade',() => document.getElementById('games-pin-btn').click()]].forEach(([label,action]) => {
+            const button = document.createElement('button'); button.className = 'custom-btn p-3 text-sm'; button.textContent = label;
+            button.onclick = () => { elements.settingsModal.classList.add('hidden'); action(); }; shortcuts.appendChild(button);
+        });
+        document.getElementById('ss-settings-appearance').parentElement.appendChild(shortcuts);
+        const playbackTools = document.createElement('div'); playbackTools.className = 'ss-playback-tools';
+        [['cast-btn','Cast / AirPlay'],['pip-btn','Picture in picture'],['fullscreen-btn','Fullscreen']].forEach(([id,label]) => {
+            const button = document.createElement('button'); button.className = 'custom-btn'; button.textContent = label;
+            button.onclick = () => document.getElementById(id).click(); playbackTools.appendChild(button);
+        });
+        document.getElementById('now-playing-info').appendChild(playbackTools);
+        document.getElementById('ss-stop').onclick = () => {
+            ++activeLoadId; currentlyPlayingUrl = ''; activeChannelObj = null; currentRetryCount = 10;
+            destroyPlayers(); elements.loadingOverlay.classList.add('hidden');
+            elements.playerContainer.classList.add('idle-compact'); document.body.classList.remove('is-playing');
+            elements.mainView.scrollTo({top:0,behavior:'smooth'});
+        };
+        elements.globalSearchInput.addEventListener('input',runGlobalSearch);
+        elements.globalSearchModal.addEventListener('click',e => { if (e.target === elements.globalSearchModal) closeGlobalSearch(); });
+        // Escape works even while typing. Keep keyboard focus inside the search dialog.
+        elements.globalSearchModal.addEventListener('keydown',e => {
+            if (e.key === 'Escape') { e.stopPropagation(); closeGlobalSearch(); }
+            if (e.key !== 'Tab') return;
+            const focusable = [...elements.globalSearchModal.querySelectorAll('button,input,[tabindex="0"]')].filter(el => el.offsetParent !== null);
+            const first = focusable[0], last = focusable[focusable.length-1];
+            if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last?.focus(); }
+            else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first?.focus(); }
+        });
+        setSourceDrawer(false);
     }
 
     function bindAllEvents() {
         elements.themeToggleBtn?.addEventListener('click', toggleLightDarkMode);
         
         elements.openSearchBtn?.addEventListener('click', openGlobalSearch);
-        elements.closeGlobalSearch?.addEventListener('click', () => { elements.globalSearchModal.classList.add('hidden'); });
+        elements.closeGlobalSearch?.addEventListener('click', () => closeGlobalSearch());
         
         elements.qualityToggleBtn?.addEventListener('click', () => {
             elements.qualitySelector.classList.toggle('hidden');
         });
 
-        elements.closeSidebarBtn?.addEventListener('click', () => {
-            elements.sidebar.classList.add('-translate-x-full');
-            elements.mobileOverlay.classList.add('hidden');
-        });
-
-        function renderSearchRow(channel, badge) {
-            const itemDiv = document.createElement('div');
-            itemDiv.className = 'channel-item flex items-center space-x-4 p-3 cursor-pointer rounded-xl transition-all duration-200 border border-black/5 dark:border-white/5 mb-2 bg-black/5 dark:bg-white/5 hover:bg-[var(--accent-glow)]';
-            itemDiv.setAttribute('role', 'button');
-            itemDiv.setAttribute('tabindex', '0');
-            itemDiv.innerHTML = `
-                <div class="flex-shrink-0 w-12 h-12 bg-black/5 dark:bg-black/40 rounded flex items-center justify-center overflow-hidden border border-black/5 dark:border-white/5">
-                    <img src="${escapeHtml(channel.logo || '')}" alt="" loading="lazy" class="w-full h-full object-cover" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" onload="this.style.display='block'; this.nextElementSibling.style.display='none';">
-                    <div class="w-full h-full flex items-center justify-center text-sm font-bold text-slate-500" style="${channel.logo ? 'display: none;' : 'display: flex;'}">${escapeHtml((channel.title || 'X').substring(0,1).toUpperCase())}</div>
-                </div>
-                <div class="flex-1 overflow-hidden">
-                    <div class="text-sm font-bold text-slate-900 dark:text-white truncate">${escapeHtml(channel.title || 'Unknown')}</div>
-                    <div class="text-xs font-semibold uppercase tracking-wider" style="color: var(--accent-text)">${escapeHtml(badge || channel.group || 'Media')}</div>
-                </div>
-                <svg class="w-6 h-6 text-slate-500 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>`;
-            const go = () => {
-                elements.globalSearchModal.classList.add('hidden');
-                playStream(channel.url);
-                elements.nowPlayingTitle.textContent = channel.title;
-                elements.nowPlayingGenre.textContent = channel.group || 'MEDIA';
-                elements.mainView.scrollTo({ top: 0, behavior: 'smooth' });
-            };
-            itemDiv.addEventListener('click', go);
-            itemDiv.addEventListener('keydown', ev => { if (ev.key === 'Enter') go(); });
-            return itemDiv;
-        }
-
-        function searchSectionHeading(text) {
-            const h = document.createElement('div');
-            h.className = 'text-[10px] font-bold uppercase tracking-widest text-[var(--text-muted)] px-1 pt-3 pb-2';
-            h.textContent = text;
-            return h;
-        }
-
-        elements.globalSearchInput?.addEventListener('input', e => {
-            clearTimeout(searchTimeout);
-            const raw = e.target.value.trim();
-            const term = raw.toLowerCase();
-
-            if (term.length < 2) {
-                elements.globalSearchResults.innerHTML = '<div class="h-full flex items-center justify-center text-[var(--text-muted)] text-lg">Type at least two characters…</div>';
-                return;
-            }
-
-            // Local pass is instant; the Internet Archive pass is debounced behind it.
-            const searchPool = [...favorites, ...archiveLoadedChannels, ...vodSeriesEpisodes(), ...allChannelsInPlaylist];
-            const uniquePool = Array.from(new Map(searchPool.map(item => [item.url, item])).values());
-            const local = uniquePool.filter(c => c.title && c.title.toLowerCase().includes(term)).slice(0, 40);
-
-            elements.globalSearchResults.innerHTML = '';
-            if (local.length) {
-                elements.globalSearchResults.appendChild(searchSectionHeading(`In your library · ${local.length}`));
-                local.forEach(c => elements.globalSearchResults.appendChild(renderSearchRow(c)));
-            }
-
-            const archiveBlock = document.createElement('div');
-            archiveBlock.innerHTML = `<div class="text-[10px] font-bold uppercase tracking-widest text-[var(--text-muted)] px-1 pt-4 pb-2">Searching the Internet Archive…</div>`;
-            elements.globalSearchResults.appendChild(archiveBlock);
-
-            searchTimeout = setTimeout(async () => {
-                try {
-                    const { channels } = await archiveSearch({ collection: null, label: 'Free Cinema', term: raw, rows: 30 });
-                    // A newer keystroke may have replaced this render pass already.
-                    if (!archiveBlock.isConnected) return;
-                    archiveBlock.innerHTML = '';
-                    if (!channels.length) {
-                        if (!local.length) {
-                            elements.globalSearchResults.innerHTML = '<div class="h-full flex items-center justify-center text-[var(--text-muted)] text-lg">No matches found.</div>';
-                        }
-                        return;
-                    }
-                    archiveBlock.appendChild(searchSectionHeading(`Free public-domain films · ${channels.length}`));
-                    channels.forEach(c => archiveBlock.appendChild(renderSearchRow(c, 'Free Cinema')));
-                } catch (err) {
-                    if (archiveBlock.isConnected) archiveBlock.innerHTML = '';
-                }
-            }, 350);
-        });
+        elements.closeSidebarBtn?.addEventListener('click', () => setSourceDrawer(false));
 
         /* ---- Detail sheet ---- */
         document.getElementById('detail-close')?.addEventListener('click', closeDetail);
@@ -6263,20 +6737,17 @@ document.addEventListener('DOMContentLoaded', function() {
             const ch = detailChannel;
             closeDetail();
             // A box-set card stands for a whole series, so open its episode list.
-            if (ch._vault) { displayVaultTitles(ch._vault, 'series'); return; }
-            playStream(ch.url);
-            elements.nowPlayingTitle.textContent = ch.title;
-            elements.nowPlayingGenre.textContent = ch.group || 'MEDIA';
-            elements.mainView.scrollTo({ top: 0, behavior: 'smooth' });
+            openTitle(ch);
         });
         document.getElementById('detail-fav')?.addEventListener('click', () => {
-            if (!detailChannel || detailChannel._vault) return;
+            if (!detailChannel) return;
             const fake = { _channel: detailChannel, classList: { add() {}, remove() {} }, setAttribute() {} };
             toggleFavorite(fake);
+            document.getElementById('detail-fav').textContent = favorites.some(f => f.url === detailChannel.url) ? '✓ In My List' : '+ My List';
         });
 
         document.getElementById('all-networks-btn')?.addEventListener('click', () => {
-            loadDataForSource('Live TV');
+            showBrowseSource('Live TV');
             const networks = LIVE_TV_SECTIONS.find(s => s.key === 'networks');
             if (networks) setTimeout(() => displayLiveTvSection(networks), 60);
         });
@@ -6362,14 +6833,8 @@ document.addEventListener('DOMContentLoaded', function() {
         });
         
         elements.playlistElement?.addEventListener('click', handlePlaylistClick);
-        elements.menuToggle?.addEventListener('click', () => {
-            elements.mobileOverlay.classList.toggle('hidden');
-            elements.sidebar.classList.toggle('-translate-x-full');
-        });
-        elements.mobileOverlay?.addEventListener('click', () => {
-            elements.sidebar.classList.add('-translate-x-full');
-            elements.mobileOverlay.classList.add('hidden');
-        });
+        elements.menuToggle?.addEventListener('click', () => setSourceDrawer(elements.sidebar.classList.contains('-translate-x-full')));
+        elements.mobileOverlay?.addEventListener('click', () => setSourceDrawer(false));
 
         const openArcade = () => {
             elements.gameHubModal.classList.remove('hidden');
@@ -6454,6 +6919,7 @@ document.addEventListener('DOMContentLoaded', function() {
         checkCookieConsent();
         initializeThemeSystem();
         bindAllEvents();
+        initializeTvExperience();
         initializePlayers();
         setupAllPlaylists();
 
