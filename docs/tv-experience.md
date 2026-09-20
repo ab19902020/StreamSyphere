@@ -1,35 +1,38 @@
-# StreamSphere TV — television experience refresh
+# StreamSphere — Discovery Hub
 
-## Design concepts
+The supplied “Option 5 — Discovery Hub” image is the visual reference for this revision. The earlier sea-glass concept has been replaced by a near-black canvas, violet highlights and a cinematic catalogue layout.
 
-Three complementary concepts guide this implementation:
+## Desktop and mobile
 
-1. **Cinema at home.** A dark navy canvas, restrained sea-glass accent, generous artwork, a featured billboard and clear content rails. Home begins with something to discover; the player appears when a viewer selects something.
-2. **The channel guide.** A channel-first destination with UK, sports and news entry points, network selection, full-width channel rows, stable numbers, category filters, channel search, alphabetical sorting and saved-channel filtering. No invented programmes or schedules: the feeds provide channel information only.
-3. **Your television.** My List brings saved films, series and channels together, while continue watching retains the existing saved playback positions. Mobile has persistent Home / Live TV / Movies / Search / My List shortcuts.
+- Desktop has a single compact header with the StreamSphere swirl mark, primary destinations, search, Cast and Settings. A permanent discovery sidebar leads to Home, Discover, Movies, TV Shows, Live TV, Collections and My List.
+- The featured carousel uses real catalogue artwork, title metadata, Watch now, My List, details, previous/next controls and labelled selection dots. It does not advance automatically.
+- Six portrait posters fit across the desktop content area, with restrained titles, metadata and shelf controls. Wide monitors show eight.
+- Mobile has category chips, a portrait feature card, compact swipeable poster rows and persistent Home / Discover / My List / Live TV / Settings navigation.
+- Continue Watching uses landscape cards with actual saved progress and remaining time. It appears after the first Home poster row when history exists, and is also available in My List.
+- Collections remains an accessible source drawer. Settings also exposes source browsing, Kids & family, Arcade and light/dark appearance on mobile.
+- Live TV retains its channel guide, network directory, stable channel numbers, search, category/sort controls and favourites. Search retains Movies / TV shows / Live channels scopes and episode selection.
 
-The result combines these concepts. It keeps the existing one-file application, source catalogue, player integrations and optional local preferences.
+The reference's fictional films, social profiles, trending rankings, programme schedules and download controls have not been introduced as pretend functionality. All visible destinations use the site's existing capabilities.
 
-## Main changes
+## First-paint artwork
 
-- Content-first Home; source browsing moves to a dismissible drawer on every screen size.
-- One visual search with Everything / Movies / TV shows / Live channels filters. Search includes loaded sources, the movie catalogue, the series catalogue, a UK/Pluto channel index and Internet Archive search. Additional networks enter the index when browsed.
-- Search cards open details for films/shows and tune directly to live channels. Series open an episode selector; collection identifiers are never handed to the media player.
-- Guide favourites, channel-name search, category chips, alphabetical sorting, stable channel numbers and useful empty states.
-- Collection grids have title search alongside genre and sort controls.
-- Favourites refresh My List; shows can also be saved.
-- An explicit close-player action releases media and cancels stale playback work. Blocked-source explanations stay visible in the content-first layout.
-- Mobile playback actions retain Cast/AirPlay, picture-in-picture and fullscreen access. Light mode remains available in Settings.
-- Search supports Escape from its input, focus containment and return focus. The closed source drawer is inert.
-- Rapid filter changes cancel obsolete DOM-render chunks; interrupted shelves can rebuild on return.
-- Smaller sponsor placement after browsing; no changes to source URLs or automatic affiliate behavior.
-- Default dark appearance, updated installable-app colours and service-worker cache version.
+Twelve editorial picks are drawn from the existing `My Movies` M3U playlist; each file was checked against its existing Archive item's metadata on 19 September 2026. No new stream providers or playback URLs were introduced. Artwork and metadata use the app's existing TMDB integration.
+
+The initial selection, twelve posters and three feature backdrops are bundled so Home displays real content before remote catalogue and metadata requests finish. As soon as the current playlist loads, the selection is reconciled by exact stream URL; removed titles are discarded. If the source is offline, the last known selection remains visible. Playback remains subject to the original source's availability.
+
+See [artwork provenance](../assets/discovery/README.md). DM Sans and Manrope are served locally, with their OFL licences in `assets/fonts/`.
 
 ## Validation
 
-`tests/tv-experience.cjs` uses deterministic playlists and metadata, isolated from production data. It checks navigation, guide filtering, favourites, number stability, stale render cancellation, blocked-source UI, search scopes, Escape, detail handoff, media URL assignment and cleanup, My List, series selection, theme switching, and layouts at 320, 390, 768 and 1440 pixels.
+`tests/tv-experience.cjs` uses controlled playlists, metadata and watch history. It covers:
 
-Run with Node and Playwright installed:
+- Featured carousel navigation, keyboard focus retention, My List and real resume progress.
+- Desktop sidebar, mobile destinations, source drawer and history preservation across section changes.
+- Guide search, categories, favourites, stable numbering and cancellation of stale render chunks.
+- Search scopes and Escape, detail-to-player handoff, media cleanup and series episode selection.
+- Light/dark appearance and overflow checks at 320, 390, 768 and 1440 pixels.
+
+Run with Node and Playwright:
 
 ```sh
 npm install --no-save playwright
@@ -37,13 +40,13 @@ npx playwright install chromium
 node tests/tv-experience.cjs
 ```
 
-For an existing browser installation, set `BROWSER_EXECUTABLE_PATH`. `TAILWIND_CDN_PATH` can point to a local copy of the app's Tailwind CDN script for offline test runs. The test server chooses a free local port and closes on exit.
+An existing browser can be selected with `BROWSER_EXECUTABLE_PATH`. Set `TAILWIND_CDN_PATH` to a local copy of the Tailwind CDN script for offline checks. The test server chooses a free port and closes on exit.
 
-These tests validate the interface and player handoffs. They do not establish the availability of every third-party channel, regional playback rights, or physical Cast/AirPlay-device behavior. Existing stream restrictions and failures remain visible in the player.
+These checks verify interface behaviour and player handoffs, rather than the continued availability of every external stream or a physical Cast/AirPlay device.
 
-## Screenshots
+## Implemented previews
 
-These are captures of the implemented page, with the default Home billboard visible while external catalogue artwork loads.
+The screenshots show the actual page and existing catalogue artwork. Empty watch history stays empty.
 
 ![Desktop Home](home-desktop.png)
 
