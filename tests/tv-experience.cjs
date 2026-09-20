@@ -12,10 +12,12 @@ const channels = '#EXTM3U\n' + Array.from({length:140},(_,i)=>`#EXTINF:-1 tvg-id
 const movies = '#EXTM3U\n#EXTINF:-1,Archive Adventure (1950)\nhttps://archive.org/download/test-film/Archive%20Adventure.mp4\n#EXTINF:-1,Test Comedy (1960)\nhttps://archive.org/download/test-comedy/Test%20Comedy.mp4';
 const southPark = '#EXTM3U\n' + ['S02E01 Next season','S01E10 Tenth episode','S01E02 Second episode','S01E01 First episode'].map(title=>`#EXTINF:-1,South Park ${title}\nhttps://archive.org/download/south-park/${title.split(' ')[0]}.mp4`).join('\n');
 const shows = '#EXTM3U\n#EXTINF:-1 group-title="Test Show",Test Show S01E01\nhttps://archive.org/download/test-show/Test%20Show%20S01E01.mp4';
+const openFixture={schemaVersion:1,updatedAt:'2026-09-20',sources:[{id:'blender',name:'Open Test Studio',website:'https://publisher.example/',description:'Open films and series.'}],movies:[{title:'Open Film',url:'https://publisher.example/open-film.mp4',sourceId:'blender',sourceUrl:'https://publisher.example/open-film',poster:'https://publisher.example/poster.jpg',description:'An openly licensed adventure.',creator:'Test Filmmaker',rights:{name:'CC BY 4.0',url:'https://creativecommons.org/licenses/by/4.0/'},genres:['Adventure'],year:2024}],shows:[{id:'open-test-show',title:'Open Test Series',sourceId:'blender',poster:'https://publisher.example/series.jpg',description:'Publisher series.',episodes:[1,2].map(n=>({title:`Open Episode ${n}`,url:n===1?'nasa:test-nasa-episode':`https://publisher.example/episode-${n}.mp4`,assetManifest:n===1?'https://images-assets.nasa.gov/video/test-nasa-episode/collection.json':undefined,sourceId:'blender',sourceUrl:'https://publisher.example/series',poster:'https://publisher.example/series.jpg',description:'A source-supplied episode description.',creator:'Test Studio',rights:{name:'CC BY 4.0',url:'https://creativecommons.org/licenses/by/4.0/'},genres:['Science'],season:2025,episode:n}))}],live:[{title:'Official Test Live',url:'https://publisher.example/live.mp4',sourceId:'blender',sourceUrl:'https://publisher.example/live',poster:'https://publisher.example/logo.jpg',description:'The official broadcast.',creator:'Test Broadcaster',rights:{name:'Publisher permission',url:'https://publisher.example/terms'},genres:['News'],country:'jp'}]};
 const svg = '<svg xmlns="http://www.w3.org/2000/svg" width="600" height="900"><rect width="600" height="900" fill="#23443f"/><circle cx="300" cy="380" r="190" fill="#30566c"/></svg>';
 let server,browser;
 (async()=>{
  server = http.createServer((req,res)=>{
+   if(req.url.split('?')[0]==='/data/open-catalogue.json'){res.setHeader('Content-Type','application/json');res.end(JSON.stringify(openFixture));return;}
    const asset=path.join(root,decodeURIComponent(req.url.split('?')[0]));
    if(req.url.startsWith('/assets/') && asset.startsWith(root+path.sep) && fs.existsSync(asset)) { res.setHeader('Content-Type',asset.endsWith('.woff')?'font/woff':'image/jpeg');res.end(fs.readFileSync(asset));return; }
    res.setHeader('Content-Type','text/html');res.end(app);
@@ -33,6 +35,7 @@ let server,browser;
    if(url.hostname==='127.0.0.1') return route.continue();
    const send=(body,contentType='application/json')=>route.fulfill({status:200,contentType,body:typeof body==='string'?body:JSON.stringify(body)});
    if(url.hostname==='cdn.tailwindcss.com') return tailwind ? send(tailwind,'text/javascript') : route.continue();
+   if(url.hostname==='images-assets.nasa.gov' && url.pathname.endsWith('/collection.json')) return send(['https://untrusted.example/fake~medium.mp4','http://images-assets.nasa.gov/video/test-nasa-episode/test~orig.mp4','http://images-assets.nasa.gov/video/test-nasa-episode/test~medium.mp4']);
    if(url.pathname.endsWith('.m3u')) return send(url.pathname.endsWith('Movies.m3u')?movies:url.pathname.endsWith('Sp.m3u')?southPark:url.pathname.endsWith('/fr.m3u')?channels.replaceAll('Test Channel','France Channel'):url.hostname==='raw.githubusercontent.com' && !url.pathname.includes('iptv-org')?shows:channels,'text/plain');
    if(url.pathname==='/metadata/RobertBarrDetectiveSeries') return send({files:['S02E01 Next term','S01E02 Bunk Off','S01E01 First Day','S01E01 First Day.ia'].map(title=>({name:`The Inbetweeners ${title}.mp4`,format:'MPEG4',size:'200000000'}))});
    if(url.pathname.startsWith('/metadata/')) return send({metadata:{title:'Test collection'},files:[{name:'Archive Adventure (1950).mp4',format:'MPEG4',size:'200000000'},{name:'Second Film (1940).mp4',format:'MPEG4',size:'200000000'}]});
@@ -208,6 +211,44 @@ let server,browser;
  assert.equal(await page.locator('#continue-watching-container').count(),1,'History survives navigation without duplicate IDs');
  assert.equal(await page.locator('.section-pane[data-section=home] #continue-watching-container').isVisible(),true);
  assert.equal(await page.locator('#discovery-sidebar').isVisible(),false,'Mobile replaces desktop sidebar with bottom navigation');
+ // Source catalogue, credits, publisher series and official live players.
+ await page.setViewportSize({width:1440,height:1000});
+ await page.locator('#discovery-sidebar').getByRole('button',{name:'Open library',exact:true}).click();
+ await page.locator('.library-grid .poster-card').first().waitFor();
+ assert.ok((await page.locator('.library-counts').textContent()).includes('2 episodes'));
+ await page.locator('.library-grid .poster-card').filter({hasText:'Open Film'}).click();
+ assert.equal(await page.locator('#detail-overview').textContent(),'An openly licensed adventure.');
+ assert.equal(await page.locator('#detail-source-credit').getByRole('link',{name:'CC BY 4.0 ↗'}).getAttribute('href'),'https://creativecommons.org/licenses/by/4.0/');
+ await page.locator('#detail-play').click();
+ await page.waitForFunction(()=>document.querySelector('#main-player').getAttribute('src')?.includes('open-film.mp4'));
+ assert.ok((await page.locator('#playback-source-credit').textContent()).includes('Test Filmmaker'));
+ await page.locator('#ss-stop').click();
+ await page.getByRole('navigation',{name:'Open library content'}).getByRole('button',{name:'TV & series'}).click();
+ await page.locator('.library-grid .poster-card').first().click();
+ await page.locator('#detail-fav').click();
+ const savedShow=await page.evaluate(()=>JSON.parse(localStorage.getItem('iptv_favorites')).find(ch=>ch._openShowId==='open-test-show'));
+ assert.ok(savedShow && !savedShow._episodes,'Saving a show never serializes its full episode catalogue');
+ await page.locator('#detail-play').click();
+ await page.locator('#sidebar .channel-item').filter({hasText:'Open Episode 1'}).click();
+ await page.waitForFunction(()=>document.querySelector('.episode-heading')?.textContent.includes('Open Test Series'));
+ assert.equal(await page.getByRole('combobox',{name:'Select season',exact:true}).inputValue(),'2025');
+ await page.waitForFunction(()=>document.querySelector('#main-player').getAttribute('src')==='https://images-assets.nasa.gov/video/test-nasa-episode/test~medium.mp4');
+ await page.locator('[data-next-episode]').click();
+ await page.waitForFunction(()=>document.querySelector('#main-player').getAttribute('src')?.includes('episode-2.mp4'));
+ await page.locator('#ss-stop').click();
+ await page.locator('#top-playlist-bar [data-section=live]').click();
+ await page.getByRole('navigation',{name:'Browse live TV'}).getByRole('button',{name:'Official channels'}).click();
+ await page.locator('.live-country-grid .poster-card').filter({hasText:'Official Test Live'}).click();
+ await page.waitForFunction(()=>document.querySelector('#main-player').getAttribute('src')?.includes('publisher.example/live.mp4'));
+ assert.ok((await page.locator('#playback-source-credit').textContent()).includes('Test Broadcaster'));
+ await page.locator('#ss-stop').click();
+ await page.setViewportSize({width:390,height:844});
+ await page.locator('#ss-mobile-nav').getByRole('button',{name:'Home',exact:true}).click();
+ await page.locator('.open-library-link').click();
+ await page.locator('.library-grid .poster-card').first().waitFor();
+ assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=390));
+ await page.getByRole('searchbox',{name:'Search the open library',exact:true}).fill('no-such-film');
+ await page.locator('.library-grid .ss-empty').waitFor();
  // A saved episode from an earlier session rebuilds its series without visiting TV first.
  await page.evaluate(()=>{localStorage.setItem('ss_section','home');localStorage.setItem('iptv_history',JSON.stringify([{title:'South Park S01E01 First episode',group:'South Park',isVod:true,isSeries:true,url:'https://archive.org/download/south-park/S01E01.mp4',savedTime:60,duration:1200}]));});
  const resumed=await context.newPage();
@@ -219,5 +260,5 @@ let server,browser;
  await resumed.waitForFunction(()=>document.querySelector('#main-player').getAttribute('src')?.includes('S01E02'));
  await resumed.close();
  assert.deepEqual(errors,[],'No uncaught browser errors');
- console.log('PASS: Discovery carousel/focus/My List, real resume progress, Home, drawer, guide search/filter/favourites, stable numbering, render races, blocked-source UI, search scopes/Escape, detail handoff, playback cleanup, My List, country browsing/filtering, archive deduplication, series continuity, numeric order, automatic next, season selection, mobile episodes, theme, and 320/390/768/1440px layout.');
+ console.log('PASS: Discovery carousel/focus/My List, real resume progress, Home, drawer, guide search/filter/favourites, stable numbering, render races, blocked-source UI, search scopes/Escape, detail handoff, playback cleanup, My List, country browsing/filtering, archive deduplication, series continuity, numeric order, automatic next, season selection, mobile episodes, theme, open-library filters and credits, NASA asset resolution, publisher episode continuity, official live players, and 320/390/768/1440px layout.');
 })().catch(e=>{console.error(e);process.exitCode=1;}).finally(async()=>{if(browser)await browser.close();if(server)await new Promise(r=>server.close(r));});

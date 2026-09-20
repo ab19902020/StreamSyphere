@@ -404,3 +404,7 @@ where that applies.
   `.playlist-pill.active` — an element that stopped existing when the source pills became
   section tabs, so all three silently did nothing. State like that belongs in a variable
   (`sidebarReload`), not in the DOM.
+
+## Open library
+
+The source-backed expansion adds 219 films and shorts, 18 series with 2,167 episodes, and six official live players, with publisher artwork, descriptions and visible source credits. See [the catalogue and refresh notes](docs/open-library.md).

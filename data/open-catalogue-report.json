@@ -1,0 +1,13 @@
+{
+  "updatedAt": "2026-09-20",
+  "movies": 219,
+  "shows": 18,
+  "episodes": 2167,
+  "issues": [
+    {
+      "source": "archive-films",
+      "error": "<urlopen error timed out>"
+    }
+  ],
+  "live": 6
+}
