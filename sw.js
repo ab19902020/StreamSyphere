@@ -13,7 +13,7 @@
  *   - old cache versions are dropped on activate.
  */
 
-const CACHE = 'streams-sphere-v8';
+const CACHE = 'streams-sphere-v9';
 const SHELL = ['/', '/Index.html', '/manifest.json'];
 
 self.addEventListener('install', event => {
