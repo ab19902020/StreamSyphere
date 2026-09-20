@@ -7,7 +7,7 @@ instant-play arcade games, running entirely in the browser with no backend.
 
 ## Discovery Hub
 
-The interface follows the supplied Discovery Hub reference: near-black and violet styling, a cinematic featured carousel, desktop discovery sidebar, compact poster shelves, and mobile category chips and bottom navigation. Real catalogue artwork loads immediately, and Continue Watching shows saved progress. The player opens on selection; source browsing remains a drawer. See [the implemented design, screenshots and validation](docs/tv-experience.md).
+The interface follows the supplied Discovery Hub reference: near-black and violet styling, a cinematic featured carousel, desktop discovery sidebar, compact poster shelves, and mobile category chips and bottom navigation. Real catalogue artwork loads immediately, and Continue Watching shows saved progress. The player opens on selection; source browsing remains a drawer. Live TV starts with countries and continents, with categories and search within each country. Series playback includes the full available episode list, season selection and Previous/Next controls that stay with the show while browsing. See [the implemented design, screenshots and validation](docs/tv-experience.md).
 
 ## Files
 

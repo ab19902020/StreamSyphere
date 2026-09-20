@@ -869,7 +869,7 @@
         .header-title,.rail-title { text-shadow:none; font-family:'Manrope',sans-serif; letter-spacing:-.025em!important; }
         button,input,select { font:inherit; } button,a,input,select,[tabindex] { -webkit-tap-highlight-color:transparent; }
         :focus-visible { outline:2px solid var(--accent-text)!important; outline-offset:4px; }
-        header { height:76px; padding:0 28px!important; background:var(--bg-color); border-bottom:1px solid var(--border-color); gap:30px; }
+        header { height:70px; padding:0 28px!important; background:var(--bg-color); border-bottom:1px solid var(--border-color); gap:30px; }
         .ss-brand { display:flex; align-items:center; gap:9px; border:0; background:none; color:var(--text-color); white-space:nowrap; }
         .ss-mark { display:block; width:35px; height:39px; flex-shrink:0; filter:drop-shadow(0 0 12px #6b43ff25); }.ss-mark svg { width:100%; height:100%; }
         .ss-wordmark { font-family:'Manrope',sans-serif; font-size:21px; font-weight:800; letter-spacing:-.9px; }.ss-wordmark small { display:none; }
@@ -881,11 +881,11 @@
         #settings-btn svg { width:18px; height:18px; flex-shrink:0; } #settings-btn { flex-shrink:0; border:1px solid #a387ff69; border-radius:50%; width:36px; background:linear-gradient(145deg,#b3a0ff24,#433380); color:#ded4ff; }
         #games-pin-btn,#theme-toggle-btn,#menu-toggle { display:none!important; } #close-sidebar-btn { display:flex!important; }
         #pip-btn,#fullscreen-btn { display:none; } body.is-playing #pip-btn,body.is-playing #fullscreen-btn { display:flex; }
-        #top-playlist-bar { width:auto; height:76px; padding:0!important; gap:23px; background:transparent; border:0; box-shadow:none; overflow:visible; }
-        #top-playlist-bar>* { margin:0!important; }.section-tab { height:76px; position:relative; padding:0; border:0; border-radius:0; background:none; box-shadow:none; color:var(--text-muted); font-size:11px; font-weight:600; white-space:nowrap; }
+        #top-playlist-bar { width:auto; height:70px; padding:0!important; gap:23px; background:transparent; border:0; box-shadow:none; overflow:visible; }
+        #top-playlist-bar>* { margin:0!important; }.section-tab { height:70px; position:relative; padding:0; border:0; border-radius:0; background:none; box-shadow:none; color:var(--text-muted); font-size:11px; font-weight:600; white-space:nowrap; }
         .section-tab svg { display:none; }.section-tab.active { background:none; color:var(--text-color); box-shadow:none; }.section-tab.active::after { content:''; position:absolute; bottom:20px; left:0; right:0; height:2px; border-radius:2px; background:var(--accent-solid); box-shadow:0 0 9px var(--accent-glow); }
         #top-playlist-bar [data-section=kids] { display:none; }
-        #discovery-sidebar { display:flex; flex-direction:column; width:190px; flex:0 0 190px; padding:26px 13px 22px; border-right:1px solid var(--border-color); background:var(--bg-color); overflow-y:auto; scrollbar-width:none; }
+        #discovery-sidebar { display:flex; flex-direction:column; width:180px; flex:0 0 180px; padding:26px 13px 22px; border-right:1px solid var(--border-color); background:var(--bg-color); overflow-y:auto; scrollbar-width:none; }
         .ss-side-links { display:flex; flex-direction:column; gap:6px; }.ss-side-links button { display:flex; align-items:center; text-align:left; position:relative; gap:13px; width:100%; min-height:44px; padding:11px 14px; border-radius:7px; color:var(--text-muted); font-size:11px; font-weight:500; }
         .ss-side-links svg { width:18px; height:18px; flex-shrink:0; }.ss-side-links button:hover { color:var(--text-color); background:var(--chip-bg); }.ss-side-links button[aria-current=page] { color:#e6ddff; background:linear-gradient(90deg,#55439354,#30285125); }.ss-side-links button[aria-current=page]::before { content:''; position:absolute; left:-13px; top:7px; bottom:7px; width:3px; background:#ac86ff; box-shadow:0 0 15px #a575ff; }.ss-side-links button[aria-current=page] svg { color:#b99aff; filter:drop-shadow(0 0 6px #9667ff88); }
         .ss-side-label { margin:23px 14px 12px; padding-top:20px; border-top:1px solid var(--border-color); font-size:10px; color:var(--text-color); font-weight:600; }
@@ -893,16 +893,16 @@
         .ss-side-promo svg { width:33px; height:33px; color:#bba2ff; margin-bottom:14px; }.ss-side-promo strong { color:#eee8ff; font-size:12px; line-height:1.5; display:block; }.ss-side-promo p { font-size:10px; color:#a7a0bd; line-height:1.6; margin:8px 0 14px; }.ss-side-promo button { padding:10px 8px; width:100%; border-radius:5px; background:linear-gradient(110deg,#7950ff,#5032ed); color:white; font-size:10px; }
         #sidebar { position:absolute; width:340px; max-width:90vw; top:0; bottom:0; z-index:60; transform:translateX(-105%)!important; box-shadow:20px 0 80px #0007; transition:transform .2s; }
         #sidebar:not(.-translate-x-full) { transform:translateX(0)!important; } #mobile-overlay { z-index:55; } #mobile-overlay:not(.hidden) { display:block!important; }
-        #main-view { min-width:0; padding:0 28px 50px!important; display:flex; gap:0; background:var(--bg-color); } #main-view>* { flex-shrink:0; }
+        #main-view { min-width:0; padding:0 26px 50px!important; display:flex; gap:0; background:var(--bg-color); } #main-view>* { flex-shrink:0; }
         #player-container.idle-compact,#player-container.idle-compact+#now-playing-info { display:none; } #player-container { max-width:1100px; align-self:center; margin-top:20px; box-shadow:none; } #now-playing-info { margin:14px 0 28px; background:var(--glass-bg); box-shadow:none; }
         #home-rows { margin:0; order:2; } #network-shelf { order:3; margin:30px 0; } #continue-watching-container { order:1; margin:24px 0 0; } #arcade-banner { display:none; } #featured-container { order:4; }
         .ss-sponsored { order:6; margin:35px 0 0!important; padding:0!important; background:none!important; border:1px solid var(--border-color); border-radius:9px; box-shadow:none!important; opacity:.8; }.ss-sponsored>div { padding:16px!important; }.ss-sponsored>div>div:first-child { width:42px; height:42px; }.ss-sponsored h3 { font-size:14px; }.ss-sponsored p { font-size:11px; }
-        .hero { position:relative; isolation:isolate; display:flex; align-items:center; min-height:438px; border:0; border-radius:0; background:#080d19; overflow:hidden; margin:0 -12px 0; }
+        .hero { position:relative; isolation:isolate; display:flex; align-items:center; min-height:395px; border:0; border-radius:0; background:#080d19; overflow:hidden; margin:0 -12px 0; }
         .hero-art { width:100%; height:100%; object-fit:cover; object-position:70% 35%; opacity:1; }
         .hero::after { z-index:-1; background:linear-gradient(90deg,#060910f5 0%,#060910bd 29%,#06091008 75%),linear-gradient(0deg,#060910 0%,transparent 40%,#06091018 100%); }
-        .hero-art { z-index:-2; }.hero-body { max-width:640px; padding:42px 32px 76px!important; color:white; }
+        .hero-art { z-index:-2; }.hero-body { max-width:600px; padding:34px 27px 60px!important; color:white; }
         .hero-eyebrow { display:flex; align-items:center; gap:8px; color:#bb9fff; font-size:9px; letter-spacing:.2em; font-weight:700; text-transform:uppercase; }.hero-eyebrow::before { content:''; width:4px; height:13px; border-radius:2px; background:#9364ff; box-shadow:0 0 12px #9161ff; }
-        .hero-title { font-family:'Manrope',sans-serif; color:#fff; font-size:clamp(34px,3.6vw,52px); line-height:1.14; letter-spacing:.13em!important; text-transform:uppercase; margin:18px 0 20px; font-weight:500; text-wrap:balance; overflow-wrap:anywhere; text-shadow:0 2px 20px #0009; }
+        .hero-title { font-family:'Manrope',sans-serif; color:#fff; font-size:clamp(34px,3.3vw,48px); line-height:1.14; letter-spacing:.13em!important; text-transform:uppercase; margin:18px 0 20px; font-weight:500; text-wrap:balance; overflow-wrap:anywhere; text-shadow:0 2px 20px #0009; }
         .hero-meta { color:#d2d4df; font-size:10px; gap:0; }.hero-meta .pill { border:0; padding:0; border-radius:0; background:transparent; color:inherit; font-weight:400; }.hero-meta .pill+.pill::before { content:'·'; margin:0 9px; color:#7f8495; }
         .hero-overview { color:#c9cbd5; max-width:440px; font-size:12px; line-height:1.7; margin-top:15px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
         .hero-actions { margin-top:21px; gap:12px; align-items:center; }.hero-btn { height:44px; display:inline-flex; align-items:center; justify-content:center; gap:10px; border-radius:5px; padding:12px 22px; text-transform:none; letter-spacing:0; font-size:12px; font-weight:600; }.hero-btn svg { width:16px; height:16px; }.hero-btn.primary { background:linear-gradient(110deg,#7951ff,#5033f3); color:#fff; box-shadow:0 4px 25px #5839ff26; }.hero-btn.ghost { color:#efedf7; background:#252b3aaf; border-color:#b4b8d11a; }.hero-btn[data-info] { padding:10px; width:39px; height:39px; border-radius:50%; min-width:0; }
@@ -921,13 +921,13 @@
         #global-search-modal-content { max-width:1050px; height:88vh; border-radius:14px; background:var(--bg-color); }.ss-search-tabs { display:flex; gap:8px; padding:16px 22px; border-bottom:1px solid var(--border-color); overflow-x:auto; }.ss-search-hint { max-width:540px; margin:55px auto; text-align:center; }.ss-search-hint h2 { color:var(--text-color); font:700 30px 'Manrope',sans-serif; margin-bottom:13px; }.ss-search-hint p { color:var(--text-muted); font-size:14px; line-height:1.7; }.ss-search-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(145px,1fr)); gap:20px; margin-top:20px; }.ss-search-grid .poster-card { width:100%; }.ss-search-label { font-size:12px; color:var(--text-muted); margin-top:10px; }
         .ss-mobile-nav { display:none; }.ss-stop { font-size:12px; padding:9px 12px; white-space:nowrap; }.ss-playback-tools { display:none; } #settings-modal,#add-playlist-modal { z-index:180; } #toast-container { bottom:85px; }
         html.light .ss-side-links button[aria-current=page] { color:#4c288e; } html.light .header-title { text-shadow:none; } html.light .hero { border-radius:0 0 9px 9px; }
-        @media(min-width:1650px) { #main-view { padding-left:40px!important; padding-right:40px!important; }.hero { min-height:490px; }.poster-card { width:calc((100% - 98px)/8); }.channel-card { width:calc((100% - 70px)/6); } }
+        @media(min-width:1650px) { #main-view { padding-left:40px!important; padding-right:40px!important; }.hero { min-height:455px; }.poster-card { width:calc((100% - 98px)/8); }.channel-card { width:calc((100% - 70px)/6); } }
         @media(max-width:1190px) { header { gap:20px; padding:0 20px!important; }.ss-wordmark { font-size:18px; }#top-playlist-bar { gap:18px; }#open-search-btn span { max-width:155px; }#open-search-btn kbd { display:none; }#discovery-sidebar { width:166px; flex-basis:166px; }#main-view { padding-left:22px!important; padding-right:22px!important; }.poster-card { width:calc((100% - 56px)/5); }.channel-card { width:calc((100% - 42px)/4); } }
         @media(max-width:960px) { #discovery-sidebar { display:none; }header { flex-wrap:wrap; height:auto; min-height:116px; row-gap:0; padding:12px 24px 0!important; }header>div:first-child { flex:1; }.ss-header-tools { flex:0 0 auto; }#top-playlist-bar { order:3; width:100%; height:47px; gap:25px; }.section-tab { height:47px; }.section-tab.active::after { bottom:6px; }#open-search-btn { min-width:0; background:none; border:0; }#open-search-btn span { display:none; }#menu-toggle { display:flex!important; }#main-view { padding-bottom:90px!important; }.hero { min-height:400px; }.hero-body { max-width:580px; } }
         @media(max-width:600px) {
-          header { min-height:108px; padding:11px 17px 0!important; gap:0; }.ss-brand { gap:6px; }.ss-mark { width:27px; height:31px; }.ss-wordmark { font-size:19px; letter-spacing:-.7px; }header>div:first-child { gap:0; }#menu-toggle { display:none!important; }.ss-header-tools { gap:9px; }header #cast-btn,header #cast-btn+div { display:none; }#settings-btn { height:31px; width:31px; padding:7px; }#open-search-btn { width:32px; height:34px; padding:7px; }#open-search-btn svg { width:20px; height:20px; }body.is-playing #pip-btn,body.is-playing #fullscreen-btn { display:none; }
+          header { min-height:100px; padding:11px 17px 0!important; gap:0; }.ss-brand { gap:6px; }.ss-mark { width:27px; height:31px; }.ss-wordmark { font-size:19px; letter-spacing:-.7px; }header>div:first-child { gap:0; }#menu-toggle { display:none!important; }.ss-header-tools { gap:9px; }header #cast-btn,header #cast-btn+div { display:none; }#settings-btn { height:31px; width:31px; padding:7px; }#open-search-btn { width:32px; height:34px; padding:7px; }#open-search-btn svg { width:20px; height:20px; }body.is-playing #pip-btn,body.is-playing #fullscreen-btn { display:none; }
           #top-playlist-bar { gap:8px; height:49px; overflow-x:auto; scrollbar-width:none; align-items:center; }#top-playlist-bar [data-section=mine] { display:none; }.section-tab { flex:1; height:27px; padding:4px 13px; border:1px solid transparent; border-radius:7px; background:#ffffff06; font-size:11px; font-weight:500; }.section-tab.active { background:linear-gradient(180deg,#40315f8c,#181129); border-color:#8863e1; box-shadow:inset 0 0 8px #9872e733,0 0 8px #7a4dfe15; color:#f1e8ff; }.section-tab.active::after { display:none; }.section-tab[data-section=home] span { font-size:0; }.section-tab[data-section=home] span::after { content:'For You'; font-size:11px; }
-          #main-view { padding:7px 17px 90px!important; }.hero { min-height:373px; height:373px; margin:0; border-radius:10px; align-items:flex-end; background:#0d111b; }.hero-body { width:100%; max-width:none; padding:0 17px 39px!important; }.hero-art { object-position:62% center; opacity:1!important; }.hero::after { background:linear-gradient(0deg,#090c13 0%,#090c13e8 22%,#090c1355 55%,#090c1300 80%); }.hero-title { font-size:25px; letter-spacing:.15em!important; line-height:1.16; margin:7px 0 8px; font-weight:500; }.hero-eyebrow { font-size:7px; letter-spacing:.16em; gap:6px; color:#eee7ff; }.hero-eyebrow::before { height:9px; width:3px; }.hero-meta { font-size:8px; }.hero-meta .pill+.pill::before { margin:0 6px; }.hero-meta .pill:nth-child(n+4) { display:none; }.hero-overview { font-size:10px; line-height:1.5; margin-top:8px; -webkit-line-clamp:2; max-width:none; }.hero-actions { gap:9px; margin-top:12px; flex-wrap:nowrap; }.hero-btn { padding:9px 8px; height:35px; flex:1; font-size:10px; gap:8px; }.hero-btn.primary { background:#f5f5f8; color:#08090e; box-shadow:none; }.hero-btn.ghost { background:#ffffff0f; border:1px solid #ffffff06; }.hero-btn[data-info] { display:none; }.hero-pagination { bottom:7px; }.hero-dot { width:16px; height:24px; }.hero-dot::after { width:5px; height:5px; }.hero-controls { display:none; }
+          #main-view { padding:7px 17px 90px!important; }.hero { min-height:340px; height:340px; margin:0; border-radius:10px; align-items:flex-end; background:#0d111b; }.hero-body { width:100%; max-width:none; padding:0 17px 39px!important; }.hero-art { object-position:62% center; opacity:1!important; }.hero::after { background:linear-gradient(0deg,#090c13 0%,#090c13e8 22%,#090c1355 55%,#090c1300 80%); }.hero-title { font-size:25px; letter-spacing:.15em!important; line-height:1.16; margin:7px 0 8px; font-weight:500; }.hero-eyebrow { font-size:7px; letter-spacing:.16em; gap:6px; color:#eee7ff; }.hero-eyebrow::before { height:9px; width:3px; }.hero-meta { font-size:8px; }.hero-meta .pill+.pill::before { margin:0 6px; }.hero-meta .pill:nth-child(n+4) { display:none; }.hero-overview { font-size:10px; line-height:1.5; margin-top:8px; -webkit-line-clamp:2; max-width:none; }.hero-actions { gap:9px; margin-top:12px; flex-wrap:nowrap; }.hero-btn { padding:9px 8px; height:35px; flex:1; font-size:10px; gap:8px; }.hero-btn.primary { background:#f5f5f8; color:#08090e; box-shadow:none; }.hero-btn.ghost { background:#ffffff0f; border:1px solid #ffffff06; }.hero-btn[data-info] { display:none; }.hero-pagination { bottom:7px; }.hero-dot { width:16px; height:24px; }.hero-dot::after { width:5px; height:5px; }.hero-controls { display:none; }
           .discovery-rail { margin-top:20px; }.rail-head { margin-bottom:8px; }.rail-title { font-size:14px!important; }.rail-more { margin:0; font-size:9px; }.rail { gap:9px; padding-bottom:3px; margin-right:-17px; padding-right:17px; }.poster-card { width:calc((100% - 42px)/3.45); min-width:88px; border-radius:5px; }.poster-art { border-radius:5px; }.poster-meta { padding:6px 1px 0; }.poster-name { font-size:9px; }.poster-sub { font-size:8px; margin-top:2px; }.rail-arrow { display:none!important; }.channel-card { width:145px; }.channel-card .poster-art { height:85px; padding:21px; }.channel-art-label { height:85px; font-size:14px; }
           #continue-watching-container { margin-top:20px; }#continue-watching-container h3 { font-size:14px; margin-bottom:9px; }#history-grid { gap:9px; margin-right:-17px; padding-right:17px; }.continue-card { flex-basis:calc((100% - 14px)/2); }.continue-caption { padding:25px 8px 6px; }.continue-caption strong { font-size:10px; }.continue-caption small { font-size:8px; }.continue-play { width:22px; height:22px; right:7px; bottom:12px; }.network-tile { min-width:128px; }
           .ss-mobile-nav { position:fixed; bottom:0; left:0; right:0; z-index:45; display:flex; justify-content:space-around; padding:10px 4px calc(10px + env(safe-area-inset-bottom)); background:var(--nav-veil); border-top:1px solid var(--border-color); backdrop-filter:blur(18px); }.ss-mobile-nav button { display:flex; flex-direction:column; align-items:center; gap:5px; color:var(--text-muted); min-width:54px; font-size:8px; min-height:36px; }.ss-mobile-nav svg { width:20px; height:20px; }.ss-mobile-nav button[aria-current=page] { color:#c9b0ff; }.ss-mobile-nav button[aria-current=page] svg { fill:#a988ff22; filter:drop-shadow(0 0 7px #9c72ff77); }
@@ -935,8 +935,77 @@
           #global-search-modal { padding:10px; }#global-search-modal-content { height:calc(100dvh - 20px); }#global-search-input { font-size:14px; }.ss-search-tabs { padding:12px; gap:6px; }.ss-search-tabs button { padding:8px 10px; }.ss-search-grid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; }.ss-search-hint { margin:30px 10px; }.ss-search-hint h2 { font-size:24px; }.ss-search-hint p { font-size:12px; }
           #cookie-consent-banner { bottom:70px; }.ss-sponsored>div>div:first-child { display:none; }#now-playing-info { padding:10px; gap:8px; flex-wrap:wrap; }#now-playing-title { font-size:13px; }#now-playing-info>div:first-child { display:none; }.ss-playback-tools { display:flex; width:100%; gap:7px; }.ss-playback-tools button { flex:1; padding:9px 5px; font-size:10px; }
         }
-        @media(max-width:360px) { .ss-wordmark { font-size:16px; }.ss-mark { width:25px; }.ss-header-tools { gap:3px; }#top-playlist-bar { gap:5px; }.section-tab { padding:4px 10px; }.hero { height:361px; min-height:361px; }.hero-title { font-size:21px; }.hero-body { padding-left:14px!important; padding-right:14px!important; } }
+        @media(max-width:360px) { .ss-wordmark { font-size:16px; }.ss-mark { width:25px; }.ss-header-tools { gap:3px; }#top-playlist-bar { gap:5px; }.section-tab { padding:4px 10px; }.hero { height:330px; min-height:330px; }.hero-title { font-size:21px; }.hero-body { padding-left:14px!important; padding-right:14px!important; } }
         @media(prefers-reduced-motion:reduce) { *,*::before,*::after { scroll-behavior:auto!important; animation:none!important; transition:none!important; } }
+        .guide-heading { padding:16px 0 0!important; }
+        .guide-heading .header-title { font-size:28px; font-weight:600; }
+        .guide-heading [data-back] { font-size:10px; font-weight:500; letter-spacing:0; text-transform:none; background:var(--glass-bg); }
+        .guide-heading [data-chips] { padding:4px 0 12px; }
+        .guide-heading [data-count] { margin-top:5px; color:var(--text-color); }
+        .channel-row[aria-current=true] { background:linear-gradient(90deg,#8e65f427,#8e65f407); box-shadow:inset 3px 0 #a884ff; }
+        .channel-row[aria-current=true] .ch-live::before { content:'● '; }
+        .channel-row .ch-logo { display:grid; place-items:center; border-radius:6px; background:#ffffff06; padding:5px; }
+        .channel-wall { margin-left:0; margin-right:0; }
+        .ss-save-channel:hover { color:var(--accent-text); background:#9576ff0c; }
+        @media(max-width:600px) { .guide-heading .header-title { font-size:20px; }.guide-heading { padding-top:8px!important; }.ss-guide-note { font-size:10px; }.channel-row { min-height:75px; }.ch-live { font-size:7px; } }
+        /* Compact cinematic covers: artwork, title and metadata form one tile. */
+        .poster-card:not(.channel-card) { position:relative; aspect-ratio:4/5; overflow:hidden; border:1px solid #ffffff16; background:#101421; }
+        .poster-card:not(.channel-card) .poster-art { width:100%; height:100%; aspect-ratio:auto; object-fit:cover; object-position:center; border:0; border-radius:0; }
+        .poster-card:not(.channel-card) .poster-meta { position:absolute; inset:auto 0 0; padding:48px 10px 12px; background:linear-gradient(transparent,#060a14df 48%,#050810f7); text-align:center; color:#fff; }
+        .poster-card:not(.channel-card) .poster-name { font-family:'Manrope',sans-serif; font-size:13px; font-weight:500; letter-spacing:.13em; text-transform:uppercase; line-height:1.45; white-space:normal; display:-webkit-box; -webkit-box-orient:vertical; -webkit-line-clamp:3; }
+        .poster-card:not(.channel-card) .poster-sub { font-size:9px; margin-top:8px; color:#bcc0cf; }
+        .hero-art { object-position:75% 38%; }
+        .live-hub { padding:28px 0; }
+        .live-masthead { display:flex; justify-content:space-between; align-items:center; gap:18px; margin-bottom:24px; }
+        .live-masthead h1 { font:650 32px 'Manrope',sans-serif; letter-spacing:-1px; margin:9px 0 7px; }
+        .live-masthead p:not(.hero-eyebrow) { font-size:12px; color:var(--text-muted); }
+        .live-masthead>button { display:flex; align-items:center; gap:9px; font-size:11px; padding:10px 14px; border:1px solid var(--border-color); border-radius:7px; }
+        .live-masthead svg,.live-browse-tabs svg,.live-search svg { width:17px; height:17px; flex-shrink:0; }
+        .live-spotlight { position:relative; isolation:isolate; display:flex; justify-content:space-between; align-items:center; overflow:hidden; min-height:290px; padding:32px 38px; border:1px solid #a990ff25; border-radius:12px; color:#fff; background:radial-gradient(ellipse at 65% 30%,#6243b54a,transparent 65%),linear-gradient(115deg,#14102b,#121930 60%,#090e1d); }
+        .live-orbit { position:absolute; z-index:-1; width:480px; height:480px; left:30%; top:-80px; color:#a58cf721; transform:rotate(-18deg); }
+        .live-orbit svg { width:100%; height:100%; stroke-width:.35; }
+        .live-badge { display:flex; gap:7px; align-items:center; font-size:8px; letter-spacing:.2em; color:#d4c5ff; }
+        .live-badge i { width:5px; height:5px; background:#b58aff; border-radius:50%; box-shadow:0 0 10px #9867ff; }
+        .live-spotlight h2 { font:500 43px/1.12 'Manrope',sans-serif; letter-spacing:-1px; margin:12px 0; }
+        .live-spotlight-copy p { font-size:11px; color:#b4b5c9; line-height:1.7; }
+        .live-spotlight-copy button { display:flex; gap:10px; align-items:center; padding:12px 15px; margin-top:20px; border-radius:5px; background:linear-gradient(110deg,#8355ff,#5135f4); font-size:11px; }
+        .live-spotlight-copy button span { margin-left:12px; font-size:17px; }
+        .live-quick-countries { display:grid; grid-template-columns:1fr 1fr; gap:12px; width:42%; max-width:390px; }
+        .live-quick-countries button { background:#ffffff06; border:1px solid #ffffff0e; padding:15px 19px; border-radius:8px; text-align:left; }
+        .live-quick-countries button:hover { background:#ffffff10; border-color:#9f77ff80; }
+        .live-quick-countries button>span { font-size:24px; }
+        .live-quick-countries strong { display:block; font-size:12px; font-weight:500; margin:7px 0 5px; }
+        .live-quick-countries small { font-size:9px; color:#aaaac2; }
+        .live-browse-tabs { display:flex; gap:30px; margin:28px 0; border-bottom:1px solid var(--border-color); overflow-x:auto; scrollbar-width:none; }
+        .live-browse-tabs button { display:flex; align-items:center; gap:9px; padding:0 0 15px; border-bottom:2px solid transparent; font-size:12px; color:var(--text-muted); white-space:nowrap; }
+        .live-browse-tabs button[aria-pressed=true] { color:var(--text-color); border-color:#9872ff; }
+        .live-browse-tabs button[aria-pressed=true] svg { color:#b197ff; }
+        .live-directory-head { display:flex; justify-content:space-between; align-items:center; gap:20px; }
+        .live-directory-head h2 { font:600 19px 'Manrope',sans-serif; }
+        .live-directory-head p { font-size:10px; color:var(--text-muted); margin-top:6px; }
+        .live-search { display:flex; gap:9px; padding:11px 14px; align-items:center; background:var(--glass-bg); border:1px solid var(--border-color); border-radius:7px; color:var(--text-muted); }
+        .live-search input { width:190px; min-width:0; color:var(--text-color); background:transparent; border:0; outline:0; font-size:11px; }
+        .live-regions { display:flex; flex-wrap:wrap; gap:8px; margin:20px 0; }
+        .live-regions button { padding:7px 12px; border-radius:5px; border:1px solid var(--border-color); font-size:10px; color:var(--text-muted); }
+        .live-regions button[aria-pressed=true] { border-color:#9f7bf264; background:#8659ee1e; color:var(--accent-text); }
+        .live-country-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; }
+        .country-tile { display:flex; gap:15px; align-items:center; text-align:left; padding:20px 18px; background:var(--glass-bg); border:1px solid var(--border-color); border-radius:8px; transition:background .2s,border-color .2s; }
+        .country-tile:hover { border-color:#9f77ff70; background:var(--chip-bg); }
+        .country-flag,.country-code { display:inline-grid; place-items:center; min-width:35px; height:30px; border:1px solid #a68eff25; border-radius:5px; background:#8b6ce317; color:var(--accent-text); font:600 10px Manrope,sans-serif; flex-shrink:0; }.live-quick-countries button>.country-code { font-size:10px; }.live-spotlight-copy button .country-code { margin:0; color:white; background:#ffffff0c; height:20px; min-width:24px; font-size:8px; }.country-copy { flex:1; min-width:0; }.country-copy strong { display:block; font-size:12px; font-weight:500; }.country-copy small { display:block; font-size:9px; color:var(--text-muted); margin-top:5px; }.country-chevron { color:var(--text-muted); font-size:18px; }
+        .live-empty { grid-column:1/-1; text-align:center; padding:40px 15px; color:var(--text-muted); font-size:12px; }.live-empty svg { height:30px; width:30px; margin:0 auto 15px; }.live-empty h3 { color:var(--text-color); font-size:17px; margin-bottom:8px; }.live-saved-grid .poster-card { width:100%; }
+        .guide-country-picker { display:flex; align-items:center; gap:12px; margin:10px 0 20px; }.guide-country-picker>span { color:var(--accent-text); font-size:9px; letter-spacing:.14em; }.guide-country-picker select { min-width:220px; max-width:100%; border:1px solid var(--border-color); background:var(--glass-bg); color:var(--text-color); border-radius:7px; padding:10px 12px; font-size:12px; }
+        .episode-panel { margin:0 0 28px; padding:23px; background:var(--glass-bg); border:1px solid var(--border-color); border-radius:12px; }
+        .episode-heading { display:flex; justify-content:space-between; align-items:center; gap:20px; }.episode-heading h2 { font:600 24px 'Manrope',sans-serif; margin:7px 0; }.episode-heading p { color:var(--text-muted); font-size:11px; }.episode-step { display:flex; gap:10px; flex-shrink:0; }.episode-step button { display:flex; align-items:center; gap:9px; border:1px solid var(--border-color); background:var(--chip-bg); border-radius:6px; padding:11px 15px; font-size:12px; }.episode-step [data-next-episode] { background:linear-gradient(110deg,#7951ff,#5033f3); color:#fff; }.episode-step button:disabled { opacity:.35; cursor:default; }
+        .episode-filters { display:flex; gap:20px; align-items:center; margin:22px 0 16px; }.episode-filters label { display:flex; align-items:center; gap:10px; font-size:11px; color:var(--text-muted); }.episode-filters select,.episode-filters input { padding:10px 12px; border-radius:6px; background:var(--bg-color); color:var(--text-color); border:1px solid var(--border-color); font-size:12px; min-width:0; }.episode-filters input { flex:1; max-width:320px; margin-left:auto; }
+        .episode-list { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; max-height:340px; overflow-y:auto; padding:4px; }.episode-row { display:flex; align-items:center; gap:12px; text-align:left; padding:14px 12px; border-radius:7px; border:1px solid var(--border-color); }.episode-row:hover { background:var(--chip-bg); }.episode-row[aria-current=true] { border-color:#9c71ff60; background:#8660ff15; }.episode-number { font:500 17px 'Manrope',sans-serif; color:var(--text-muted); width:28px; flex-shrink:0; }.episode-row>span:nth-child(2) { flex:1; min-width:0; }.episode-row strong { display:block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:12px; font-weight:500; }.episode-row small { display:block; margin-top:5px; color:var(--text-muted); font-size:9px; }.episode-play { color:var(--accent-text); font-size:9px; }.episode-loading { padding:15px; font-size:13px; }.episode-loading button { text-decoration:underline; color:var(--accent-text); }
+        @media(max-width:960px) { .live-country-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }.live-spotlight { padding:25px; }.episode-heading h2 { font-size:21px; } }
+        @media(max-width:600px) {
+          .poster-card:not(.channel-card) { aspect-ratio:4/5.2; }.poster-card:not(.channel-card) .poster-meta { padding:25px 5px 7px; }.poster-card:not(.channel-card) .poster-name { font-size:8px; letter-spacing:.13em; line-height:1.5; }.poster-card:not(.channel-card) .poster-sub { font-size:7px; margin-top:4px; }
+          .hero-art { object-position:74% center; }.live-hub { padding:14px 0; }.live-masthead { gap:8px; margin-bottom:18px; }.live-masthead h1 { font-size:28px; }.live-masthead p:not(.hero-eyebrow) { font-size:10px; }.live-masthead>button { padding:9px; font-size:9px; }.live-masthead>button svg { display:none; }
+          .live-spotlight { padding:20px; min-height:0; }.live-spotlight h2 { font-size:27px; margin:9px 0; }.live-spotlight h2 br { display:none; }.live-spotlight-copy p { display:none; }.live-spotlight-copy button { margin-top:14px; }.live-orbit { left:23%; width:360px; height:360px; top:-10px; }.live-quick-countries { display:none; }.live-spotlight-copy button { font-size:10px; padding:11px 13px; }.live-browse-tabs { gap:20px; margin:20px 0; }.live-browse-tabs button { font-size:11px; padding-bottom:12px; gap:6px; }.live-browse-tabs svg { width:14px; height:14px; }
+          .live-directory-head { flex-wrap:wrap; gap:16px; }.live-directory-head h2 { font-size:17px; }.live-search { width:100%; }.live-search input { flex:1; }.live-regions { gap:6px; margin:14px 0; flex-wrap:nowrap; overflow-x:auto; scrollbar-width:none; }.live-regions button { flex-shrink:0; }.live-regions button { font-size:9px; padding:7px 9px; }.live-country-grid { gap:8px; }.country-tile { padding:14px 10px; gap:9px; }.country-flag { font-size:9px; min-width:29px; height:26px; }.country-copy strong { font-size:10px; }.country-copy small { font-size:8px; }.country-chevron { display:none; }.guide-country-picker select { min-width:0; width:100%; }
+          .episode-panel { padding:15px 10px; }.episode-heading { flex-wrap:wrap; gap:14px; }.episode-heading h2 { font-size:20px; }.episode-step { width:100%; }.episode-step button { flex:1; justify-content:center; padding:10px 6px; font-size:11px; }.episode-filters { gap:8px; flex-wrap:wrap; margin:17px 0 12px; }.episode-filters label { width:100%; }.episode-filters select { flex:1; }.episode-filters input { margin:0; max-width:none; width:100%; }.episode-list { grid-template-columns:1fr; max-height:310px; }.episode-row { padding:12px 8px; gap:8px; }.episode-row strong { font-size:11px; }
+        }
     </style>
 </head>
 <body class="bg-slate-50 dark:bg-slate-900 transition-colors duration-500">
@@ -2137,6 +2206,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const seen = new Set(archiveLoadedChannels.map(c => c.url));
         channels.forEach(c => { if (!seen.has(c.url)) archiveLoadedChannels.push(c); });
 
+        if (ARCHIVE_SERIES_VAULTS.some(v => v.id === vault.id)) registerSeries(`vault:${vault.id}`, vault.label, channels, vault.id);
         archiveVaultCache[vault.id] = channels;
         return channels;
     }
@@ -2694,29 +2764,10 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function playNextEpisode(currentUrl) {
-        if (!currentUrl) return;
-        const currentChannel = allChannelsInPlaylist.find(c => c.url === currentUrl);
-        if (!currentChannel || !currentChannel.group) return;
-        
-        let seriesChannels = allChannelsInPlaylist.filter(c => c.group === currentChannel.group);
-        seriesChannels.sort((a, b) => {
-            const scoreA = getEpisodeScore(a.title);
-            const scoreB = getEpisodeScore(b.title);
-            if (scoreA !== scoreB && scoreA !== 999999 && scoreB !== 999999) return scoreA - scoreB;
-            return a.title.localeCompare(b.title);
-        });
-
-        const currentIndex = seriesChannels.findIndex(c => c.url === currentUrl);
-        if (currentIndex > -1 && currentIndex < seriesChannels.length - 1) {
-            const nextChannel = seriesChannels[currentIndex + 1];
-            playStream(nextChannel.url);
-            const nextChannelElement = document.querySelector(`.channel-item[data-url="${CSS.escape(nextChannel.url)}"]`);
-            if (nextChannelElement) {
-                document.querySelectorAll('.channel-item').forEach(item => item.classList.remove('active'));
-                nextChannelElement.classList.add('active');
-                nextChannelElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }
-        }
+        if (!currentUrl || currentUrl !== currentlyPlayingUrl) return;
+        const context = episodeContexts.get(currentUrl) || playingSeries;
+        const index = context?.episodes.findIndex(ch => ch.url === currentUrl) ?? -1;
+        if (index >= 0 && index < context.episodes.length - 1) playSeriesEpisode(context.episodes[index + 1]);
     }
 
     function showPlayerError(url, errMsg, blocker = null) {
@@ -2785,6 +2836,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function playChannel(ch) {
         const blocker = ch.blocker || browserBlocker(ch.url);
         if (blocker) {
+            playingSeries = null; renderEpisodePanel();
             showPlayerError(ch.url, '', blocker);
             return false;
         }
@@ -3067,18 +3119,14 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function cleanEpisodeTitle(rawTitle, seriesName) {
-        let cleaned = rawTitle.replace(/[/_]/g, ' ');
-        const sePattern = /(S(\d{1,2}))?[\s.E|x](\d{1,3})|Season (\d{1,2}) Episode (\d{1,3})/i;
-        const match = cleaned.match(sePattern);
-        if (match) {
-            const season = (match[2] || match[4] || '').padStart(2, '0');
-            const episode = (match[3] || match[5] || '').padStart(2, '0');
-            let episodeTitle = cleaned.replace(new RegExp(seriesName.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'), 'gi'), '');
-            episodeTitle = episodeTitle.replace(sePattern, '').trim();
-            episodeTitle = episodeTitle.replace(/^-+\s*|^\s*-\s*/, '').trim();
-            return `S${season} E${episode} - ${episodeTitle || 'Episode ' + parseInt(episode, 10)}`;
-        }
-        return cleanTitleForSearch(rawTitle).replace(new RegExp(seriesName.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'), 'gi'), '').trim();
+        const pattern = /\bS(\d{1,2})[ ._-]*E(\d{1,3})\b|\b(\d{1,2})x(\d{1,3})\b|\bSeason\s*(\d{1,2})\s*[- /]*Episode\s*(\d{1,3})\b/i;
+        const match = rawTitle.match(pattern);
+        const namePattern = new RegExp(seriesName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'),'gi');
+        const title = rawTitle.replace(namePattern,'').replace(pattern,'').replace(/\.(mp4|mkv|avi|webm)$/i,'').replace(/[._/]/g,' ').replace(/^\s*[-–:]+\s*/,'').trim();
+        if (!match) return title || rawTitle;
+        const season = Number(match[1] || match[3] || match[5]);
+        const episode = Number(match[2] || match[4] || match[6]);
+        return `S${String(season).padStart(2,'0')} E${String(episode).padStart(2,'0')} — ${title || 'Episode '+episode}`;
     }
 
     function extractSeriesNameFromTitle(title) {
@@ -3408,6 +3456,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
 
+        Object.entries(vodSeriesMaster).forEach(([name,episodes]) => { vodSeriesMaster[name] = registerSeries(`series:${name}`,name,episodes).episodes; });
         if (Object.keys(vodSeriesMaster).length === 0) {
             showSidebarError('No series could be loaded.', 'The series playlists may be offline. Try a force refresh.');
             return;
@@ -3518,7 +3567,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 "Drama",
                 "Science Fiction"
             ],
-            "tmdbId": 157336
+            "tmdbId": 157336,
+            "cardArt": "assets/discovery/interstellar-backdrop.jpg"
         }
     },
     {
@@ -3534,14 +3584,16 @@ document.addEventListener('DOMContentLoaded', function() {
             "overview": "When Alita awakens with no memory of who she is in a future world she does not recognize, she is taken in by Ido, a compassionate doctor who realizes that somewhere in this abandoned cyborg shell is the heart and soul of a young woman with an extraordinary past.",
             "poster": "assets/discovery/alita-battle-angel-poster.jpg",
             "posterLarge": "https://image.tmdb.org/t/p/w780/xRWht48C2V8XNfzvPehyClOvDni.jpg",
-            "backdrop": "assets/discovery/alita-battle-angel-backdrop.jpg",
+            "backdrop": "assets/discovery/alita-scene.jpg",
             "rating": 7.3,
             "genres": [
                 "Action",
                 "Science Fiction",
                 "Adventure"
             ],
-            "tmdbId": 399579
+            "tmdbId": 399579,
+            "shortOverview": "A cyborg awakens with no memory of her past — and discovers an extraordinary future.",
+            "cardArt": "assets/discovery/alita-scene.jpg"
         }
     },
     {
@@ -3565,7 +3617,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 "Adventure",
                 "Mystery"
             ],
-            "tmdbId": 75612
+            "tmdbId": 75612,
+            "cardArt": "assets/discovery/oblivion-backdrop.jpg"
         }
     },
     {
@@ -3588,7 +3641,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 "Comedy",
                 "Fantasy"
             ],
-            "tmdbId": 590223
+            "tmdbId": 590223,
+            "cardArt": "assets/discovery/love-and-monsters-scene.jpg"
         }
     },
     {
@@ -3609,7 +3663,8 @@ document.addEventListener('DOMContentLoaded', function() {
             "genres": [
                 "Science Fiction"
             ],
-            "tmdbId": 506072
+            "tmdbId": 506072,
+            "cardArt": "assets/discovery/prospect-scene.jpg"
         }
     },
     {
@@ -3632,7 +3687,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 "Romance",
                 "Science Fiction"
             ],
-            "tmdbId": 274870
+            "tmdbId": 274870,
+            "cardArt": "assets/discovery/passengers-scene.jpg"
         }
     },
     {
@@ -3654,7 +3710,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 "Science Fiction",
                 "Horror"
             ],
-            "tmdbId": 300668
+            "tmdbId": 300668,
+            "cardArt": "assets/discovery/annihilation-scene.jpg"
         }
     },
     {
@@ -3675,7 +3732,8 @@ document.addEventListener('DOMContentLoaded', function() {
             "genres": [
                 "Drama"
             ],
-            "tmdbId": 376867
+            "tmdbId": 376867,
+            "cardArt": "assets/discovery/moonlight-scene.jpg"
         }
     },
     {
@@ -3698,7 +3756,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 "Drama",
                 "Romance"
             ],
-            "tmdbId": 38
+            "tmdbId": 38,
+            "cardArt": "assets/discovery/eternal-sunshine-of-the-spotless-mind-scene.jpg"
         }
     },
     {
@@ -3721,7 +3780,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 "Adventure",
                 "Crime"
             ],
-            "tmdbId": 328387
+            "tmdbId": 328387,
+            "cardArt": "assets/discovery/nerve-scene.jpg"
         }
     },
     {
@@ -3743,7 +3803,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 "Comedy",
                 "Drama"
             ],
-            "tmdbId": 773
+            "tmdbId": 773,
+            "cardArt": "assets/discovery/little-miss-sunshine-scene.jpg"
         }
     },
     {
@@ -3767,7 +3828,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 "History",
                 "Action"
             ],
-            "tmdbId": 11362
+            "tmdbId": 11362,
+            "cardArt": "assets/discovery/the-count-of-monte-cristo-scene.jpg"
         }
     }
 ];
@@ -3896,7 +3958,7 @@ document.addEventListener('DOMContentLoaded', function() {
         return enrichChannel(channel).then(rec => {
             if (!rec || !card.isConnected) return;
             const art = card.querySelector('.poster-art');
-            if (rec.poster && art) { art.src = rec.poster; art.dataset.hasArt = '1'; }
+            if (rec.poster && art) { art.src = rec.cardArt || rec.poster; art.dataset.hasArt = '1'; }
 
             // Prefer TMDB's title: the filename-derived one repeats the year the
             // subtitle already shows, and often keeps odd capitalisation.
@@ -3992,7 +4054,7 @@ document.addEventListener('DOMContentLoaded', function() {
         card.setAttribute('tabindex', '0');
         card._channel = channel;
 
-        const art = posterFor(channel);
+        const art = channel._tmdb?.cardArt || posterFor(channel);
         const rawSub = channel._tmdb ? [channel.isSeries ? 'Series' : 'Movie',channel._tmdb.year].filter(Boolean).join(' · ') : (channel.group && channel.group !== channel.title ? channel.group : '');
         const sub = rawSub === 'Uncategorized' ? (opts.live ? 'Live channel' : '') : rawSub;
         card.innerHTML = `
@@ -4400,6 +4462,7 @@ document.addEventListener('DOMContentLoaded', function() {
             elements.mainView.scrollTo({ top: 0, behavior: 'auto' });
             (SECTION_RENDERERS[key] || renderHomeRows)();
         } else {
+            pane.querySelector('.live-hub')?._refresh?.();
             // Tapping the tab you are already on means "take me back to the top".
             const top = sameTab ? 0 : (sectionScroll.get(key) || 0);
             requestAnimationFrame(() => elements.mainView.scrollTo({ top, behavior: 'auto' }));
@@ -4437,6 +4500,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const overlay = sectionPanes.get('__overlay');
         if (overlay) { overlay.remove(); sectionPanes.delete('__overlay'); }
         sectionHost = showPane(activeSection);
+        sectionHost.querySelector('.live-hub')?._refresh?.();
         document.getElementById('network-shelf').classList.toggle('hidden', activeSection !== 'home');
         const top = sectionScroll.get(activeSection) || 0;
         requestAnimationFrame(() => elements.mainView.scrollTo({ top, behavior: 'auto' }));
@@ -4651,7 +4715,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <p class="hero-eyebrow">${escapeHtml(opts.eyebrow || 'Featured in your collection')}</p>
                     <h2 class="hero-title">${escapeHtml(rec.name || pick.title).replace(/:\s*/, '<br>')}</h2>
                     <div class="hero-meta">${bits.map(b => `<span class="pill">${escapeHtml(String(b))}</span>`).join('')}</div>
-                    <p class="hero-overview">${escapeHtml(rec.overview || 'Discover this title in your collection.')}</p>
+                    <p class="hero-overview">${escapeHtml(rec.shortOverview || rec.overview || 'Discover this title in your collection.')}</p>
                     <div class="hero-actions">
                         <button class="hero-btn primary" data-play><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m7 4 14 8-14 8Z"/></svg><span>${pick.isSeries ? 'Episodes' : 'Watch now'}</span></button>
                         <button class="hero-btn ghost" data-save></button>
@@ -5033,74 +5097,62 @@ document.addEventListener('DOMContentLoaded', function() {
         }));
     }
 
-    async function renderLiveSection() {
+    const liveBrowseState = { tab:'countries', region:'Featured', query:'' };
+    const FEATURED_COUNTRIES = ['gb','us','ca','au','ie','in','fr','de','es','it','br','jp'];
+    function countryRegion(code) { return Object.keys(CONTINENT_MAP).find(region => CONTINENT_MAP[region].includes(code)) || 'Other'; }
+    function openCountryGuide(code) {
+        const country = WORLD_TV_COUNTRIES.find(c => c.code === code);
+        if (country) return renderChannelWall(country.name,country.url,{countryCode:country.code});
+    }
+    function renderLiveSection() {
         const host = sectionHost || document.getElementById('home-rows');
-        const launch = document.createElement('section');
-        launch.innerHTML = `<div class="ss-guide-top"><div><span class="ss-kicker">THE WORLD, LIVE</span><h1>What’s on?</h1><p>Your channels. A simpler way to tune in.</p></div><button class="custom-btn px-4 py-3 text-xs" data-sources>All TV sources ↗</button></div><div class="ss-guide-launch"><button data-uk><span class="ss-kicker">CHANNEL GUIDE</span><strong>Live TV, at a glance ↗</strong><small>Browse the United Kingdom channel line-up</small></button><button data-sport><span class="ss-kicker">SPORT</span><strong>Closer to the action ↗</strong><small>Explore free sports channels</small></button><button data-news><span class="ss-kicker">NEWS</span><strong>Stay in the know ↗</strong><small>News from around the world</small></button></div>`;
-        launch.querySelector('[data-uk]').onclick = () => renderChannelWall('United Kingdom', `${IPTV_ORG}/countries/uk.m3u`);
-        launch.querySelector('[data-sport]').onclick = () => openThemedWall('sports');
-        launch.querySelector('[data-news]').onclick = () => openThemedWall('news');
-        launch.querySelector('[data-sources]').onclick = () => { displayLiveTvHub(); setSourceDrawer(true); };
-        host.appendChild(launch);
-
-        addRail({
-            title: 'From the touchline',
-            subtitle: 'Sky Sports, TNT Sports, Premier League, BBC Sport, UEFA, FIFA, NBA, NFL — highlights, analysis and news, free from the broadcasters themselves',
-            channelStyle: true, live: true,
-            limit: 20,
-            loader: async () => sportChannelCards()
-        });
-
-        addBrowseAllBar(host, {
-            label: '⚽ Free sports, every network at once',
-            hint: 'NFL, MLB, NBA, NHL, UFC, beIN, FOX Sports, Tennis, RugbyPass, FIFA+ · legal and free',
-            action: 'Open sports guide',
-            onClick: () => openThemedWall('sports')
-        });
-
-        addBrowseAllBar(host, {
-            label: '📰 24/7 news, every network at once',
-            hint: 'Sky News, BBC, CBS, NBC, CNN Headlines, Bloomberg, Euronews, Al Jazeera and more',
-            action: 'Open news guide',
-            onClick: () => openThemedWall('news')
-        });
-
-        const shelf = document.createElement('section');
-        shelf.className = 'mt-4 px-1';
-        shelf.innerHTML = `
-            <div class="rail-head">
-                <h2 class="rail-title text-lg text-slate-900 dark:text-white header-title">Free TV Networks</h2>
-                <button class="rail-more" type="button">All sources</button>
-            </div>
-            <div class="flex gap-3 overflow-x-auto no-scrollbar pb-2" id="live-network-strip"></div>`;
-        host.appendChild(shelf);
-        shelf.querySelector('.rail-more').addEventListener('click', () => { displayLiveTvHub(); setSourceDrawer(true); });
-
-        const strip = shelf.querySelector('#live-network-strip');
-        HOME_NETWORKS.forEach(n => {
-            const tile = document.createElement('button');
-            tile.className = 'network-tile';
-            tile.innerHTML = `
-                <span class="text-xl leading-none" aria-hidden="true">${n.icon}</span>
-                <span class="net-name">${escapeHtml(n.name)}</span>
-                <span class="net-sub">${escapeHtml(n.sub)}</span>`;
-            // The first two shelf entries are merged themed guides, not single playlists.
-            tile.addEventListener('click', () => n.wall
-                ? openThemedWall(n.wall)
-                : renderChannelWall(`${n.name} · ${n.sub}`, n.url));
-            strip.appendChild(tile);
-        });
-
-        [['Sports', 'sports', '⚽'], ['News', 'news', '📰'], ['Movies', 'movies', '🎬'],
-         ['Entertainment', 'entertainment', '🎭'], ['Documentary', 'documentary', '🎥'],
-         ['Music', 'music', '🎵']].forEach(([label, slug, icon]) => {
-            addRail({
-                title: `${icon} ${label}`,
-                channelStyle: true, live: true,
-                loader: () => sampleFromPlaylist(`${IPTV_ORG}/categories/${slug}.m3u`, label, 20),
-                onMore: () => renderChannelWall(`${label} channels`, `${IPTV_ORG}/categories/${slug}.m3u`)
+        const hub = document.createElement('section'); hub.className = 'live-hub';
+        hub.innerHTML = `<div class="live-masthead"><div><p class="hero-eyebrow">ON AIR. EVERYWHERE.</p><h1>Live TV</h1><p>Local favourites. A whole world to discover.</p></div><button data-sources>${tvIcon('collections')}<span>All sources</span></button></div>
+            <div class="live-spotlight"><div class="live-orbit" aria-hidden="true">${tvIcon('globe')}</div><div class="live-spotlight-copy"><span class="live-badge"><i></i> LIVE CHANNELS</span><h2>Your world. <br>Live.</h2><p>Find your country. Pick a channel.<br>Make yourself at home.</p><button data-uk><span class="country-code">UK</span> Browse United Kingdom <span>›</span></button></div><div class="live-quick-countries" aria-label="Quick country choices"></div></div>
+            <nav class="live-browse-tabs" aria-label="Browse live TV"></nav>
+            <div class="live-directory"><div class="live-directory-head"><div><h2 data-directory-title>Choose a country</h2><p data-directory-count></p></div><label class="live-search">${tvIcon('search')}<input type="search" aria-label="Search countries" placeholder="Search countries…"></label></div><nav class="live-regions" aria-label="Filter countries by region"></nav><div class="live-country-grid" data-directory-grid></div></div>`;
+        host.appendChild(hub);
+        hub.querySelector('[data-sources]').onclick = () => { displayLiveTvHub(); setSourceDrawer(true); };
+        hub.querySelector('[data-uk]').onclick = () => openCountryGuide('gb');
+        const quick = hub.querySelector('.live-quick-countries');
+        ['us','ca','in','au'].forEach(code => { const c=countryMap[code],button=document.createElement('button');button.innerHTML=`<span class="country-code">${code==='gb'?'UK':code.toUpperCase()}</span><strong>${escapeHtml(c.name)}</strong><small>Explore channels ›</small>`;button.onclick=()=>openCountryGuide(code);quick.appendChild(button); });
+        const search = hub.querySelector('input'), grid = hub.querySelector('[data-directory-grid]'), regions = hub.querySelector('.live-regions');
+        search.value = liveBrowseState.query;
+        const setTab = tab => { liveBrowseState.tab=tab;liveBrowseState.query='';search.value='';paintTabs();paintDirectory(); };
+        function paintTabs() {
+            const tabs=hub.querySelector('.live-browse-tabs');tabs.replaceChildren();
+            [['countries','globe','Countries'],['categories','collections','Categories'],['networks','live','Networks'],['languages','globe','Languages'],['saved','mine','Saved channels']].forEach(([key,icon,label])=>{
+                const button=document.createElement('button');button.innerHTML=`${tvIcon(icon)}<span>${label}</span>`;button.setAttribute('aria-pressed',String(liveBrowseState.tab===key));button.onclick=()=>setTab(key);tabs.appendChild(button);
             });
-        });
+        }
+        function paintDirectory() {
+            const {tab,region,query}=liveBrowseState,term=query.trim().toLowerCase();grid.replaceChildren();regions.replaceChildren();
+            grid.classList.toggle('live-saved-grid',tab==='saved');
+            const labels={countries:['Choose a country','countries'],categories:['What would you like to watch?','categories'],networks:['Explore the networks','networks'],languages:['Watch in your language','languages'],saved:['Your saved channels','saved channels']};
+            const [title,noun]=labels[tab];hub.querySelector('[data-directory-title]').textContent=title;search.placeholder=`Search ${noun}…`;search.setAttribute('aria-label',`Search ${noun}`);
+            let entries=[];
+            if(tab==='countries') {
+                ['Featured','All countries',...Object.keys(CONTINENT_MAP)].forEach(name=>{const b=document.createElement('button');b.textContent=name;b.setAttribute('aria-pressed',String(region===name));b.onclick=()=>{liveBrowseState.region=name;paintDirectory();};regions.appendChild(b);});
+                let countries=term ? WORLD_TV_COUNTRIES : region==='Featured' ? FEATURED_COUNTRIES.map(code=>WORLD_TV_COUNTRIES.find(c=>c.code===code)) : region==='All countries' ? WORLD_TV_COUNTRIES : WORLD_TV_COUNTRIES.filter(c=>countryRegion(c.code)===region);
+                entries=countries.filter(Boolean).filter(c=>`${c.name} ${c.code} ${c.code==='gb'?'UK Britain':''} ${c.code==='us'?'USA America':''}`.toLowerCase().includes(term)).map(c=>({name:c.name,icon:c.icon,sub:countryRegion(c.code),code:c.code,action:()=>openCountryGuide(c.code)}));
+            } else if(tab==='saved') {
+                const saved=favorites.filter(ch=>searchType(ch)==='live'&&!ch.isGame&&ch.title.toLowerCase().includes(term));
+                saved.forEach(ch=>grid.appendChild(makePosterCard(ch,{channelStyle:true,live:true})));
+                hub.querySelector('[data-directory-count]').textContent=`${saved.length} saved channels`;
+                if(!saved.length)grid.innerHTML='<div class="live-empty">'+tvIcon('mine')+'<h3>Your favourites belong here</h3><p>Save a channel from any country guide to find it here.</p></div>';
+                return;
+            } else {
+                const sourceKey=tab==='categories'?'genres':tab;
+                const section=LIVE_TV_SECTIONS.find(s=>s.key===sourceKey);
+                entries=(section?.sources||[]).filter(s=>s.name.toLowerCase().includes(term)).map(s=>({name:s.name,icon:s.icon,sub:tab==='categories'?'Live channels':tab==='languages'?'By broadcast language':'Free TV network',action:()=>renderChannelWall(s.name,s.url)}));
+            }
+            hub.querySelector('[data-directory-count]').textContent=tab==='countries'?`${entries.length} ${term?'matching ':''}countries & territories`:`${entries.length} ${noun}`;
+            entries.forEach(entry=>{const button=document.createElement('button');button.className='country-tile';if(entry.code)button.dataset.country=entry.code;button.innerHTML=`<span class="country-flag" aria-hidden="true">${entry.code ? (entry.code==='gb'?'UK':entry.code.toUpperCase()) : entry.icon||'TV'}</span><span class="country-copy"><strong>${escapeHtml(entry.name)}</strong><small>${escapeHtml(entry.sub)}</small></span><span class="country-chevron" aria-hidden="true">›</span>`;button.onclick=entry.action;grid.appendChild(button);});
+            if(!entries.length)grid.innerHTML='<div class="live-empty"><h3>No matches</h3><p>Try a different name or choose another tab.</p></div>';
+        }
+        search.oninput=()=>{liveBrowseState.query=search.value;paintDirectory();};
+        hub._refresh=()=>{paintTabs();paintDirectory();};
+        paintTabs();paintDirectory();
     }
 
     /**
@@ -5165,7 +5217,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const host = openOverlayPane();
 
         const head = document.createElement('div');
-        head.className = 'px-2 mt-4 mb-3';
+        head.className = 'guide-heading px-2 mt-4 mb-3';
         head.innerHTML = `
             <div class="flex items-center gap-3 mb-3">
                 <button data-back class="custom-btn px-3 py-2 text-xs font-bold uppercase tracking-wider">← Back</button>
@@ -5174,6 +5226,12 @@ document.addEventListener('DOMContentLoaded', function() {
             <div data-chips class="flex gap-2 overflow-x-auto no-scrollbar pb-1"></div>
             <p data-count class="text-[11px] text-[var(--text-muted)] mt-2">Loading channels…</p>`;
         head.querySelector('[data-back]').addEventListener('click', closeOverlayPane);
+        if (opts.countryCode) {
+            const label = document.createElement('label'); label.className = 'guide-country-picker';
+            label.innerHTML = '<span>COUNTRY</span><select aria-label="Select country">'+WORLD_TV_COUNTRIES.map(c=>`<option value="${c.code}">${c.icon} ${escapeHtml(c.name)}</option>`).join('')+'</select>';
+            const select = label.querySelector('select'); select.value = opts.countryCode;
+            select.onchange = () => openCountryGuide(select.value); head.prepend(label);
+        }
         host.appendChild(head);
         scrollBrowseIntoView(head);
 
@@ -5186,14 +5244,15 @@ document.addEventListener('DOMContentLoaded', function() {
         tools.innerHTML = `<input class="custom-input" type="search" aria-label="Search this channel guide" placeholder="Find a channel…"><select class="custom-input" aria-label="Sort channels"><option value="source">Channel order</option><option value="az">Name: A–Z</option></select><label><input type="checkbox" data-favourites> Favourites only</label>`;
         head.insertBefore(tools, head.querySelector('[data-chips]'));
         const note = document.createElement('p'); note.className = 'ss-guide-note';
-        note.textContent = 'Choose a channel to watch. Programme schedules are not supplied by these sources.';
+        note.textContent = 'Select a channel to watch · Save your favourites with the star';
         head.appendChild(note);
         let query = ''; let onlyFavourites = false; let order = 'source';
         let channels = [];
         try {
             channels = await collectChannels(url, sourceName, opts);
             if (!channels.length) throw new Error('empty');
-            await applyLiveLogos(channels);
+            if (opts.countryCode) channels.forEach(ch => { ch._countryCode = opts.countryCode; });
+            else await applyLiveLogos(channels);
             if (opts.groupBySource) channels.forEach(c => { c.group = c._sourceLabel; });
         } catch (e) {
             if (myToken !== sectionToken) return;
@@ -5242,6 +5301,8 @@ document.addEventListener('DOMContentLoaded', function() {
             const blocker = ch.blocker || browserBlocker(ch.url);
             const row = document.createElement('button');
             row.className = `channel-row${blocker ? ' ch-blocked' : ''}`;
+            row.dataset.channelUrl = ch.url;
+            if (ch.url === currentlyPlayingUrl) row.setAttribute('aria-current','true');
             row.innerHTML = `
                 <span class="ch-num">${channelNumbers.get(ch.url)}</span>
                 <span class="ch-logo">
@@ -5259,6 +5320,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
             row.addEventListener('click', () => {
                 if (!playChannel(ch)) return;
+                wall.querySelectorAll('.channel-row').forEach(item => { if (item.dataset.channelUrl === ch.url) item.setAttribute('aria-current','true'); else item.removeAttribute('aria-current'); });
                 elements.nowPlayingTitle.textContent = ch.title;
                 elements.nowPlayingGenre.textContent = (ch.group && ch.group !== 'Uncategorized') ? ch.group : 'LIVE';
                 elements.mainView.scrollTo({ top: 0, behavior: 'smooth' });
@@ -5292,6 +5354,7 @@ document.addEventListener('DOMContentLoaded', function() {
             [['All', channels.length], ...groupsOf().slice(0, 24)].forEach(([g, n]) => {
                 const chip = document.createElement('button');
                 chip.className = `filter-chip ${g === group ? 'active' : ''}`;
+                chip.setAttribute('aria-pressed',String(g === group));
                 chip.innerHTML = `${escapeHtml(g)} <span class="opacity-60">${n}</span>`;
                 chip.addEventListener('click', () => { group = g; paintChips(); paint(); });
                 chipRow.appendChild(chip);
@@ -5385,13 +5448,13 @@ document.addEventListener('DOMContentLoaded', function() {
      * filter therefore never hides a title for lacking metadata: unknown genres stay
      * visible under "All".
      */
-    function openGrid(title, items) {
+    function openGrid(title, items, opts = {}) {
         // Cancel the section's in-flight rails so they cannot append below the grid.
         sectionToken++;
         const host = openOverlayPane();
 
         let genre = 'All';
-        let sortBy = 'title';
+        let sortBy = opts.sort || 'title';
         let titleQuery = '';
         let enriching = true;
 
@@ -5412,6 +5475,7 @@ document.addEventListener('DOMContentLoaded', function() {
             <div data-chips class="flex gap-2 overflow-x-auto no-scrollbar pb-1"></div>
             <p data-count class="text-[11px] text-[var(--text-muted)] mt-2"></p>`;
         head.querySelector('[data-back]').addEventListener('click', closeOverlayPane);
+        head.querySelector('#grid-sort').value = sortBy;
         host.appendChild(head);
         scrollBrowseIntoView(head);
 
@@ -5512,9 +5576,9 @@ document.addEventListener('DOMContentLoaded', function() {
         const myToken = sectionToken;
         const heroHost = document.createElement('div'); host.appendChild(heroHost);
         paintHero(heroHost, featuredDiscovery());
-        addRail({ title:'Discover your next favourite', loader:async () => discoverySelection.slice(0,6), onMore:() => openSection('movies') });
+        addRail({ title:'Tonight’s picks', loader:async () => discoverySelection.slice(0,6), onMore:() => openSection('movies') });
         const historySlot = document.createElement('div'); historySlot.dataset.historySlot = ''; host.appendChild(historySlot);
-        addRail({ title:'More to fall in love with', loader:async () => discoverySelection.slice(6,12), onMore:() => openSection('movies') });
+        addRail({ title:'More to discover', loader:async () => discoverySelection.slice(6,12), onMore:() => openSection('movies') });
         const selectionRails = [...host.querySelectorAll('.discovery-rail')];
         loadMyMovies().then(({all}) => {
             if (myToken !== sectionToken || !heroHost.isConnected) return;
@@ -5668,6 +5732,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 (vodSeriesMaster[name] = vodSeriesMaster[name] || []).push(ch);
             });
         });
+        Object.entries(vodSeriesMaster).forEach(([name,episodes]) => { vodSeriesMaster[name] = registerSeries(`series:${name}`,name,episodes).episodes; });
     }
 
     /**
@@ -6274,6 +6339,83 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    // Series context belongs to playback, never to the currently browsed channel list.
+    const seriesContexts = new Map(), episodeContexts = new Map();
+    let playingSeries = null, episodeSeason = 'all', episodeQuery = '';
+    function episodeParts(channel) {
+        const text = `${channel.archiveFile || ''} ${channel.title || ''}`.replace(/[_.]/g,' ');
+        const match = text.match(/\bS(\d{1,2})\s*E(\d{1,3})\b|\b(\d{1,2})x(\d{1,3})\b|\bSeason\s*(\d{1,2})\s*[- /]*Episode\s*(\d{1,3})\b/i);
+        if(match) return {season:Number(match[1]||match[3]||match[5]),episode:Number(match[2]||match[4]||match[6])};
+        const season=text.match(/\bSeason\s*(\d{1,2})\b/i),episode=text.match(/\b(?:Episode|Ep|E)\s*(\d{1,3})\b/i);
+        return {season:season?Number(season[1]):null,episode:episode?Number(episode[1]):null};
+    }
+    function registerSeries(key,title,episodes,vaultId=null) {
+        const list=[...new Map(episodes.map(ch=>[ch.url,ch])).values()].sort((a,b)=>{
+            const x=episodeParts(a),y=episodeParts(b);
+            return (x.season??999)-(y.season??999)||(x.episode??9999)-(y.episode??9999)||a.title.localeCompare(b.title,undefined,{numeric:true});
+        });
+        const context={key,title,episodes:list};seriesContexts.set(key,context);
+        list.forEach(ch=>{ch.isEpisode=true;ch.isVod=true;ch._seriesKey=key;ch._seriesTitle=title;if(vaultId)ch._seriesVaultId=vaultId;episodeContexts.set(ch.url,context);});
+        return context;
+    }
+    function episodePanel() {
+        let panel=document.getElementById('ss-episodes');
+        if(!panel){panel=document.createElement('section');panel.id='ss-episodes';panel.className='episode-panel hidden';panel.setAttribute('aria-label','Series episodes');document.getElementById('now-playing-info').after(panel);}
+        return panel;
+    }
+    function syncEpisodePlayback(channel,url) {
+        const context=episodeContexts.get(url);
+        if(context){
+            playingSeries=context;episodeQuery='';const episode=context.episodes.find(ch=>ch.url===url);const parts=episodeParts(episode);
+            episodeSeason=parts.season===null?'all':String(parts.season);renderEpisodePanel();return;
+        }
+        playingSeries=null;renderEpisodePanel();
+        if(!channel)return;
+        const vault=ARCHIVE_SERIES_VAULTS.find(v=>v.id===(channel._seriesVaultId||channel.archiveId));
+        if(vault){
+            const panel=episodePanel();panel.classList.remove('hidden');panel.innerHTML='<p class="episode-loading">Loading all episodes…</p>';
+            loadArchiveVault(vault).then(episodes=>{
+                registerSeries(`vault:${vault.id}`,vault.label,episodes,vault.id);
+                if(currentlyPlayingUrl===url)syncEpisodePlayback(channel,url);
+            }).catch(()=>{if(currentlyPlayingUrl===url){panel.innerHTML='<p class="episode-loading">The episode list could not load. <button data-retry-episodes>Try again</button></p>';panel.querySelector('button').onclick=()=>syncEpisodePlayback(channel,url);}});
+        } else if(channel.isEpisode||channel.isSeries||channel._seriesKey){
+            const ready=vodSeriesMaster[channel.group||channel._seriesTitle];
+            if(ready?.length){registerSeries(`series:${channel.group}`,channel._seriesTitle||channel.group,ready);if(episodeContexts.has(url))syncEpisodePlayback(channel,url);}
+            else loadVodRepositoryQuietly().then(()=>{if(currentlyPlayingUrl===url&&episodeContexts.has(url))syncEpisodePlayback(channel,url);}).catch(()=>{});
+        }
+    }
+    function playSeriesEpisode(channel) {
+        if(!channel)return;
+        const focus=document.activeElement?.hasAttribute('data-next-episode')?'[data-next-episode]':document.activeElement?.hasAttribute('data-prev-episode')?'[data-prev-episode]':null;
+        openTitle(channel);
+        if(focus)episodePanel().querySelector(focus)?.focus({preventScroll:true});
+    }
+    function renderEpisodePanel() {
+        const panel=episodePanel();panel.classList.toggle('hidden',!playingSeries);
+        if(!playingSeries){panel.replaceChildren();return;}
+        const context=playingSeries,index=context.episodes.findIndex(ch=>ch.url===currentlyPlayingUrl);
+        const seasons=[...new Set(context.episodes.map(ch=>episodeParts(ch).season).filter(s=>s!==null))].sort((a,b)=>a-b);
+        panel.innerHTML=`<div class="episode-heading"><div><span class="ss-kicker">KEEP WATCHING</span><h2>${escapeHtml(context.title)}</h2><p>${context.episodes.length} available episodes${seasons.length?` · ${seasons.length} seasons`:''}</p></div><div class="episode-step"><button data-prev-episode ${index<=0?'disabled':''}>‹ <span>Previous</span></button><button data-next-episode ${index<0||index>=context.episodes.length-1?'disabled':''}><span>Next episode</span> ›</button></div></div><div class="episode-filters"><label><span>Season</span><select aria-label="Select season"><option value="all">All episodes</option>${seasons.map(s=>`<option value="${s}">${s===0?'Specials':`Season ${s}`}</option>`).join('')}</select></label><input type="search" aria-label="Search episodes" placeholder="Find an episode…"></div><div class="episode-list" role="group" aria-label="Available episodes"></div>`;
+        const select=panel.querySelector('select'),input=panel.querySelector('input');select.value=episodeSeason;input.value=episodeQuery;
+        panel.querySelector('[data-prev-episode]').onclick=()=>playSeriesEpisode(context.episodes[index-1]);
+        panel.querySelector('[data-next-episode]').onclick=()=>playSeriesEpisode(context.episodes[index+1]);
+        select.onchange=()=>{episodeSeason=select.value;paintEpisodeList();};input.oninput=()=>{episodeQuery=input.value;paintEpisodeList();};paintEpisodeList();
+    }
+    function paintEpisodeList() {
+        if(!playingSeries)return;const list=episodePanel().querySelector('.episode-list');list.replaceChildren();
+        const items=playingSeries.episodes.filter(ch=>(episodeSeason==='all'||String(episodeParts(ch).season)===episodeSeason)&&ch.title.toLowerCase().includes(episodeQuery.trim().toLowerCase()));
+        renderInChunks(items,list,ch=>{
+            const parts=episodeParts(ch),active=ch.url===currentlyPlayingUrl,button=document.createElement('button');button.className='episode-row';button.dataset.episodeUrl=ch.url;
+            if(active)button.setAttribute('aria-current','true');
+            const marker=parts.episode===null?'▶':String(parts.episode).padStart(2,'0');
+            const title=ch.title.replace(/^S\d+\s*E\d+\s*[·—:-]?\s*/i,'').trim();
+            button.innerHTML=`<span class="episode-number">${active?'▸':marker}</span><span><strong>${escapeHtml(title||ch.title)}</strong><small>${active?'Now playing · ':''}${parts.season===null?'Episode':parts.season===0?'Special':`Season ${parts.season}`}${parts.episode===null?'':` · Episode ${parts.episode}`}</small></span><span class="episode-play" aria-hidden="true">${active?'Playing':'▶'}</span>`;
+            button.onclick=()=>playSeriesEpisode(ch);return button;
+        },50);
+        if(!items.length)list.innerHTML='<p class="ss-empty">No episodes match your search.</p>';
+    }
+
+
     window.playStream = async function(url, isProxyRetry = false, autoRetryCount = 0, restoreTime = 0) {
         const currentLoadId = ++activeLoadId;
         currentRetryCount = autoRetryCount; 
@@ -6290,15 +6432,16 @@ document.addEventListener('DOMContentLoaded', function() {
         document.body.classList.add('is-playing');
         setSourceDrawer(false);
 
-        currentlyPlayingUrl = url;
+        currentlyPlayingUrl = isProxyRetry ? (activeChannelObj?.url || url) : url;
         // `yt:list:<playlist id>` plays a whole channel rather than one video.
         const ytList = url.startsWith('yt:list:') ? url.slice('yt:list:'.length) : null;
         const videoId = ytList ? null : extractVideoID(url);
         const isGame = url.includes('.html') || url.includes('playcanv.as') || url.includes('githack.com') || url.includes('hextris.io') || url.includes('itch.io');
         const isWebRTC = url.includes('whep') || url.startsWith('webrtc://') || url.includes('/whep/');
 
-        const allKnownChannels = [...(allChannelsInPlaylist || []), ...favorites, ...archiveLoadedChannels, ...vodSeriesEpisodes()];
+        const allKnownChannels = [...(episodeContexts.get(url)?.episodes || []), ...(allChannelsInPlaylist || []), ...favorites, ...watchHistory, ...archiveLoadedChannels, ...vodSeriesEpisodes(), ...discoverySelection];
         const currentChannel = allKnownChannels.find(c => c.url === url);
+        if (!isProxyRetry && autoRetryCount === 0) syncEpisodePlayback(currentChannel,url);
 
         if (currentChannel && !isProxyRetry) {
             activeChannelObj = currentChannel;
@@ -6532,6 +6675,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function tvIcon(key) {
         const paths = {
+            globe:'<circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="4" ry="9"/><path d="M3 12h18M5 6h14M5 18h14"/>',
             home:'<path d="m3 10 9-7 9 7v10H3Z"/><path d="M9 20v-7h6v7"/>',
             live:'<rect x="3" y="5" width="18" height="13" rx="2"/><path d="M8 22h8M12 18v4m-3-13 3-3 3 3"/>',
             movies:'<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 3v18M17 3v18M3 8h4M3 16h4M17 8h4M17 16h4"/>',
@@ -6562,7 +6706,17 @@ document.addEventListener('DOMContentLoaded', function() {
             const button = document.createElement('button'); button.innerHTML = `${tvIcon(key)}<span>${label}</span>`;
             if (active) button.setAttribute('aria-current','page'); button.onclick = action; menu.appendChild(button);
         };
-        [['home','Home'],['search','Discover'],['movies','Movies'],['tv','TV Shows'],['live','Live TV'],['collections','Collections'],['mine','My List']].forEach(([key,label]) => add(menus[0],key,label,() => key === 'search' ? openGlobalSearch() : key === 'collections' ? showBrowseSource('Movie Vault') : openSection(key)));
+        add(menus[0],'home','Home',() => openSection('home'));
+        add(menus[0],'search','Discover',() => openGlobalSearch(),false);
+        const browseSorted = (title,sort) => openGrid(title,dedupeTitles(discoveryPool().filter(ch=>searchType(ch)==='movies'&&!ch.isGame)),{sort});
+        add(menus[0],'movies','Top rated',() => browseSorted('Top rated','rating'),false);
+        add(menus[0],'tv','Newest films',() => browseSorted('Newest films','year-desc'),false);
+        add(menus[0],'collections','Genres',() => openSection('movies'),activeSection==='movies');
+        add(menus[0],'collections','Collections',() => showBrowseSource('Movie Vault'),false);
+        add(menus[0],'mine','My List',() => openSection('mine'));
+        add(menus[1],'live','Live TV',() => openSection('live'));
+        add(menus[1],'globe','Countries',() => { liveBrowseState.tab='countries';openSection('live'); },false);
+        add(menus[1],'tv','TV Shows',() => openSection('tv'));
         add(menus[1],'kids','Kids & family',() => openSection('kids'));
         add(menus[1],'arcade','Arcade',() => document.getElementById('games-pin-btn').click());
         add(menus[1],'settings','Settings',() => elements.settingsBtn.click(),false);
@@ -6582,6 +6736,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function openTitle(channel) {
         if (channel._vault) { displayVaultTitles(channel._vault,'series'); return; }
         if (channel._episodes) {
+            registerSeries(`series:${channel.title}`,channel.title,channel._episodes);
             setSourceDrawer(true); allChannelsInPlaylist = channel._episodes;
             populatePlaylistUI(channel._episodes,true,() => showBrowseSource('TV Box Sets'),channel.title); return;
         }
@@ -6697,6 +6852,7 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('now-playing-info').appendChild(playbackTools);
         document.getElementById('ss-stop').onclick = () => {
             ++activeLoadId; currentlyPlayingUrl = ''; activeChannelObj = null; currentRetryCount = 10;
+            playingSeries = null; renderEpisodePanel();
             destroyPlayers(); elements.loadingOverlay.classList.add('hidden');
             elements.playerContainer.classList.add('idle-compact'); document.body.classList.remove('is-playing');
             elements.mainView.scrollTo({top:0,behavior:'smooth'});

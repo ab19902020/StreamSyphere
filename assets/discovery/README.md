@@ -20,3 +20,5 @@ The app uses the TMDB API but is not endorsed or certified by TMDB.
 | The Count of Monte Cristo (2002) | [Movie 11362](https://www.themoviedb.org/movie/11362) | [duets-2000](https://archive.org/details/duets-2000) |
 
 The three carousel backdrops and twelve posters are bundled for reliable first paint. The full catalogue continues to load and enrich dynamically. Update `DISCOVERY_PICKS` and these assets together when changing the editorial selection. Live playlist reconciliation removes entries that no longer appear in My Movies.
+
+Scene artwork added on 2026-09-20 uses backdrops from the same TMDB records for compact covers with readable title overlays. The Alita feature now uses a single scene rather than a cast montage. Existing poster artwork remains available in title details.
